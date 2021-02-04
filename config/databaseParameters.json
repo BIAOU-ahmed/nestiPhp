@@ -1,0 +1,14 @@
+{
+    "alidjinou.needemand.com": {
+        "user": "c21alidjinou",
+        "db_name": "c21alidjinou",
+        "password": "qsdF7854",
+        "host": "localhost"
+    },
+    "localhost": {
+        "user": "root",
+        "db_name": "nestiPhp",
+        "password": "",
+        "host": "localhost"
+    }
+}

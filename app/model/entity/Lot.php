@@ -10,9 +10,18 @@ class Lot extends BaseEntity{
     public function getArticle(): ?Article{
         return $this->getRelatedEntity("Article");
     }
-    
+
+    public function setArticle(Article $a){
+        $this->setRelatedEntity($a);
+    }
+
+
     public function getImportations(): array{
         return $this->getRelatedEntities("Importation");
+    }
+
+    public function getAdmins(): array{
+        return $this->getIndirectlyRelatedEntities("Users", "Importation", BaseDao::FLAGS['active']); 
     }
 
 

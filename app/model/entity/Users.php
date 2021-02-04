@@ -1,13 +1,14 @@
 <?php
-
-class User extends BaseEntity{
-    private $idUser;
+SiteUtil::require('model/dao/UsersDao.php');
+class Users extends BaseEntity{
+    private $idUsers;
     private $lastName;
-    private $firtName;
+    private $firstName;
     private $email;
     private $password;
     private $flag;
     private $dateCreation;
+    private $login;
 
 
     public function getOrders(): array{
@@ -18,6 +19,19 @@ class User extends BaseEntity{
         return $this->getRelatedEntities("ConnectionLog");
     }
 
+    public function getComments(): array{
+        return $this->getRelatedEntities("Comment", BaseDao::FLAGS['active']);
+    }
+
+    public function getRecipes(): array{
+        return $this->getIndirectlyRelatedEntities("Recipe", "Grades", BaseDao::FLAGS['active']); 
+    }
+
+
+    public function isPassword($plaintext){
+
+        return true;
+    }
     /**
      * Get the value of dateCreation
      */
@@ -101,9 +115,9 @@ class User extends BaseEntity{
     /**
      * Get the value of firtName
      */
-    public function getFirtName()
+    public function getFirstName()
     {
-        return $this->firtName;
+        return $this->firstName;
     }
 
     /**
@@ -111,9 +125,9 @@ class User extends BaseEntity{
      *
      * @return  self
      */
-    public function setFirtName($firtName)
+    public function setFirstName($firstName)
     {
-        $this->firtName = $firtName;
+        $this->firstName = $firstName;
 
         return $this;
     }
@@ -141,9 +155,9 @@ class User extends BaseEntity{
     /**
      * Get the value of idUser
      */
-    public function getIdUser()
+    public function getIdUsers()
     {
-        return $this->idUser;
+        return $this->idUsers;
     }
 
     /**
@@ -151,9 +165,29 @@ class User extends BaseEntity{
      *
      * @return  self
      */
-    public function setIdUser($idUser)
+    public function setIdUsers($idUsers)
     {
-        $this->idUser = $idUser;
+        $this->idUsers = $idUsers;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of login
+     */ 
+    public function getLogin()
+    {
+        return $this->login;
+    }
+
+    /**
+     * Set the value of login
+     *
+     * @return  self
+     */ 
+    public function setLogin($login)
+    {
+        $this->login = $login;
 
         return $this;
     }

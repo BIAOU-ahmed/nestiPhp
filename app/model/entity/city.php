@@ -1,32 +1,27 @@
 <?php
-
-class Product extends BaseEntity{
-
-    private $idProduct;
+class City extends BaseEntity{
+    private $idCity;
     private $name;
 
+   
 
-    public function getArticles(): array{
-        return $this->getRelatedEntities("Article", BaseDao::FLAGS['active']);
-    }
-    
 
     /**
-     * Get the value of idProduct
+     * Get the value of idCity
      */ 
-    public function getIdProduct()
+    public function getIdCity()
     {
-        return $this->idProduct;
+        return $this->idCity;
     }
 
     /**
-     * Set the value of idProduct
+     * Set the value of idCity
      *
      * @return  self
      */ 
-    public function setIdProduct($idProduct)
+    public function setIdCity($idCity)
     {
-        $this->idProduct = $idProduct;
+        $this->idCity = $idCity;
 
         return $this;
     }
