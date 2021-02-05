@@ -65,7 +65,7 @@ class BaseDao
     {
         $pdo = DatabaseUtil::connect();
         $sql = "SELECT * FROM " . self::getTableName() . " ORDER BY " . self::getPkColumnName() . " DESC";
-        FormatUtil::dump(self::getPkColumnName());
+        //FormatUtil::dump(self::getPkColumnName());
         $values = [];
 
         if ( $flag != null){
@@ -177,7 +177,7 @@ class BaseDao
 
         $sql = "INSERT INTO " . self::getTableName() . " (" . implode(',', $columnNames) . ") 
         values(" . implode(',', $questionMarks) . ")";
-        FormatUtil::dump($sql);
+        //FormatUtil::dump($sql);
         $q = $pdo->prepare($sql);
 
         $values = array_map(function($columnName) use ($entity) { return EntityUtil::get($entity,$columnName); }, $columnNames);

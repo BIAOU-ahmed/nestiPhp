@@ -6,6 +6,10 @@ class Chef extends Users{
         return $this->getRelatedEntities("Recipe", BaseDao::FLAGS['active']);
     }
 
+    public function getUser() { 
+        return UsersDao::findOneBy("idUsers",$this->idChef);
+    }
+
     /**
      * Get the value of idChef
      */ 

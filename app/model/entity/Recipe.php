@@ -1,5 +1,5 @@
 <?php
-
+SiteUtil::require('model/dao/RecipeDao.php');
 class Recipe extends BaseEntity{
     private $idRecipe;
     private $dateCreation;

@@ -3,150 +3,81 @@
 // SiteUtil::require('model/entity/Recipe.php');
 SiteUtil::require('model/entity/Users.php');
 SiteUtil::require('util/FormatUtil.php');
+SiteUtil::require('controller/BaseController.php');
 
 
 
 
-class UserController extends BaseController{
+class UserController extends BaseEntityController
+{
 
     protected static $entityClass = "Users";
-
-
-    /**
-     * __construct
-     * constructor sanitizes request, initializes a user, and calls an action 
-     * @return void
-     */
-    public function __construct()
-    {
-
-        parent::__construct();
-        
-
-        // $this->initializeUser($id);
-        // if ($this->getUser() == null) {
-        //     $this->login();
-        // }else{
-
-        //     method_exists($this, $action) ?
-        //     $this->$action() : // if action in URL exists, call it
-        //     $this->default(); // else call default one
-        // }
-
-    }
-
-    protected function processAction($action)
-    {
-        
-        if (isset($_SESSION['userLogin'])) {
-            $this->entity = UsersDao::findOneBy('login', $_SESSION['userLogin']);
-           
-        }else{
-            $action = "login";
-        }
-        parent::processAction($action);
-    }
-
-
-    public function setUser($user)
-    {
-        $_SESSION['userLogin'] = $user->getLogin();
-        $this->user = $user;
-    }
-
-    /**
-     * initializeEntity
-     * Sets user class parameter to a user from data source if specified in url, otherwise a new user
-     * @return void
-     */
-    private function initializeUser($id)
-    {
-        if (!empty($id)) { // If a user ID is specified in the URL
-            $this->user = UsersDao::findById($id); // find corresponding user in data source
-        }
-
-        if (!$this->user) { // If no ID specified, or wrong ID specified
-            $this->user = new Users;
-        }
-    }
-
-
-
-    /**
-     * render
-     * renders a template
-     * @param  mixed $templateName template name , or null to redirect to default action
-     * @return void
-     */
-    // private function render($templateName, $vars = [])
+    protected static $dao = "UsersDao";
+    protected static $loggedInUser;
+    // public static function getEntityClass()
     // {
-    //     if ($templateName == null) {
-    //         //si le templet eest nul(ex si on delete un article => aon applele le tmplate par dafault (ici la liste))
-    //         $this->default();
-    //     } else {
 
-    //         // Add shared parameters to the existing ones
-    //         $vars = array_merge($vars, [
-    //             'baseUrl' => SiteUtil::url() . 'public', // absolute url of public folder
-    //             'user' => $this->user,         // current user
-    //             'controller' => $this,         // current user
-    //             'templatePath' => SiteUtil::toAbsolute("app/view/user/$templateName.php")
-    //         ]);
-    //         //pour que ca fonctionne pour toutes les aciton, on passe le nom du template
-    //         include __DIR__ . '/../view/common/base.php';
-    //         //    echo $this->twig->render("$templateName.twig", $vars); // render twig template
+    //     return "Users";
+    // }
+
+    // public static function callActionMethod($action)
+    // {
+    //     self::$entity = self::getUser();
+    //     if (self::$entity == null) {
+    //         $action = "login";
     //     }
+    //     parent::callActionMethod($action);
     // }
 
 
-    /**
-     * read
-     * view user parameters
-     * @return void
-     */
-    private function read()
-    {
-        $this->render('read');
-    }
 
-    protected function login()
+
+    public static function login()
     {
 
         $template = 'login';
-        if (isset($_POST['user'])) {
+        if (isset($_POST['Users'])) {
 
-            $candidate = UsersDao::findOneBy('login', $_POST['user']['username']);
+            $candidate = UsersDao::findOneBy('login', $_POST['Users']['username']);
 
-            if ($candidate != null && $candidate->isPassword($_POST['user']['password'])) {
-                $this->setUser($candidate);
-                $template = null;
+            if ($candidate != null && $candidate->isPassword($_POST['Users']['password'])) {
+
+                self::setLoggedInUser($candidate, $_POST['Users']['password']);
+                header('Location: ' . SiteUtil::url() . 'loc=recipe&action=list');
             }
         }
-        $this->render($template);
+        self::render(['action'=>'login','base'=>'users/baseLogin']);;
     }
 
-    /**
-     * default
-     * default action (called if no action specified, wrong action specified, or null template specified)
-     * @return void
-     */
-    // private function default()
-    // {
-    //     $this->render("listUsers", [
-    //         'users' => UsersDao::findAll()
-    //     ]);
-    // }
 
+    public static function logout()
+    {
+        self::setLoggedInUser(null);
+        
+        header('Location: ' . SiteUtil::url() . 'loc=user&action=login');
+    }
 
 
     /**
      * Get the value of user
      */
-    public function getUser()
+    public static function getLoggedInUser()
     {
-        if (isset($_SESSION['userLogin'])) {
-            $this->user = UsersDao::findOneBy('login', $_SESSION['userLogin']);
+        if (self::$loggedInUser == null &&  isset($_COOKIE['user'])) {
+            $candidate = UsersDao::findOneBy('login', $_COOKIE['user']['login']);
+            if ($candidate->isPassword($_COOKIE['user']['password'])) {
+                self::$loggedInUser = $candidate;
+            };
         }
-        return $this->user;
+        return self::$loggedInUser;
+    }
+
+    public static function setLoggedInUser($user, $plaintextPassword = null)
+    {
+        if ($user != null) {
+            self::$loggedInUser = $user;
+            setcookie("user[login]", $user->getLogin(), 2147483647, '/');
+            setcookie("user[password]", $plaintextPassword, 2147483647, '/');
+        }
     }
 }

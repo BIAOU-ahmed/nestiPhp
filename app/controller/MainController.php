@@ -1,20 +1,39 @@
 <?php
-class MainController{
+SiteUtil::require("controller/UserController.php");
 
-    public function __construct(){
-        $loader = new \Twig\Loader\FilesystemLoader(SiteUtil::toAbsolute('templates/user'));
-        $this->twig = new \Twig\Environment($loader);
-        
-        FormatUtil::sanitize($_POST); // need recursive sanitizing for multidimensional array
+SiteUtil::require("controller/RecipeController.php");
 
-        // action is first slug in url, id second
-        @[$action, $id] = SiteUtil::getUrlParameters();
+session_start();
+class MainController
+{
 
-        $this->initializeUser($id);
-        
-        method_exists($this, $action)?
-            $this->$action(): // if action in URL exists, call it
-            $this->default(); // else call default one
+    public function __construct()
+    {
     }
-    
+
+    public static function processRoute($action = null)
+    {
+
+        FormatUtil::sanitize($_POST); // need recursive sanitizing for multidimensional array
+        FormatUtil::sanitize($_GET);
+        $location = $_GET['loc'] ?? null;
+
+
+        // UserController::setEntity(UserController::getUser());
+        if (UserController::getLoggedInUser() == null) {
+            return  UserController::processAction('login');
+        }
+        
+        switch ($location) {
+            case 'user':
+                UserController::processAction();
+                break;
+            case 'recipe':
+                RecipeController::processAction();
+                break;
+            case 'article':
+                ArticleController::processAction();
+                break;
+        }
+    }
 }
