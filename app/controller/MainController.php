@@ -1,4 +1,5 @@
 <?php
+
 SiteUtil::require("controller/UserController.php");
 
 SiteUtil::require("controller/RecipeController.php");
@@ -16,15 +17,15 @@ class MainController
 
         FormatUtil::sanitize($_POST); // need recursive sanitizing for multidimensional array
         FormatUtil::sanitize($_GET);
-        $location = $_GET['loc'] ?? null;
+        @[$controller, $action, $id] = SiteUtil::getUrlParameters();
 
 
         // UserController::setEntity(UserController::getUser());
         if (UserController::getLoggedInUser() == null) {
             return  UserController::processAction('login');
         }
-        
-        switch ($location) {
+
+        switch ($controller) {
             case 'user':
                 UserController::processAction();
                 break;
@@ -34,6 +35,11 @@ class MainController
             case 'article':
                 ArticleController::processAction();
                 break;
+            case "":
+                RecipeController::processAction();
+                break;
+            default:
+                BaseController::error();
         }
     }
 }

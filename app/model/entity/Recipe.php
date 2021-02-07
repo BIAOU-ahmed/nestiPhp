@@ -1,6 +1,7 @@
 <?php
 SiteUtil::require('model/dao/RecipeDao.php');
-class Recipe extends BaseEntity{
+class Recipe extends BaseEntity
+{
     private $idRecipe;
     private $dateCreation;
     private $name;
@@ -11,28 +12,35 @@ class Recipe extends BaseEntity{
     private $idChef;
     private $idImage;
 
-    public function getComments(): array{
+    public function getComments(): array
+    {
         return $this->getRelatedEntities("Comment");
     }
-    public function getParagraphs(): array{
+    public function getParagraphs(): array
+    {
         return $this->getRelatedEntities("Paragraph");
     }
-    public function getIngredientRecipes(): array{
+    public function getIngredientRecipes(): array
+    {
         return $this->getRelatedEntities("IngredientRecipe");
     }
-    public function getImage(): ?Image{
+    public function getImage(): ?Image
+    {
         return $this->getRelatedEntity("Image");
     }
 
-    public function setImage(Image $i){
+    public function setImage(Image $i)
+    {
         $this->setRelatedEntity($i);
     }
 
-    public function getChef(): ?Chef{ 
+    public function getChef(): ?Chef
+    {
         return $this->getRelatedEntity("Chef");
     }
 
-    public function setChef(Chef $c){
+    public function setChef(Chef $c)
+    {
         $this->setRelatedEntity($c);
     }
 
@@ -64,6 +72,20 @@ class Recipe extends BaseEntity{
         return $this->idRecipe;
     }
 
+
+    public function getTime()
+    {
+        $time = explode(":", $this->getPreparationTime());
+        $hour = $time[0] != 00 ? $time[0] . 'h' : '';
+
+        $hour = ltrim($hour, "0");
+        // $hour = (String) ((int)$hour) ;
+
+
+        $min = $time[1] != 00 ? $time[1] . ' min' : '';
+        $displayTime = $hour . $min;
+        return $displayTime;
+    }
     /**
      * Set the value of idRecipe
      *
@@ -198,7 +220,7 @@ class Recipe extends BaseEntity{
 
     /**
      * Get the value of idChef
-     */ 
+     */
     public function getIdChef()
     {
         return $this->idChef;
@@ -208,7 +230,7 @@ class Recipe extends BaseEntity{
      * Set the value of idChef
      *
      * @return  self
-     */ 
+     */
     public function setIdChef($idChef)
     {
         $this->idChef = $idChef;

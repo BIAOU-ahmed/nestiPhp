@@ -3,7 +3,7 @@
 class Orders extends BaseEntity{
     private $idOrders;
     private $flag;
-    private $creationDate;
+    private $dateCreation;
     private $idUser;
 
     
@@ -11,11 +11,11 @@ class Orders extends BaseEntity{
         return $this->getRelatedEntities("OrderLine");
     }
     
-    public function getUser(): ?User{
+    public function getUser(): ?Users{
         return $this->getRelatedEntity("User");
     }
 
-    public function setUser(User $user){
+    public function setUser(Users $user){
         $this->setRelatedEntity($user);
     }
 
@@ -59,25 +59,7 @@ class Orders extends BaseEntity{
         return $this;
     }
 
-    /**
-     * Get the value of creationDate
-     */
-    public function getCreationDate()
-    {
-        return $this->creationDate;
-    }
-
-    /**
-     * Set the value of creationDate
-     *
-     * @return  self
-     */
-    public function setCreationDate($creationDate)
-    {
-        $this->creationDate = $creationDate;
-
-        return $this;
-    }
+    
 
     /**
      * Get the value of idUser
@@ -95,6 +77,26 @@ class Orders extends BaseEntity{
     public function setIdUser($idUser)
     {
         $this->idUser = $idUser;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dateCreation
+     */ 
+    public function getDateCreation()
+    {
+        return $this->dateCreation;
+    }
+
+    /**
+     * Set the value of dateCreation
+     *
+     * @return  self
+     */ 
+    public function setDateCreation($dateCreation)
+    {
+        $this->dateCreation = $dateCreation;
 
         return $this;
     }

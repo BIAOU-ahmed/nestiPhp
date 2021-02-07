@@ -13,6 +13,8 @@ require_once dirname( __FILE__ ) . '/../app/util/SiteUtil.php';
 
 // SiteUtil::require("controller/UserController.php");
 // new MainController(); // Constructor will determine action 
-$user = UsersDao::findOneBy("login","luther");
-$user->setPasswordHashFromPlaintext("azerty14AZERTY!");
-UsersDao::saveOrUpdate($user);
+// $user = UsersDao::findOneBy("login","luther");
+// $user->setPasswordHashFromPlaintext("azerty14AZERTY!");
+// UsersDao::saveOrUpdate($user);
+$d = new DateTime('NOW');
+echo $d->format('Y-m-d H:i:s');

@@ -29,14 +29,8 @@ class BaseController
 
     public static function processAction($forceAction = null)
     {
-        FormatUtil::sanitize($_POST); // need recursive sanitizing for multidimensional array
-        FormatUtil::sanitize($_GET);
-        //  @[$location, $action, $id] =SiteUtil::getUrlParameters();
-
-
-        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
-        $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
-        $location = filter_input(INPUT_GET, 'loc', FILTER_SANITIZE_STRING);
+     
+         @[$location, $action, $id] =SiteUtil::getUrlParameters();
 
 
         if ($forceAction != null) {
@@ -71,19 +65,22 @@ class BaseController
     }
 
     public static function setupTemplateVars(&$vars,&$templates){
+        @[$location, $action, $id] =SiteUtil::getUrlParameters();
             // Add shared parameters to the existing ones
             $vars = array_merge($vars, [
                 'baseUrl' => SiteUtil::url(), // absolute url of public folder
                 'controller' => self::class,         // current user
                 'templatePath' => SiteUtil::toAbsolute("app/view/".$templates['action'].'.php'),
-                'loggedInUser' => UserController::getLoggedInUser()
+                'loggedInUser' => UserController::getLoggedInUser(),
+                'stylesheet' => $templates['action'],
+                'urlParameters' => ['action'=>$action,'location'=>$location,'id'=>$id]
             ]);
 
     }
 
 
     //ca va chercher dans le dossier error et abvec un / si c'est autre part que dan sle dossier de l'entité en cours
-    protected static function error()
+    public static function error()
     {
         self::render('error/error404');
     }

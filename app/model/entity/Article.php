@@ -53,6 +53,23 @@ class Article extends BaseEntity{
         return $this->getIndirectlyRelatedEntities("Orders", "OrderLine", BaseDao::FLAGS['active']); 
     }
 
+    public function getLastPrice(): String
+    {
+ 
+        $maxDate = 0;
+        $arrayArticlePrice = $this->getArticlePrices();
+
+        foreach ($arrayArticlePrice as $value) {
+            $date =   strtotime($value->getDateStart());
+            if ($maxDate <  $date) {
+                $maxDate =  $date;
+                $price = $value->getPrice();
+            }
+        }
+        return $price;
+    }
+    
+
     /**
      * Get the value of idProduct
      */

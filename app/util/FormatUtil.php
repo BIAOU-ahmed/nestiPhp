@@ -53,6 +53,24 @@ class FormatUtil{
         }
         return substr( $haystack, -$length ) === $needle;
     }
+
+
+       /**
+     * endsWith
+     * check if a string starts with another string
+     * 
+     * @param  mixed $haystack
+     * @param  mixed $needle
+     * @return void
+     */
+    public static function startsWith( $haystack, $needle ) {
+        $length = strlen( $needle );
+        if( !$length ) {
+            return true;
+        }
+        return substr( $haystack, $length ) === $needle;
+    }
+    
 }
 
 ?>

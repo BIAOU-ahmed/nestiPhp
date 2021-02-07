@@ -30,14 +30,9 @@ class BaseEntityController extends baseController
 
     public static function processAction($forceAction = null)
     {
-        FormatUtil::sanitize($_POST); // need recursive sanitizing for multidimensional array
-        FormatUtil::sanitize($_GET);
-        //  @[$location, $action, $id] =SiteUtil::getUrlParameters();
+     
+         @[$location, $action, $id] =SiteUtil::getUrlParameters();
 
-
-        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
-        $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
-        $location = filter_input(INPUT_GET, 'loc', FILTER_SANITIZE_STRING);
 
 
         if ($forceAction != null) {
@@ -101,17 +96,23 @@ class BaseEntityController extends baseController
      */
     public static function edit()
     {
+        
         $templateName = 'edit';
         $templateVars = ["isSubmitted" => !empty($_POST[self::getEntityClass()])];
 
         if ($templateVars["isSubmitted"]) { // if we arrived here by way of the submit button in the edit view
-            self::getEntity()->setParametersFromArray($_POST[self::getEntityClass()]);
+            $entity = self::getEntity();
+            EntityUtil::setFromArray($entity,$_POST[self::getEntityClass()]);
+            FormatUtil::dump(self::getEntity());
+          
             if (self::getEntity()->isValid()) {
-                self::getDao()::saveOrUpdate(self::getEntity());
+                // self::getDao()::saveOrUpdate(self::getEntity());
                 $templateName = null; // null template will redirect to default action
             } else {
                 $templateVars["errors"] = self::getEntity()->getErrors();
+                FormatUtil::dump($templateVars["errors"]);
             }
+           
         }
 
         // template remains "edit" if no POST user parameters, or if user parameters in POST are invalid

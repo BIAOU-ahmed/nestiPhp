@@ -1,0 +1,7 @@
+body {
+    font-family: Lora;
+    background-image: url(../images/bg-nesti.png);
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover
+}

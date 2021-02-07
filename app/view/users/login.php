@@ -32,7 +32,9 @@
 
     </div>
 </div> -->
-
+<?php  if(@$vars['message'] == 'disconnect'){
+    echo 'toto';
+} ?>
 <div class="flex w-full h-full justify-center md:mt-48 items-stretch login-page">
 
     <div class="flex w-1/2  self-center">
@@ -42,7 +44,7 @@
                 <h2 class="text-center text-4xl text-indigo-900 font-display font-semibold lg:text-left xl:text-5xl
                     xl:text-bold flex justify-center">Connexion</h2>
                 <div class="mt-12">
-                    <form id="login-form" class="form" action="<?= $vars['baseUrl'] ?>loc=user&action=login" method="post">
+                    <form id="login-form" class="form" action="<?= $vars['baseUrl'] ?>user/login" method="post">
                         <div>
                             <div class="ml-6 text-sm font-bold text-gray-700 tracking-wide">Identifiant</div>
                             <i class="far fa-user-circle"></i><input class=" w-5/6 ml-2 text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="text" value="luther" placeholder="mike@gmail.com" name="Users[username]">

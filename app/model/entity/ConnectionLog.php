@@ -1,24 +1,24 @@
 <?php
 
 class ConnectionLog extends BaseEntity{
-    private $idUserLog;
+    private $idConnectionLog;
     private $dateConnection;
-    private $idUser;
+    private $idUsers;
 
-    public function getUser(): ?User{ 
+    public function getUser(): ?Users{ 
         return $this->getRelatedEntity("User");
     }
 
-    public function setUser(User $u){
+    public function setUser(Users $u){
         $this->setRelatedEntity($u);
     }
 
     /**
      * Get the value of idUser
      */ 
-    public function getIdUser()
+    public function getIdUsers()
     {
-        return $this->idUser;
+        return $this->idUsers;
     }
 
     /**
@@ -26,9 +26,9 @@ class ConnectionLog extends BaseEntity{
      *
      * @return  self
      */ 
-    public function setIdUser($idUser)
+    public function setIdUsers($idUser)
     {
-        $this->idUser = $idUser;
+        $this->idUsers = $idUser;
 
         return $this;
     }
@@ -56,9 +56,9 @@ class ConnectionLog extends BaseEntity{
     /**
      * Get the value of idUserLog
      */ 
-    public function getIdUserLog()
+    public function getIdConnectionLog()
     {
-        return $this->idUserLog;
+        return $this->idConnectionLog;
     }
 
     /**
@@ -66,9 +66,9 @@ class ConnectionLog extends BaseEntity{
      *
      * @return  self
      */ 
-    public function setIdUserLog($idUserLog)
+    public function setIdConnectionLog($idUserLog)
     {
-        $this->idUserLog = $idUserLog;
+        $this->idConnectionLog = $idUserLog;
 
         return $this;
     }

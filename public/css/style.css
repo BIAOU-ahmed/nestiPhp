@@ -1,51 +1,72 @@
- body {
-     font-family: Lora;
-     background-image: url(../images/bg-nesti.png);
-     background-attachment: fixed;
-     background-position: center;
-     background-size: cover
- }
- /* body {
+/* body {
     margin: 0;
     padding: 0;
     background-color: #17a2b8;
     height: 100vh;
 } */
- 
- #login .container #login-row #login-column #login-box {
-     margin-top: 120px;
-     max-width: 600px;
-     height: 320px;
-     border: 1px solid #9C9C9C;
-     background-color: #EAEAEA;
- }
- 
- #login .container #login-row #login-column #login-box #login-form {
-     padding: 20px;
- }
- 
- #login .container #login-row #login-column #login-box #login-form #register-link {
-     margin-top: -85px;
- }
- 
- .nav-links {
-     background-color: #005663;
-     /* width: 70%; */
- }
- 
- .nav-button {
-     width: 20%;
-     background-color: #00838f;
- }
- 
- .active {
-     background-color: #fac02e;
- }
- 
- .head {
-     height: 10%;
- }
- 
- .icon {
-     background: url('../images/icons/create-svg.png');
- }
+
+#login .container #login-row #login-column #login-box {
+    margin-top: 120px;
+    max-width: 600px;
+    height: 320px;
+    border: 1px solid #9C9C9C;
+    background-color: #EAEAEA;
+}
+
+#login .container #login-row #login-column #login-box #login-form {
+    padding: 20px;
+}
+
+#login .container #login-row #login-column #login-box #login-form #register-link {
+    margin-top: -85px;
+}
+
+.nav-links {
+    background-color: #005663;
+    /* width: 70%; */
+}
+
+.nav-button {
+    width: 20%;
+    background-color: #00838f;
+}
+
+.active {
+    background-color: #fac02e;
+}
+
+.head {
+    height: 10%;
+}
+
+.icon {
+    background: url('../images/icons/create-svg.png');
+}
+
+.order-link {
+    background-color: #fac02e;
+}
+
+progress {
+    color: red;
+}
+
+progress::-webkit-progress-value {
+    background: lightblue;
+}
+
+progress::-moz-progress-bar {
+    background: lightcolor;
+}
+
+progress::-webkit-progress-value {
+    background: red;
+}
+
+progress::-webkit-progress-bar {
+    background: blue;
+}
+
+#orderLineDetail {
+    height: 80%;
+}
