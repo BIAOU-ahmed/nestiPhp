@@ -1,9 +1,20 @@
 <div class="  antialiased sans-serif h-screen">
 
 
-    <!-- <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css">
-<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script> -->
+    <?php
+    // FormatUtil::dump($_POST);
+    // FormatUtil::dump($vars);
+    if (isset($_SESSION['message'])) { ?>
+        <div id="error-message" class="w-full block bg-red-400 text-gray-700 text-center px-6 py-4 border-0 relative mb-4">
 
+            <span class="  inline-block text-2xl align-middle mr-8">
+                Erreur d'identifiant ou de mot de passe
+            </span>
+
+        </div>
+    <?php 
+    unset($_SESSION["message"]);
+} ?>
 
     <div class="py-6 px-4" x-data="datatables()">
         <h1 class="text-4xl py-4 border-b mb-10">Utilisateurs</h1>
@@ -58,7 +69,7 @@
                                 <span class="text-gray-700 py-3 "> <?= $user->getId() ?></span>
                             </td>
                             <td class="border-dashed border-t border-gray-200 ">
-                                <span class="text-gray-700 py-3 "><?= $user->getFirstName().' '. $user->getLastName() ?></span>
+                                <span class="text-gray-700 py-3 "><?= $user->getFirstName() . ' ' . $user->getLastName() ?></span>
                             </td>
                             <td class="border-dashed border-t border-gray-200 ">
                                 <span class="text-gray-700  py-3 "> <?= $user->getRoles()  ?></span>
@@ -73,10 +84,62 @@
                                 <span class="text-gray-700  text-center ">
                                     <a href="<?= $vars['baseUrl'] ?>user/edit/<?= $user->getId() ?>" class="underline ">Modifier</a>
                                 </span> <br>
-                                <span class="text-gray-700 text-center ">
 
-                                    <a href="" class="underline ">Supprimer</a>
-                                </span>
+                                <div x-data="{ showModal<?= $user->getId() ?>: false }" :class="{'overflow-y-hidden': showModal<?= $user->getId() ?> }">
+                                    <main class="flex flex-col sm:flex-row justify-center items-center">
+                                        <a class="cursor-pointer underline  text-gray-700 p-2 w-32   " @click="showModal<?= $user->getId() ?> = true">
+                                            Supprimer
+                                        </a>
+
+                                    </main>
+
+                                    <!-- Modal1 -->
+                                    <div class="fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal<?= $user->getId() ?>" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                                        <div class="relative sm:w-3/4 md:w-1/2 lg:w-1/3  sm:mx-auto my-10 opacity-100">
+                                            <div class="relative bg-gray-300 shadow-lg rounded-md text-gray-900 z-20" @click.away="showModal<?= $user->getId() ?> = false" x-show="showModal<?= $user->getId() ?>" x-transition:enter="transition transform duration-300" x-transition:enter-start="scale-0" x-transition:enter-end="scale-100" x-transition:leave="transition transform duration-300" x-transition:leave-start="scale-100" x-transition:leave-end="scale-0">
+                                                <form action="<?= $vars['baseUrl'] ?>user/delete/<?= $user->getId() ?>" method="post">
+
+
+                                                    <header class="w-full h-40 grid mb-5 flex items-center  ">
+                                                        <div class=" w-full   grid  bg-white h-20">
+
+                                                            <h2 class=" font-semibold text-center justify-self-center self-center "><i class="text-3xl text-red-600 fas fa-exclamation-triangle"></i> Voulez-vous vraiment supprimer l'element: <?= $user->getId() ?> ?</h2>
+
+                                                        </div>
+
+                                                    </header>
+                                                    <main class="  h-20 grid   p-2 text-center">
+                                                        <p class="w-2/3 justify-self-center bg-white rounded-md">
+                                                            Cette action est définitive et irréversible
+                                                        </p>
+                                                    </main>
+                                                    <footer class="">
+
+                                                        <div class="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
+                                                            <button class="bg-red-500  active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease" @click="showModal<?= $user->getId() ?> = false">
+                                                                <span class="text-lg"> Annuller </span>
+                                                            </button>
+
+                                                            <div class="bg-green-500 ml-5 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
+                                                                <button name="delete" type="submit" value="1" class="text-lg text-center  block lg:inline-block lg:mt-0">
+                                                                Confirmer </button> 
+                                                                
+
+                                                            </div>
+                                                        </div>
+                                                    </footer>
+
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+
                             </td>
                         </tr>
                     <?php } ?>

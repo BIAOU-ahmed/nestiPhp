@@ -3,13 +3,13 @@
 class Users extends BaseEntity
 {
 
-    public const VALIDATED_PROPERTIES = [
-        "firstName" => ["notEmpty", "letters"],
-        "lastName" => ["notEmpty", "letters"],
-        "passwordHash" => ["notEmpty", "strong",""],
-        "login" => ["notEmpty", "unique"],
-        "email" => ["email", "unique"]
-    ];
+    // public const VALIDATED_PROPERTIES = [
+    //     "firstName" => ["notEmpty", "letters"],
+    //     "lastName" => ["notEmpty", "letters"],
+    //     "passwordHash" => ["notEmpty", "strong",""],
+    //     "login" => ["notEmpty", "unique"],
+    //     "email" => ["email", "unique"]
+    // ];
 
     private $idUsers;
     private $lastName;
@@ -29,80 +29,83 @@ class Users extends BaseEntity
 
     function __construct()
     {
-        $d = new DateTime('NOW');
-        $this->setDateCreation($d->format('Y-m-d H:i:s'));
-    }
-
-
-
-    /**
-     * isValid
-     * Looks at error array andreturns false if it contains an error
-     * @return bool true if all validators passed, false if just one validator failed
-     */
-    public function isValid()
-    {
-        return empty($this->getErrors());
-    }
-
-
-
-
-
-    /**
-     * validateProperty
-     * Loops through all validators for that property (if any), and returns a list of failed validators
-     * @param  String $fieldName
-     * @return Array errors found, by validator name (or empty array if none found)
-     * example return array:
-     * ['notEmpty' => true],   // error found: empty value
-     */
-    public function validateProperty(String $propertyName)
-    {
-        $propertyErrors = [];
-
-        if (isset(self::VALIDATED_PROPERTIES[$propertyName])) {
-            // Loop through each validator for that field
-            foreach (self::VALIDATED_PROPERTIES[$propertyName] as $validatorName) {
-                // store error states (negated validator) with the validator name as key
-                $errored = !EntityValidatorUtil::$validatorName($this, $propertyName);
-                if ($errored) {
-                    $propertyErrors[$validatorName] = true;
-                }
-            }
+        if($this->getDateCreation()==null){
+            $d = new DateTime('NOW');
+            $this->setDateCreation($d->format('Y-m-d H:i:s'));
         }
 
-        return $propertyErrors;
     }
 
 
-    /**
-     * getErrors
-     * validate each field, store array of failed validators
-     * @return Array multidimensional array of error arrays, stored by property name.
-     * Example returned array: 
-     *  [
-     *      'lastName'  =>  ['notEmpty' => true],
-     *      'tel'       =>  ['notEmpty' => true, 'telephone' => true ],
-     *      'email'     =>  ['unique' => true ],
-     * ]
-     */
-    public function getErrors(): ?array
-    {
-        if ($this->errors == null) {
-            $this->errors = [];
 
-            foreach (self::VALIDATED_PROPERTIES as $propertyName => $validators) {
-                // assign an array of errors in the form ['myValidator' => true, 'myOtherValidator' => false ]
-                $this->errors[$propertyName] = $this->validateProperty($propertyName);
-                if (empty($this->errors[$propertyName])) {
-                    unset($this->errors[$propertyName]); // If no error found, unset empty array
-                }
-            }
-        }
+    // /**
+    //  * isValid
+    //  * Looks at error array andreturns false if it contains an error
+    //  * @return bool true if all validators passed, false if just one validator failed
+    //  */
+    // public function isValid()
+    // {
+    //     return empty($this->getErrors());
+    // }
 
-        return $this->errors;
-    }
+
+
+
+
+    // /**
+    //  * validateProperty
+    //  * Loops through all validators for that property (if any), and returns a list of failed validators
+    //  * @param  String $fieldName
+    //  * @return Array errors found, by validator name (or empty array if none found)
+    //  * example return array:
+    //  * ['notEmpty' => true],   // error found: empty value
+    //  */
+    // public function validateProperty(String $propertyName)
+    // {
+    //     $propertyErrors = [];
+
+    //     if (isset(self::VALIDATED_PROPERTIES[$propertyName])) {
+    //         // Loop through each validator for that field
+    //         foreach (self::VALIDATED_PROPERTIES[$propertyName] as $validatorName) {
+    //             // store error states (negated validator) with the validator name as key
+    //             $errored = !EntityValidatorUtil::$validatorName($this, $propertyName);
+    //             if ($errored) {
+    //                 $propertyErrors[$validatorName] = true;
+    //             }
+    //         }
+    //     }
+
+    //     return $propertyErrors;
+    // }
+
+
+    // /**
+    //  * getErrors
+    //  * validate each field, store array of failed validators
+    //  * @return Array multidimensional array of error arrays, stored by property name.
+    //  * Example returned array: 
+    //  *  [
+    //  *      'lastName'  =>  ['notEmpty' => true],
+    //  *      'tel'       =>  ['notEmpty' => true, 'telephone' => true ],
+    //  *      'email'     =>  ['unique' => true ],
+    //  * ]
+    //  */
+    // public function getErrors(): ?array
+    // {
+    //     if ($this->errors == null) {
+    //         $this->errors = [];
+
+    //         foreach (self::VALIDATED_PROPERTIES as $propertyName => $validators) {
+    //             // assign an array of errors in the form ['myValidator' => true, 'myOtherValidator' => false ]
+    //             $this->errors[$propertyName] = $this->validateProperty($propertyName);
+    //             if (empty($this->errors[$propertyName])) {
+    //                 unset($this->errors[$propertyName]); // If no error found, unset empty array
+    //             }
+    //         }
+    //     }
+
+    //     return $this->errors;
+    // }
 
     public function getCity(): ?City
     {
@@ -127,7 +130,7 @@ class Users extends BaseEntity
 
     public function getComments(): array
     {
-        return $this->getRelatedEntities("Comment", BaseDao::FLAGS['active']);
+        return $this->getRelatedEntities("Comment");
     }
 
     public function getRecipes(): array
@@ -259,6 +262,54 @@ class Users extends BaseEntity
         return $roles;
     }
 
+    public function getChef(){
+        return ChefDao::findById($this->getId());
+    }
+    public function getAdministrator(){
+        return AdministratorDao::findById($this->getId());
+    }
+    public function getModerator(){
+        return ModeratorDao::findById($this->getId());
+    }
+    public function makeChef(){
+        if($this->getChef()==null){
+            $chef = new Chef();
+            $chef->setIdChef($this->getId());
+            ChefDao::save($chef);
+        }
+       
+    }
+    public function makeAdministrator(){
+        if($this->getAdministrator()==null){
+            $administrator = new Administrator();
+            $administrator->setIdAdministrator($this->getId());
+            AdministratorDao::save($administrator);
+        }
+       
+    }
+    public function makeModerator(){
+        if($this->getModerator()==null){
+            $moderator = new Moderator();
+            $moderator->setIdModerator($this->getId());
+            ModeratorDao::save($moderator);
+        }
+       
+    }
+
+    public function isChef(){
+        return $this->getChef()!=null;
+    }
+    public function isAdministrator(){
+        $result = true;
+        if($this->getAdministrator()==null){
+            $result = false;
+        }
+        return $result;
+    }
+    public function isModerator(){
+        return $this->getModerator()!=null;
+    }
+   
     // public function getState()
     // {
 

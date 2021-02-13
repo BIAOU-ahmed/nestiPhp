@@ -15,9 +15,7 @@
 class BaseController
 {
 
-    protected static $entity;
-    protected static $entityClass;
-    protected static $dao;
+    protected static $templateVars = [];
 
 
     public static function callActionMethod($action)
@@ -29,8 +27,8 @@ class BaseController
 
     public static function processAction($forceAction = null)
     {
-     
-         @[$location, $action, $id] =SiteUtil::getUrlParameters();
+
+        @[$location, $action, $id] = SiteUtil::getUrlParameters();
 
 
         if ($forceAction != null) {
@@ -49,32 +47,49 @@ class BaseController
      */
     protected static function render($templates, $vars = [])
     {
+        // echo 'in render';
         if ($templates == null) {
             //si le templet eest nul(ex si on delete un article => aon applele le tmplate par dafault (ici la liste))
             self::error();
         } else {
             if (!is_array($templates)) {
-                 $templates =['action'=>$templates,'base'=>'common/base'];
+                $templates = ['action' => $templates, 'base' => 'common/base'];
             }
-     
-         get_called_class()::setupTemplateVars($vars,$templates);
-        
+
+            get_called_class()::setupTemplateVars($vars, $templates);
+            // $vars = static::$templateVars;
             //repars a la racine du porjet
-            include_once SiteUtil::toAbsolute('app/view/'.$templates['base'].'.php');
+            include_once SiteUtil::toAbsolute('app/view/' . $templates['base'] . '.php');
         }
     }
 
-    public static function setupTemplateVars(&$vars,&$templates){
-        @[$location, $action, $id] =SiteUtil::getUrlParameters();
-            // Add shared parameters to the existing ones
-            $vars = array_merge($vars, [
-                'baseUrl' => SiteUtil::url(), // absolute url of public folder
-                'controller' => self::class,         // current user
-                'templatePath' => SiteUtil::toAbsolute("app/view/".$templates['action'].'.php'),
-                'loggedInUser' => UserController::getLoggedInUser(),
-                'stylesheet' => $templates['action'],
-                'urlParameters' => ['action'=>$action,'location'=>$location,'id'=>$id]
-            ]);
+    public static function addVars($newVars){
+        static::$templateVars = array_merge(static::$templateVars,$newVars);
+    }
+    public static function setupTemplateVars(&$vars, &$templates)
+    {
+        $vars = array_merge($vars, static::$templateVars);
+        
+        $controller = SiteUtil::getUrlParameters()[0] ?? "";
+        $id = SiteUtil::getUrlParameters()[2] ?? "";
+        $action = SiteUtil::getUrlParameters()[1] ?? "";
+        // Add shared parameters to the existing ones
+
+
+        $vars = array_merge($vars, [
+            'baseUrl' => SiteUtil::url(), // absolute url of public folder
+            'controller' => self::class,         // current user
+            'templatePath' => SiteUtil::toAbsolute("app/view/" . $templates['action'] . '.php'),
+            'loggedInUser' => UserController::getLoggedInUser(),
+            'stylesheet' => $templates['action'],
+            'urlParameters' => ['action' => $action, 'location' => $controller, 'id' => $id]
+        ]);
+
+        // if(isset($vars['entities']) && $action=="delete"){
+        //     $vars['message'] ='errorLogin';
+        //     header('Location: ' . SiteUtil::url() . $controller.'/list');
+        // }
+
 
     }
 

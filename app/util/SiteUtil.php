@@ -65,6 +65,8 @@ class SiteUtil
                 self::require("model/dao/$className.php");
             } elseif (FormatUtil::endsWith($className, "Util")) {
                 self::require("util/$className.php");
+            } elseif (FormatUtil::endsWith($className, "Builder")) {
+                self::require("form/$className.php");
             } else {
                 self::require("model/entity/$className.php");
             }

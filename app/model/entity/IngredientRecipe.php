@@ -7,8 +7,8 @@ class IngredientRecipe extends BaseEntity{
     private $recipePosition;
     private $idUnit;
     
-    public function getIngredient(): Ingredient{
-        return $this->getRelatedEntity("Ingredient");
+    public function getIngredient(): ?Ingredient{
+        return IngredientDao::findById($this->getIdProduct());
     }
 
     public function setIngredient(Ingredient $i){

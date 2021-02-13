@@ -110,6 +110,7 @@ class BaseDao
     public static function findAll($flag=null): array
     {
         $pdo = DatabaseUtil::connect();
+        //FormatUtil::dump($pdo);
         $sql = "SELECT * FROM " . self::getTableName() . " ORDER BY " . self::getPkColumnName() . " DESC";
         
         $values = [];
@@ -143,6 +144,7 @@ class BaseDao
     public static function findAllBy(String $key, $value, $flag=null)
     {
         $pdo = DatabaseUtil::connect();
+       
         $sql = "SELECT * FROM " . self::getTableName() . " WHERE $key = ?";
         $values = [$value];
 
@@ -228,6 +230,11 @@ class BaseDao
             $pdo = DatabaseUtil::connect();
             $currentDao = $currentClass::getDaoClass();
             
+            if($currentDao::findById($entity->getId()) != null){
+                $insertedId = $entity->getId();
+                continue;
+            }
+
             $columnNames = $currentDao::getColumnNames(false); // get column names for current table
 
             // populate values with the entity properties that correspond to the column names
@@ -253,6 +260,8 @@ class BaseDao
 
             $insertedId = $pdo->lastInsertId();
         }
+        $entity->setId($insertedId);
+        // FormatUtil::dump($entity);
         return $entity->getId(); // Last inserted ID is entity's id
     }
 
@@ -309,10 +318,8 @@ class BaseDao
      * @return void
      */
     public static function delete($entity) {
-        $pdo = DatabaseUtil::connect();
-        $sql = "DELETE FROM " . self::getTableName() . " WHERE " . self::getPkColumnName() . " = ?";
-        $q = $pdo->prepare($sql);
-        $q->execute([EntityUtil::get($entity, self::getPkColumnName()) ?? null]); // if entity doesn't exist, null instead of pk
+        $entity ->setFlag("b");
+        static::update($entity);
     }
 
     public static function getManyToMany($startEntity, $joinEntityClass, $endEntityClass, $flag=null){

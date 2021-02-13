@@ -50,9 +50,18 @@ class UserController extends BaseEntityController
                 $newConnection->setDateConnection($today);
                 ConnectionLogDao::saveOrUpdate($newConnection);
                 header('Location: ' . SiteUtil::url() . 'recipe/list');
+            }else{
+                $templateVars = ['message' => 'errorLogin'];
+
             }
         }
-        self::render(['action' => 'login', 'base' => 'users/baseLogin']);;
+        self::render(['action' => 'login', 'base' => 'users/baseLogin'],$templateVars);;
+    }
+    public static function orderLines()
+    {
+
+       
+        self::render(['action' => 'userOrderLines', 'base' => 'users/baseLogin']);
     }
 
 
@@ -86,23 +95,75 @@ class UserController extends BaseEntityController
         $templateVars['orderLines'] = [];
 
         $orders = self::getEntity()->getOrders();
-        foreach($orders as $order){
+        foreach ($orders as $order) {
             $templateVars['orderLines'][$order->getId()] = $order->getOrderLines();
-            foreach($order->getOrderLines() as $element){
-                FormatUtil::dump((array) $element);
+            foreach ($order->getOrderLines() as $element) {
+                // FormatUtil::dump((array) $element);
             }
         }
+        FormatUtil::dump(static::getEntity());
         if ($templateVars["isSubmitted"]) { // if we arrived here by way of the submit button in the edit view
             $user = static::getEntity();
-            EntityUtil::setFromArray($user, $_POST[static::getEntityClass()]);
+            // EntityUtil::setFromArray($user, $_POST[static::getEntityClass()]);
             FormatUtil::dump(static::getEntity());
+            $formBuilder = new UsersFormBuilder($user, $_POST[static::getEntityClass()]);
+            // FormatUtil::dump( $_POST['roles']);
+            // FormatUtil::dump($formBuilder);
+            $city = CityDao::findOneBy("name", $_POST['Users']['city']);
+            if ($formBuilder->isValid()) {
+                if (!$city) {
+                    $city = new City();
+                    $city->setName($_POST['Users']['city']);
+                    $cityId = CityDao::save($city);
+                    $city->setId($cityId);
+                }
+                // FormatUtil::dump($city);
+                $validatedProperties = $formBuilder->getParameters();
+                // FormatUtil::dump($validatedProperties);
+                if (isset($validatedProperties['city'])) {
+                    echo "test";
+                    unset($validatedProperties['city']);
+                }
 
-            if (static::getEntity()->isValid()) {
+                if (isset($validatedProperties['password'])) {
+                    $plainTextPassword = $validatedProperties['password'];
+                    // FormatUtil::dump($plainTextPassword);
+                    unset($validatedProperties['password']);
+                    $user->setPasswordHashFromPlaintext($plainTextPassword);
+                }
+
+                EntityUtil::setFromArray($user, $validatedProperties);
+                $user->setIdCity($city->getId());
                 
-                // self::getDao()::saveOrUpdate(self::getEntity());
-                $templateName = null; // null template will redirect to default action
+
+                
+                self::getDao()::saveOrUpdate($user);
+
+                if (isset($_POST['roles']['admin'])) {
+                    $user->makeAdministrator();
+                }
+                if (isset($_POST['roles']['chef'])) {
+                    $user->makeChef();
+                }
+                if (isset($_POST['roles']['moderator'])) {
+                    $user->makeModerator();
+                }
+
+                $templateName = ""; // null template will redirect to default action
             } else {
-                $templateVars["errors"] = static::getEntity()->getErrors();
+                $templateVars["errors"] = $formBuilder->getErrors();
+                $properties = $_POST[static::getEntityClass()];
+                if (isset($properties['password'])) {
+                    unset($properties['password']);
+                }
+
+                if (isset($properties['city'])) {
+                    echo "test";
+                    unset($properties['city']);
+                }
+
+                EntityUtil::setFromArray($user, $properties);
+
                 FormatUtil::dump($templateVars["errors"]);
             }
         }

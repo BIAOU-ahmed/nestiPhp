@@ -11,26 +11,26 @@ class EntityValidatorUtil
     /**
      * notEmpty
      * validates if property value is not empty
-     * @param  mixed $entity whose property we must check
+     * @param  mixed $parameters whose property we must check
      * @param  String $parameterName name of property whose value we must check
      * @return bool true if validates
      */
-    public static function notEmpty($entity, String $parameterName): bool
+    public static function notEmpty($entity,$parameters, String $parameterName): bool
     {
-        return !empty(self::_get($entity, $parameterName));
+        return !empty($parameters[$parameterName]);
     }
 
     /**
      * email
      * validates if property value is a valid email
-     * @param  mixed $entity whose property we must check
+     * @param  mixed $parameters whose property we must check
      * @param  String $parameterName name of property whose value we must check
      * @return bool true if validates
      */
-    public static function email($entity, String $parameterName): bool
+    public static function email($entity,$parameters, String $parameterName): bool
     {
         return filter_var(
-            self::_get($entity, $parameterName),
+            $parameters[$parameterName],
             FILTER_VALIDATE_EMAIL
         );
     }
@@ -38,60 +38,128 @@ class EntityValidatorUtil
     /**
      * telephone
      * validates if property value is a valid telephone number
-     * @param  mixed $entity whose property we must check
+     * @param  mixed $parameters whose property we must check
      * @param  String $parameterName name of property whose value we must check
      * @return bool true if validates
      */
-    public static function telephone($entity, String $parameterName): bool
+    public static function telephone($entity,$parameters, String $parameterName): bool
     {
         return preg_match(
             "/^\+?[0-9]+$/", // only numbers, with optional "+" in front
-            self::_get($entity, $parameterName)
+            $parameters[$parameterName]
+        );
+    }
+
+    /**
+     * telephone
+     * validates if property value is a valid telephone number
+     * @param  mixed $parameters whose property we must check
+     * @param  String $parameterName name of property whose value we must check
+     * @return bool true if validates
+     */
+    public static function numeric($entity,$parameters, String $parameterName): bool
+    {
+        return preg_match(
+            "/^[0-9]+$/", // only numbers, with optional "+" in front
+            $parameters[$parameterName]
+        );
+    }
+
+    public static function uciqueNumber($entity,$parameters, String $parameterName): bool
+    {
+        return preg_match(
+            "/^[0-5]{1}+$/", // only numbers, with optional "+" in front
+            $parameters[$parameterName]
         );
     }
 
 
-    public static function strong($entity, String $parameterName)
+    public static function strong($entity,$parameters, String $parameterName)
     {
-        FormatUtil::dump(self::_get($entity, $parameterName));
+        // FormatUtil::dump($parameters[$parameterName]);
         $n = 0;
-        $regex = "[0-9]";
-        $regexLower = "/[a-z]/";
-        $regexUpper = "/[A-Z]+/";
 
-        if (preg_match('@[0-9]@', self::_get($entity, $parameterName))) {
+        if (static::haveNumber($entity,$parameters,$parameterName)) {
             $n += 10;
             echo "in digit";
         }
-        if (preg_match($regexLower, self::_get($entity, $parameterName))) {
+        if (static::haveLower($entity,$parameters,$parameterName)) {
             $n += 26;
             echo "in lower";
         }
-        if (preg_match($regexUpper, self::_get($entity, $parameterName))) {
+        if (static::haveUpper($entity,$parameters,$parameterName)) {
             $n += 26;
             echo "in UPER";
         }
-        if (preg_match('/[!@#$%^&*-]/', self::_get($entity, $parameterName))) {
+        if (static::haveSpecialChar($entity,$parameters,$parameterName)) {
             $n += 8;
             echo "in spe";
         }
-        FormatUtil::dump(round(strlen(self::_get($entity, $parameterName))) * (log($n) / log(2)));
-        FormatUtil::dump(round(strlen(self::_get($entity, $parameterName))));
-        $result = round(strlen(self::_get($entity, $parameterName))) * (log($n) / log(2));
+      
+        $result = round(strlen($parameters[$parameterName])) * (log($n) / log(2));
 
         return $result >= 80;
+    }
+
+    public static function haveNumber($entity,$parameters, String $parameterName)
+    {
+        
+        $result = false;
+        if (preg_match('@[0-9]@', $parameters[$parameterName])) {
+            $result = true;
+        }
+ 
+
+        return $result;
+    }
+
+    public static function haveLower($entity,$parameters, String $parameterName)
+    {
+      
+        $regexLower = "/[a-z]/";
+
+        $result = false;
+        if (preg_match($regexLower, $parameters[$parameterName])) {
+            $result = true;
+        }
+
+        return $result;
+       
+    }
+
+    public static function haveUpper($entity,$parameters, String $parameterName)
+    {
+       
+        $regexUpper = "/[A-Z]+/";
+
+        $result = false;
+        if (preg_match($regexUpper, $parameters[$parameterName])) {
+            $result = true;
+        }
+
+        return $result;
+    }
+
+    public static function haveSpecialChar($entity,$parameters, String $parameterName)
+    {
+        $result = false;
+        if (preg_match('/[!@#$%^&*-]/', $parameters[$parameterName])) {
+            $result = true;
+        }
+    
+        return $result;
     }
     /**
      * url
      * validates if property value is a valid url 
-     * @param  mixed $entity whose property we must check
+     * @param  mixed $parameters whose property we must check
      * @param  String $parameterName name of property whose value we must check
      * @return bool true if validates
      */
-    public static function url($entity, String $parameterName): bool
+    public static function url($entity,$parameters, String $parameterName): bool
     {
         return filter_var(
-            self::_get($entity, $parameterName),
+            $parameters[$parameterName],
             FILTER_VALIDATE_URL // Need to use strict identical operator with FILTER_VALIDATE_URL
         ) === true;
     }
@@ -99,36 +167,37 @@ class EntityValidatorUtil
     /**
      * url
      * validates if property value is made up of letters, spaces, and hyphens
-     * @param  mixed $entity whose property we must check
+     * @param  mixed $parameters whose property we must check
      * @param  String $parameterName name of property whose value we must check
      * @return bool true if validates
      */
-    public static function letters($entity, String $parameterName): bool
+    public static function letters($entity,$parameters, String $parameterName): bool
     {
         return preg_match(
             "/^[a-zA-ZÀ-ÿ\- ]*$/", // only letters, spaces, and hyphens (including accents)
-            self::_get($entity, $parameterName)
+            $parameters[$parameterName]
         );
     }
 
 
+
     /**
      * unique
-     * validates if no other entity in datasource (excluding currently-checked entity) has the same property value
-     * @param  mixed $entity whose property we must check
+     * validates if no other parameters in datasource (excluding currently-checked parameters) has the same property value
+     * @param  mixed $parameters whose property we must check
      * @param  String $parameterName name of property whose value we must check
      * @return bool true if validates
      */
-    public static function unique($entity, String $parameterName): bool
+    public static function unique($entity,$parameters, String $parameterName): bool
     {
-        $value = self::_get($entity, $parameterName);
+        $value = $parameters[$parameterName];
         $entityInDb = $entity->getDaoClass()::findOneBy($parameterName, $value);
 
         // first, we must check if property value was not changed from the one in database
         if (
-            $entityInDb != null // If entity exists with same value in the same property
+            $entityInDb != null // If parameters exists with same value in the same property
             &&  $entityInDb->getId() == $entity->getId()
-        ) { // Unique constraint is only satisfied if entity we're checking is the same as the one in database
+        ) { // Unique constraint is only satisfied if parameters we're checking is the same as the one in database
             $valid = true;
         } else {
             $valid = $entityInDb == null;
@@ -140,12 +209,12 @@ class EntityValidatorUtil
     /**
      * _get
      * convenience method: gets a property value from an object
-     * @param  mixed $entity entity whose property we need the value of
+     * @param  mixed $parameters parameters whose property we need the value of
      * @param  String $parameterName name of property whose value we need
      * @return mixed property value
      */
-    private static function _get($entity, String $parameterName)
+    private static function _get($parameters, String $parameterName)
     {
-        return $entity->{"get" . ucfirst($parameterName)}();
+        return $parameters->{"get" . ucfirst($parameterName)}();
     }
 }

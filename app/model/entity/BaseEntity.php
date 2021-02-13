@@ -136,6 +136,6 @@ class BaseEntity{
      */
     protected function getIndirectlyRelatedEntities(String $relatedEntityClass, String $joinClass, $flag = null): array
     {
-        return self::getDaoClass()::getManyToMany($this,  $joinClass , $relatedEntityClass);
+        return self::getDaoClass()::getManyToMany($this,  $joinClass , $relatedEntityClass,$flag);
     }
 }

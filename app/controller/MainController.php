@@ -17,7 +17,10 @@ class MainController
 
         FormatUtil::sanitize($_POST); // need recursive sanitizing for multidimensional array
         FormatUtil::sanitize($_GET);
-        @[$controller, $action, $id] = SiteUtil::getUrlParameters();
+        $controller = SiteUtil::getUrlParameters()[0] ?? "";
+        $id = SiteUtil::getUrlParameters()[2] ?? "";
+        $action = SiteUtil::getUrlParameters()[1] ?? "";
+      
 
 
         // UserController::setEntity(UserController::getUser());

@@ -47,6 +47,15 @@ class Orders extends BaseEntity{
         return $this->flag;
     }
 
+
+    public function getPrice(){
+        $orderLines = $this->getOrderLines();
+        $price = 0;
+        foreach($orderLines as $line){
+            $price +=(INT) $line->getArticle()->getLastPrice() * $line->getQuantity();
+        }
+        return $price;
+    }
     /**
      * Set the value of flag
      *

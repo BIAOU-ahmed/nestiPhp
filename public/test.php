@@ -16,5 +16,5 @@ require_once dirname( __FILE__ ) . '/../app/util/SiteUtil.php';
 // $user = UsersDao::findOneBy("login","luther");
 // $user->setPasswordHashFromPlaintext("azerty14AZERTY!");
 // UsersDao::saveOrUpdate($user);
-$d = new DateTime('NOW');
-echo $d->format('Y-m-d H:i:s');
+// $d = new DateTime('NOW');
+// echo $d->format('Y-m-d H:i:s');

@@ -1,24 +1,36 @@
 <?php
 
-class Paragraph extends BaseEntity{
+class Paragraph extends BaseEntity
+{
     private $idParagraph;
     private $content;
-    private $paragraphOrder;
+    private $paragraphPosition;
     private $dateCreation;
     private $idRecipe;
 
-    public function getRecipe(): Recipe{
-        return $this->getRelatedEntity("Recipe",BaseDao::FLAGS['active']);
+
+    function __construct()
+    {
+        if ($this->getDateCreation() == null) {
+            $d = new DateTime('NOW');
+            $this->setDateCreation($d->format('Y-m-d H:i:s'));
+        }
     }
 
-    public function setRecipe(Recipe $r){
+    public function getRecipe(): Recipe
+    {
+        return $this->getRelatedEntity("Recipe", BaseDao::FLAGS['active']);
+    }
+
+    public function setRecipe(Recipe $r)
+    {
         $this->setRelatedEntity($r);
     }
 
 
     /**
      * Get the value of idRecipe
-     */ 
+     */
     public function getIdRecipe()
     {
         return $this->idRecipe;
@@ -28,7 +40,7 @@ class Paragraph extends BaseEntity{
      * Set the value of idRecipe
      *
      * @return  self
-     */ 
+     */
     public function setIdRecipe($idRecipe)
     {
         $this->idRecipe = $idRecipe;
@@ -38,7 +50,7 @@ class Paragraph extends BaseEntity{
 
     /**
      * Get the value of dateCreation
-     */ 
+     */
     public function getDateCreation()
     {
         return $this->dateCreation;
@@ -48,7 +60,7 @@ class Paragraph extends BaseEntity{
      * Set the value of dateCreation
      *
      * @return  self
-     */ 
+     */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
@@ -56,29 +68,11 @@ class Paragraph extends BaseEntity{
         return $this;
     }
 
-    /**
-     * Get the value of paragraphOrder
-     */ 
-    public function getParagraphOrder()
-    {
-        return $this->paragraphOrder;
-    }
 
-    /**
-     * Set the value of paragraphOrder
-     *
-     * @return  self
-     */ 
-    public function setParagraphOrder($paragraphOrder)
-    {
-        $this->paragraphOrder = $paragraphOrder;
-
-        return $this;
-    }
 
     /**
      * Get the value of content
-     */ 
+     */
     public function getContent()
     {
         return $this->content;
@@ -88,7 +82,7 @@ class Paragraph extends BaseEntity{
      * Set the value of content
      *
      * @return  self
-     */ 
+     */
     public function setContent($content)
     {
         $this->content = $content;
@@ -98,7 +92,7 @@ class Paragraph extends BaseEntity{
 
     /**
      * Get the value of idParagraph
-     */ 
+     */
     public function getIdParagraph()
     {
         return $this->idParagraph;
@@ -108,11 +102,56 @@ class Paragraph extends BaseEntity{
      * Set the value of idParagraph
      *
      * @return  self
-     */ 
+     */
     public function setIdParagraph($idParagraph)
     {
         $this->idParagraph = $idParagraph;
 
         return $this;
+    }
+
+
+
+    /**
+     * Get the value of paragraphPosition
+     */
+    public function getParagraphPosition()
+    {
+        return $this->paragraphPosition;
+    }
+
+    /**
+     * Set the value of paragraphPosition
+     *
+     * @return  self
+     */
+    public function setParagraphPosition($paragraphPosition)
+    {
+        $this->paragraphPosition = $paragraphPosition;
+
+        return $this;
+    }
+
+    public function getPreviousParagraph()
+    {
+        $values = [$this->getParagraphPosition(), $this->getIdRecipe()];
+        $allPrev = ParagraphDao::findPrevOrFollo($values, "<","DESC");
+        
+        // usort($allPrev, function ($a, $b) {
+        //     return strcmp($a->getParagraphPosition(), $b->getParagraphPosition());
+        // });
+        // echo count($allPrev);
+        return $allPrev[0];
+    }
+    public function getFollowingParagraph()
+    {
+        $values = [$this->getParagraphPosition(), $this->getIdRecipe()];
+        $allPrev = ParagraphDao::findPrevOrFollo($values, ">","DESC");
+        
+        // usort($allPrev, function ($a, $b) {
+        //     return strcmp($a->getParagraphPosition(), $b->getParagraphPosition());
+        // });
+        // echo count($allPrev);
+        return $allPrev[count($allPrev)-1];
     }
 }

@@ -5,3 +5,11 @@ body {
     background-position: center;
     background-size: cover
 }
+
+#disconnect-message {
+    background-color: #b0d41c;
+}
+
+#error-message {
+    background-color: #fb3939;
+}

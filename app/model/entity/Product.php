@@ -31,6 +31,24 @@ class Product extends BaseEntity{
         return $this;
     }
 
+    public function getIngredient(){
+        return IngredientDao::findById($this->getId());
+    }
+
+    public function makeIngredient(){
+        if($this->getIngredient()==null){
+            $ing = new Ingredient();
+            $ing->setIdIngredient($this->getId());
+            IngredientDao::save($ing);
+        }
+       
+    }
+
+    public function isChef(){
+        return $this->getIngredient()!=null;
+    }
+
+
     /**
      * Get the value of name
      */ 

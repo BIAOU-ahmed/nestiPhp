@@ -12,17 +12,39 @@ class Recipe extends BaseEntity
     private $idChef;
     private $idImage;
 
+    private $errors;
+
+    function __construct()
+    {
+        if ($this->getDateCreation() == null) {
+            $d = new DateTime('NOW');
+            $this->setDateCreation($d->format('Y-m-d H:i:s'));
+        }
+        if ($this->getFlag() == null) {
+
+            $this->setFlag("w");
+        }
+    }
+
     public function getComments(): array
     {
         return $this->getRelatedEntities("Comment");
     }
     public function getParagraphs(): array
     {
-        return $this->getRelatedEntities("Paragraph");
+        $paragraphs = $this->getRelatedEntities("Paragraph");
+        usort($paragraphs, function ($a, $b) {
+            return strcmp($a->getParagraphPosition(), $b->getParagraphPosition());
+        });
+        return $paragraphs;
     }
     public function getIngredientRecipes(): array
     {
-        return $this->getRelatedEntities("IngredientRecipe");
+        $ingredientRecipe = $this->getRelatedEntities("IngredientRecipe");
+        usort($ingredientRecipe, function ($a, $b) {
+            return strcmp($a->getRecipePosition(), $b->getRecipePosition());
+        });
+        return $ingredientRecipe;
     }
     public function getImage(): ?Image
     {
@@ -75,14 +97,16 @@ class Recipe extends BaseEntity
 
     public function getTime()
     {
-        $time = explode(":", $this->getPreparationTime());
-        $hour = $time[0] != 00 ? $time[0] . 'h' : '';
-
+        $time = (int) $this->getPreparationTime();
+        $hour = intdiv($time, 60);
+        $min = fmod($time, 60);
         $hour = ltrim($hour, "0");
+        $min = ltrim($min, "0");
         // $hour = (String) ((int)$hour) ;
 
+        $hour = $hour ? $hour . 'h' : '';
+        $min = $min ? $min . 'min' : '';
 
-        $min = $time[1] != 00 ? $time[1] . ' min' : '';
         $displayTime = $hour . $min;
         return $displayTime;
     }

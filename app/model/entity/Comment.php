@@ -18,11 +18,11 @@ class Comment extends BaseEntity{
         $this->setRelatedEntity($m);
     }
 
-    public function getUser(): ?User{
+    public function getUser(): ?Users{
         return $this->getRelatedEntity("User");
     }
 
-    public function setUser(User $user){
+    public function setUser(Users $user){
         $this->setRelatedEntity($user);
     }
 

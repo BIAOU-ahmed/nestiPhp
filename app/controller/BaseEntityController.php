@@ -30,8 +30,10 @@ class BaseEntityController extends baseController
 
     public static function processAction($forceAction = null)
     {
-     
-         @[$location, $action, $id] =SiteUtil::getUrlParameters();
+
+        $controller = SiteUtil::getUrlParameters()[0] ?? "";
+        $id = SiteUtil::getUrlParameters()[2] ?? "";
+        $action = SiteUtil::getUrlParameters()[1] ?? "";
 
 
 
@@ -48,12 +50,19 @@ class BaseEntityController extends baseController
 
     public static function setupTemplateVars(&$vars, &$templates)
     {
+        // $parameter = SiteUtil::getUrlParameters()[2] ?? "";
+        // if ($parameter == "deleted") {
+        //     static::addVars(["message" => "deleted"]);
+        // }
+
         parent::setupTemplateVars($vars, $templates);
         if (strpos($templates['action'], '/') === false) {
 
             $templates['action'] = strtolower(self::getEntityClass()) . "/" . $templates['action'];
         }
 
+       
+        
         // Add shared parameters to the existing ones
         $vars = array_merge($vars, [
             'entity' =>  self::getEntity(),
@@ -96,15 +105,15 @@ class BaseEntityController extends baseController
      */
     public static function edit()
     {
-        
+
         $templateName = 'edit';
         $templateVars = ["isSubmitted" => !empty($_POST[self::getEntityClass()])];
 
         if ($templateVars["isSubmitted"]) { // if we arrived here by way of the submit button in the edit view
             $entity = self::getEntity();
-            EntityUtil::setFromArray($entity,$_POST[self::getEntityClass()]);
-            FormatUtil::dump(self::getEntity());
-          
+            EntityUtil::setFromArray($entity, $_POST[self::getEntityClass()]);
+            // FormatUtil::dump(self::getEntity());
+
             if (self::getEntity()->isValid()) {
                 // self::getDao()::saveOrUpdate(self::getEntity());
                 $templateName = null; // null template will redirect to default action
@@ -112,7 +121,6 @@ class BaseEntityController extends baseController
                 $templateVars["errors"] = self::getEntity()->getErrors();
                 FormatUtil::dump($templateVars["errors"]);
             }
-           
         }
 
         // template remains "edit" if no POST user parameters, or if user parameters in POST are invalid
@@ -126,14 +134,37 @@ class BaseEntityController extends baseController
      */
     public static function delete()
     {
-        $templateName = 'delete';
 
-        if (!empty($_POST)) { // if we arrived here by way of the submit button in the delete view
+        FormatUtil::dump($_POST);
+        if (!empty($_POST)) {
+            $controller = SiteUtil::getUrlParameters()[0] ?? "";
+            $id = SiteUtil::getUrlParameters()[2] ?? "";
+            $action = SiteUtil::getUrlParameters()[1] ?? "";
+            $templateName = 'delete';
+            $templateVars = ['message' => 'deleted'];
+            FormatUtil::dump($controller);
+            FormatUtil::dump($id);
+            FormatUtil::dump(self::getEntity());
             self::getDao()::delete(self::getEntity());
-            $templateName = null;
-        }
+            $_SESSION['message'] = "deleted";
+            header('Location: ' . SiteUtil::url() . $controller.'/list');
+            // self::render(null, $templateVars);
 
-        self::render($templateName);
+            // header('Location: ' . SiteUtil::url() . $controller.'/list?message=deleted');
+            // header('Location: ' . SiteUtil::url() . $controller . '/list/deleted');
+
+            exit();
+            // self::render(['action' => 'list', 'base' => 'common/base'],$templateVars);
+        }
+        // static::render($templateName, $templateVars);
+        // $templateName = 'delete';
+
+        // if (!empty($_POST)) { // if we arrived here by way of the submit button in the delete view
+        //     self::getDao()::delete(self::getEntity());
+        //     $templateName = null;
+        // }
+
+        // self::render($templateName);
     }
 
     public static function list()

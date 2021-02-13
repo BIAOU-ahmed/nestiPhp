@@ -32,12 +32,29 @@
 
     </div>
 </div> -->
-<?php  if(@$vars['message'] == 'disconnect'){
-    echo 'toto';
-} ?>
+
 <div class="flex w-full h-full justify-center md:mt-48 items-stretch login-page">
 
-    <div class="flex w-1/2  self-center">
+    <div class="flex flex-col w-1/2  self-center">
+        <?php if (@$vars['message'] == 'disconnect') { ?>
+            <div id="disconnect-message" class="w-full block text-gray-700 text-center px-6 py-4 border-0 relative mb-4">
+
+                <span class="inline-block text-2xl align-middle mr-8">
+                    Déconnexion réussi
+                </span>
+
+            </div>
+        <?php } ?>
+
+        <?php if (@$vars['message'] == 'errorLogin') { ?>
+            <div id="error-message"  class="w-full block bg-red-400 text-gray-700 text-center px-6 py-4 border-0 relative mb-4">
+
+                <span class="  inline-block text-2xl align-middle mr-8">
+                    Erreur d'identifiant ou de mot de passe
+                </span>
+
+            </div>
+        <?php } ?>
         <div class="lg:w-full xl:max-w-screen-sm shadow-2xl bg-white">
 
             <div class="mt-10 px-12 sm:px-24 md:px-48 lg:px-12 lg:mt-16 xl:px-24 xl:max-w-2xl">
@@ -47,7 +64,7 @@
                     <form id="login-form" class="form" action="<?= $vars['baseUrl'] ?>user/login" method="post">
                         <div>
                             <div class="ml-6 text-sm font-bold text-gray-700 tracking-wide">Identifiant</div>
-                            <i class="far fa-user-circle"></i><input class=" w-5/6 ml-2 text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="text" value="luther" placeholder="mike@gmail.com" name="Users[username]">
+                            <i class="far fa-user-circle"></i><input class=" w-5/6 ml-2 text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="text" value="luther" name="Users[username]">
                         </div>
                         <div class="mt-8">
                             <div class="flex justify-between items-center">
@@ -56,7 +73,7 @@
                                 </div>
 
                             </div>
-                            <i class="fas fa-lock"></i> <input class="w-5/6 ml-2 text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" value="azerty14AZERTY!" type="password" name="Users[password]" placeholder="Enter your password">
+                            <i class="fas fa-lock"></i> <input class="w-5/6 ml-2 text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" value="azerty14AZERTY!" type="password" name="Users[password]">
                         </div>
                         <div class="mt-10">
                             <button class="float-right bg-indigo-500 text-gray-100 p-4 mb-2 rounded tracking-wide
