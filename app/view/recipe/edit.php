@@ -5,6 +5,11 @@ if ($vars["entity"]->getId() == null && UserController::getLoggedInUser()->isChe
 } elseif ($vars["entity"]->getId() != null) {
     $chef =  $vars["entity"]->getChef()->getFirstName() . ' ' . $vars["entity"]->getChef()->getLastName();
 }
+$img = 'gateauauxfraises.jpg';
+if ($vars['entity']->getImage()) {
+    $img = $vars['entity']->getImage()->getName() . '.' . $vars['entity']->getImage()->getFileExtension();
+}
+
 ?>
 
 <div class="font-sans antialiased bg-grey-lightest">
@@ -102,30 +107,28 @@ if ($vars["entity"]->getId() == null && UserController::getLoggedInUser()->isChe
                                 </div>
 
 
+                                <?php if (UserController::getLoggedInUser()->isChef()) { ?>
+                                    <div class="  flex">
+                                        <div class="relative mr-5 lg:w-1/6 md:w-1/2 shadow">
 
-                                <div class="  flex">
-                                    <div class="relative mr-5 lg:w-1/6 md:w-1/2 shadow">
-
-                                        <button class="w-full h-full bg-indigo-500 text-gray-100 p-2 rounded 
+                                            <button class="w-full h-full bg-indigo-500 text-gray-100 p-2 rounded 
             font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-indigo-600
             ">
-                                            Valider
-                                        </button>
+                                                Valider
+                                            </button>
 
-                                    </div>
+                                        </div>
 
-                                    <div class="relative shadow lg:w-1/5 md:w-1/2 text-center">
-                                        <a href="<?= $vars['baseUrl'] ?>user/" class="text-lg  p-2  block lg:inline-block lg:mt-0">
-                                            <?php if ($vars["entity"]->getId() == null) {  ?>
+                                        <div class="relative shadow lg:w-1/5 md:w-1/2 text-center">
+                                            <a href="<?= $vars['baseUrl'] ?>user/" class="text-lg  p-2  block lg:inline-block lg:mt-0">
+
                                                 Annuler
-                                            <?php } else { ?>
-                                                Supprimer
-                                            <?php }  ?>
-                                        </a>
 
+                                            </a>
+
+                                        </div>
                                     </div>
-                                </div>
-
+                                <?php } ?>
                             </div>
 
                         </div>
@@ -136,20 +139,76 @@ if ($vars["entity"]->getId() == null && UserController::getLoggedInUser()->isChe
 
                         <div class="py-4 px-8 h-full">
 
-                            <div class="mb-4 h-full">
-                                <div id="recipe-image">
-                                    <img class="h-80 rounded lg:w-4/5 md:w-full recipe-img  mb-5 bg-gray-300" src="<?= $vars['baseUrl'] ?>public/images/gateauauxfraises.jpg" alt="">
-
+                            <form method="post" class="mb-4 h-full" id="recipeImg" action="<?= $vars['baseUrl'] ?>recipe/addImage">
+                                <div>
+                                    <img id="recipe-image" class="h-80 rounded lg:w-4/5 md:w-full recipe-img  mb-5 bg-gray-300" src="<?= $vars['baseUrl'] ?>public/images/recipes/<?= $img ?>" alt="">
+                                    <input type="hidden" value="<?= $vars['entity']->getId() ?>" name="idRecipe">
                                 </div>
+                                <?php if ($vars['entity']->getId()) { ?>
+                                    <div class="lg:w-4/5 flex justify-between">
+                                        <label id="img-url" class="self-center" for=""> <?= $img ?> </label>
+                                        <div x-data="{ showModal: false }" :class="{'overflow-y-hidden': showModal }">
+                                            <main class="">
+                                                <?php
+                                                if (UserController::getLoggedInUser()->isChef()) { ?>
+                                                    <button type="button" @click="showModal = true" class="block"><i class="rounded text-center pt-1 text-3xl h-10 w-10 bg-red-600 border text-white block fas fa-trash-alt my-2"></i></button>
+                                                <?php } ?>
+                                            </main>
+
+                                            <!-- Modal1 -->
+                                            <div class="fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                                                <div class="relative sm:w-3/4 md:w-1/2 lg:w-1/3  sm:mx-auto my-10 opacity-100">
+                                                    <div class="relative bg-gray-300 shadow-lg rounded-md text-gray-900 z-20" @click.away="showModal = false" x-show="showModal" x-transition:enter="transition transform duration-300" x-transition:enter-start="scale-0" x-transition:enter-end="scale-100" x-transition:leave="transition transform duration-300" x-transition:leave-start="scale-100" x-transition:leave-end="scale-0">
+
+                                                        <header class="w-full h-40 grid mb-5 flex items-center  ">
+                                                            <div class=" w-full   grid  bg-white h-20">
+
+                                                                <h2 class=" font-semibold text-center justify-self-center self-center "><i class="text-3xl text-red-600 fas fa-exclamation-triangle"></i> Voulez-vous vraiment supprimer l'element: ?</h2>
+
+                                                            </div>
+
+                                                        </header>
+                                                        <main class="  h-20 grid   p-2 text-center">
+                                                            <p class="w-2/3 justify-self-center bg-white rounded-md">
+                                                                Cette action est définitive et irréversible
+                                                            </p>
+                                                        </main>
+                                                        <footer class="">
+
+                                                            <div class="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
+                                                                <button class="bg-red-500  active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease" @click="showModal = false">
+                                                                    <span class="text-lg"> Annuller </span>
+                                                                </button>
+
+                                                                <div @click="showModal = false" class="bg-green-500 ml-5 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
+                                                                    <button name="delete" id="deleteImg" data-idrecipe="<?= $vars['entity']->getId() ?>" value="1" class="text-lg text-center  block lg:inline-block lg:mt-0">
+                                                                        Confirmer </button>
+
+
+                                                                </div>
+                                                            </div>
+                                                        </footer>
+
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                <?php } ?>
                                 <label>Télécharger une nouvelle image</label>
                                 <div class="lg:w-4/5 flex justify-between">
-                                    <input name="Users[email]" class="<?= isset($vars["errors"]['email']) ? 'border-red-600' : '' ?> w-4/5 appearance-none border rounded py-2 px-3 text-grey-darker" id="email" type="file">
-                                    <button data-id="<?= $vars['entity']->getId() ?>" data-url="<?= $vars['baseUrl'] ?>" id="add-image" class="w-1/6 h-full bg-indigo-500 text-gray-100 p-2 rounded">
-                                        Ok
-                                    </button>
+                                    <input name="image" class=" w-4/5 appearance-none border rounded py-2 px-3 text-grey-darker" id="image" type="file">
+                                    <?php if (UserController::getLoggedInUser()->isChef()) { ?>
+                                    <input type="submit" data-id="<?= $vars['entity']->getId() ?>" data-url="<?= $vars['baseUrl'] ?>" id="add-image" value="OK" class="cursor-pointer w-1/6 h-full bg-indigo-500 text-gray-100 p-2 rounded">
+                                    <?php } ?>
+                                    <!-- Ok -->
+                                    <!-- </input> -->
                                 </div>
 
-                            </div>
+                            </form>
 
                         </div>
 
@@ -179,10 +238,10 @@ if ($vars["entity"]->getId() == null && UserController::getLoggedInUser()->isChe
             <div class=" bg-white rounded shadow">
 
 
-                <div class="grid lg:gap-10 md:gap-1 grid-cols-3 ">
+                <div class="grid lg:gap-10 md:gap-1 lg:grid-cols-3 md:grid-cols-5 ">
 
 
-                    <div class="inline-block col-span-2">
+                    <div class="inline-block lg:col-span-2 md:col-span-3">
                         <div class="py-4 px-8  text-black lg:text-4xl md:text-3xl  border-grey-lighter">
 
 
@@ -190,7 +249,7 @@ if ($vars["entity"]->getId() == null && UserController::getLoggedInUser()->isChe
 
 
                         </div>
-                        <div class="py-4 lg:px-8">
+                        <div class="py-4 lg:px-8 md:px-4">
                             <div id="paragraph-container" class="mb-4">
                                 <div class="flex mr-1 ">
                                     <div class="inline-block h-full self-center mr-3">
@@ -202,8 +261,8 @@ if ($vars["entity"]->getId() == null && UserController::getLoggedInUser()->isChe
 
                                         <div x-data="{ showModal: false }" :class="{'overflow-y-hidden': showModal }">
                                             <main class="flex flex-col sm:flex-row justify-center items-center">
-                                               
-                                                <button  @click="showModal = true" class="block"><i class="rounded text-center pt-1 text-3xl h-10 w-10 bg-red-600 border text-white block fas fa-trash-alt my-2"></i></button>
+
+                                                <button @click="showModal = true" class="block"><i class="rounded text-center pt-1 text-3xl h-10 w-10 bg-red-600 border text-white block fas fa-trash-alt my-2"></i></button>
 
                                             </main>
 
@@ -217,7 +276,7 @@ if ($vars["entity"]->getId() == null && UserController::getLoggedInUser()->isChe
                                                             <header class="w-full h-40 grid mb-5 flex items-center  ">
                                                                 <div class=" w-full   grid  bg-white h-20">
 
-                                                                    <h2 class=" font-semibold text-center justify-self-center self-center "><i class="text-3xl text-red-600 fas fa-exclamation-triangle"></i> Voulez-vous vraiment supprimer l'element:  ?</h2>
+                                                                    <h2 class=" font-semibold text-center justify-self-center self-center "><i class="text-3xl text-red-600 fas fa-exclamation-triangle"></i> Voulez-vous vraiment supprimer l'element: ?</h2>
 
                                                                 </div>
 
@@ -310,9 +369,9 @@ if ($vars["entity"]->getId() == null && UserController::getLoggedInUser()->isChe
                         </div>
 
                     </div>
-                    <div class="inline-block h-full ">
+                    <div class="inline-block h-full lg:col-span-1 md:col-span-2">
 
-                        <div class="py-4 lg:px-8 h-full">
+                        <div class="py-4 lg:px-8 md:px-3 h-full">
 
                             <div class="mb-4 h-full">
                                 <h2>Liste des ingredients</h2>

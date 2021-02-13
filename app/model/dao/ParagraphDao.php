@@ -19,4 +19,12 @@ class ParagraphDao extends BaseDao{
         };
         return $entities;
     }
+
+    public static function deleteRecipeParagraph(Paragraph $ingredient) {
+        $pdo = DatabaseUtil::connect();
+        $sql = "DELETE FROM " .self::getTableName()  . " WHERE idParagraph = ?";
+        $q = $pdo->prepare($sql);
+        $q->execute([$ingredient->getId()]); // if user doesn't exist, null instead of id
+    }
+
 }

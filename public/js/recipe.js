@@ -1,30 +1,73 @@
 $(document).ready(function() {
-    $('#add-image').click(function() {
-        $('#recipe-image').html("")
+    $('#recipeImg').on('submit', function(e) {
+        e.preventDefault();
         var order = $(this).data("id");
         let barUrl = $(this).data("url");
-        // console.log(order)
-        // console.log(barUrl)
-        // if (order != "") {
+        var formData = new FormData(this);
+
+        alert($('#img-url').html())
         $.ajax({
-                type: 'POST',
-                url: barUrl + '/recipe/addImage',
-                data: 'order=1',
-                success: function(data) {
-                    if (data != "") {
-
-                        $('#recipe-image').append(data);
-
-                    }
-
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                console.log("success");
+                console.log(data);
+                if (data == "FILE_TYPE_ERROR") {
+                    alert("le type de fichier est incorrect")
+                } else if (data == "FILE_SIZE_ERROR") {
+                    alert("le fichier est trop volumineux")
+                } else {
+                    addImage(data)
+                    alert(data);
                 }
+            },
+            error: function(data) {
+                console.log("error");
+                console.log(data);
+            }
+        });
 
-            })
-            // }
+        // $.post(barUrl + '/recipe/addImage', {
+        //     "recipe": formData,
+        // }, (response) => {
+        //     console.log("success");
+        //     console.log(response);
+        //     if (response == "FILE_TYPE_ERROR") {
+        //         alert("le type de fichier est incorrect")
+        //     } else if (response == "FILE_SIZE_ERROR") {
+        //         alert("le fichier est trop volumineux")
+        //     } else {
+        //         $('#img-url').html(response)
+        //         $('#recipe-image').attr('src', response);
+        //         alert(response);
+        //     }
+        // });
+
     })
 
+    function addImage(data) {
+        var imgUrl = data.split("/");
+
+        $('#img-url').html(imgUrl[imgUrl.length - 1])
+        $('#recipe-image').attr('src', data);
+    }
     $('#addprep').click(function() {
         $('#modal').removeClass('hidden')
+    })
+    $('#deleteImg').click(function(e) {
+        e.preventDefault();
+        let recipe = $(this).data('idrecipe');
+        alert(recipe)
+        $.post(barUrl + '/recipe/addImage', {
+            "recipe": encodeURIComponent(recipe),
+        }, (response) => {
+            addImage(response)
+            alert(response)
+        });
     })
 
     $('#add-preparation').click(function() {
@@ -294,8 +337,8 @@ $(document).ready(function() {
                 }, (response) => {
                     // let array = PSON.parse(response);
                     // $('#new-content').val(response);
-                    alert(response)
-                        // addParagraph(response);
+                    // alert(response)
+                    addParagraph(response);
 
                 });
 

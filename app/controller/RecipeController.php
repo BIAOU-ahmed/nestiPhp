@@ -38,13 +38,12 @@ class RecipeController extends BaseEntityController
         $templateName = 'edit';
         $templateVars = ["isSubmitted" => !empty($_POST[self::getEntityClass()])];
 
-        FormatUtil::dump(static::getEntity());
         if ($templateVars["isSubmitted"]) { // if we arrived here by way of the submit button in the edit view
             $recipe = static::getEntity();
             $formBuilder = new RecipeFormBuilder($recipe, $_POST[static::getEntityClass()]);
 
             // EntityUtil::setFromArray($recipe,$_POST[self::getEntityClass()]);
-            FormatUtil::dump(self::getEntity());
+
             //     IF NEW.`idImage` IS NULL OR NEW.`idImage` = '' THEN
             //     SET NEW.`idImage` = 1;
             // END IF
@@ -54,16 +53,12 @@ class RecipeController extends BaseEntityController
                 $validatedProperties = $formBuilder->getParameters();
                 EntityUtil::setFromArray($recipe, $validatedProperties);
                 $recipe->setIdChef($chefId);
-                FormatUtil::dump($recipe);
                 self::getDao()::saveOrUpdate($recipe);
                 // header('Location: ' . SiteUtil::url() . 'recipe/list/'.$recipe->getId());
                 // exit;
             } else {
                 $templateVars["errors"] = $formBuilder->getErrors();
                 $properties = $_POST[static::getEntityClass()];
-
-                FormatUtil::dump($templateVars["errors"]);
-                FormatUtil::dump($properties);
             }
         }
 
@@ -74,7 +69,48 @@ class RecipeController extends BaseEntityController
 
     public static function addImage()
     {
-        self::render(['action' => 'addImageToRecipe', 'base' => 'users/baseLogin']);
+        if (isset($_FILES)) {
+            $filetype = array('jpeg', 'jpg', 'png', 'gif', 'PNG', 'JPEG', 'JPG');
+            // FormatUtil::dump($_POST['idRecipe']);
+            foreach ($_FILES as $key) {
+
+                $name = time() . $key['name'];
+                $path = '../public/images/recipes/' . $name;
+                $file_ext =  pathinfo($name, PATHINFO_EXTENSION);
+
+
+                if (in_array(strtolower($file_ext), $filetype)) {
+
+                    if ($key['size'] < 1000000) {
+                        if (move_uploaded_file($key['tmp_name'], $path)) {
+
+                            $d = new DateTime('NOW');
+                            $t = explode('.', $name);
+                            $image = new Image();
+                            $image->setName($t[0]);
+                            $image->setDateCreation($d->format('Y-m-d H:i:s'));
+                            $image->setFileExtension($t[1]);
+                            ImageDao::saveOrUpdate($image);
+                            $recipe = RecipeDao::findById($_POST['idRecipe']);
+                            $recipe->setIdImage($image->getId());
+                            RecipeDao::saveOrUpdate($recipe);
+                            // FormatUtil::dump($image);
+                            echo SiteUtil::url() . 'public/images/recipes/' . $name;
+                        }
+                    } else {
+                        echo "FILE_SIZE_ERROR";
+                    }
+                } else {
+                    echo "FILE_TYPE_ERROR";
+                }
+            }
+        }
+        if(isset($_POST['recipe'])){
+            $recipe = RecipeDao::findById($_POST['recipe']);
+            $recipe->setIdImage(null);
+            RecipeDao::saveOrUpdate($recipe);
+            echo SiteUtil::url() . 'public/images/recipes/gateauauxfraises.jpg';
+        }
     }
     public static function movePreparations()
     {
@@ -127,15 +163,16 @@ class RecipeController extends BaseEntityController
                 $values = [$recipePara->getParagraphPosition(), $recipe->getId()];
                 $allNext = ParagraphDao::findPrevOrFollo($values, ">", "ASC");
                 $nextPosition = $recipePara->getParagraphPosition();
-                // IngredientRecipeDao::deleteRecipeIngredient($ingredientRecipe);
+                ParagraphDao::deleteRecipeParagraph($recipePara);
 
                 foreach ($allNext as $recipeParagraph) {
                     // $positionSwitch = $recipeIngredient->getRecipePosition();
                     $recipeParagraph->setParagraphPosition($nextPosition);
                     $nextPosition += 1;
+                    ParagraphDao::saveOrUpdate($recipeParagraph);
                     // IngredientRecipeDao::updateRecipeIngredient($recipeIngredient);
                 }
-                FormatUtil::dump($allNext);
+                // FormatUtil::dump($allNext);
             } else {
 
                 // echo $_POST['preparationContent'];
