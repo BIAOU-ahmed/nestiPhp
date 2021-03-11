@@ -1,74 +1,19 @@
 $(document).ready(function() {
-    $('#recipeImg').on('submit', function(e) {
-        e.preventDefault();
-        var order = $(this).data("id");
-        let barUrl = $(this).data("url");
-        var formData = new FormData(this);
 
-        alert($('#img-url').html())
-        $.ajax({
-            type: 'POST',
-            url: $(this).attr('action'),
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function(data) {
-                console.log("success");
-                console.log(data);
-                if (data == "FILE_TYPE_ERROR") {
-                    alert("le type de fichier est incorrect")
-                } else if (data == "FILE_SIZE_ERROR") {
-                    alert("le fichier est trop volumineux")
-                } else {
-                    addImage(data)
-                    alert(data);
-                }
-            },
-            error: function(data) {
-                console.log("error");
-                console.log(data);
-            }
-        });
 
-        // $.post(barUrl + '/recipe/addImage', {
-        //     "recipe": formData,
-        // }, (response) => {
-        //     console.log("success");
-        //     console.log(response);
-        //     if (response == "FILE_TYPE_ERROR") {
-        //         alert("le type de fichier est incorrect")
-        //     } else if (response == "FILE_SIZE_ERROR") {
-        //         alert("le fichier est trop volumineux")
-        //     } else {
-        //         $('#img-url').html(response)
-        //         $('#recipe-image').attr('src', response);
-        //         alert(response);
-        //     }
-        // });
 
-    })
+    // $('#image').change(function(ev) {
+    //     let image = $('#image').val();
+    //     console.log(image);
+    //     $('#img-url').html(image)
+    //     $('#recipe-image').attr('src', image);
+    //     // your code
+    // });
 
-    function addImage(data) {
-        var imgUrl = data.split("/");
-
-        $('#img-url').html(imgUrl[imgUrl.length - 1])
-        $('#recipe-image').attr('src', data);
-    }
     $('#addprep').click(function() {
         $('#modal').removeClass('hidden')
     })
-    $('#deleteImg').click(function(e) {
-        e.preventDefault();
-        let recipe = $(this).data('idrecipe');
-        alert(recipe)
-        $.post(barUrl + '/recipe/addImage', {
-            "recipe": encodeURIComponent(recipe),
-        }, (response) => {
-            addImage(response)
-            alert(response)
-        });
-    })
+
 
     $('#add-preparation').click(function() {
         // $('#ingredient-list').html("")
@@ -91,6 +36,8 @@ $(document).ready(function() {
 
             });
 
+        } else {
+            alert("Veuillez d'abord céer une recette")
         }
     })
 
@@ -118,6 +65,8 @@ $(document).ready(function() {
                 addIngredientRecipe(response);
             });
 
+        } else {
+            alert("Veuillez d'abord céer une recette")
         }
     })
     var recipe = $("#add-ingredient").data("id");
@@ -138,11 +87,39 @@ $(document).ready(function() {
         addParagraph(response);
     });
 
+    function ingredientNotPresent(ingredient) {
+        var x = document.getElementById("ingredient_list");
+        var result = true;
+        var i;
+        for (i = 0; i < x.options.length; i++) {
+            if (ingredient == x.options[i].value) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
+
+    function unitNotPresent(unit) {
+        var x = document.getElementById("unit_list");
+        var result = true;
+        var i;
+        for (i = 0; i < x.options.length; i++) {
+            console.log(unit)
+            console.log(x.options[i].value)
+            if (unit == x.options[i].value) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
+
     function addIngredientRecipe(data) {
-        // alert(data)
-        if (data == false) {
+        alert(data)
+        if (data === "false") {
             alert("test")
-        } else {
+        } else if (data !== '') {
             $('#ingredient-list').html("")
                 // alert(data)
             let n = JSON.parse(data)
@@ -152,6 +129,15 @@ $(document).ready(function() {
                 let item = '<div class="flex justify-between mb-2"> <li  >' + n[k].quantity + " " + n[k].unitName + " de " + n[k].ingredientName + '</li> <button  data-idrecipe="' + n[k].idRecipe + '" data-idproduct="' + n[k].idProduct + '" class="deleteIngredient md:ml-2 md:w-1/6 lg:w-1/12 bg-indigo-500 text-gray-100  rounded">' +
                     'X' +
                     '</button> </div>';
+                console.log("ingredient" + ingredientNotPresent(n[k].ingredientName))
+                if (ingredientNotPresent(n[k].ingredientName)) {
+                    let newIng = '<option value="' + n[k].ingredientName + '"></option>'
+                    $('#ingredient_list').append(newIng)
+                }
+                if (unitNotPresent(n[k].unitName)) {
+                    let newIng = '<option value="' + n[k].unitName + '"></option>'
+                    $('#unit_list').append(newIng)
+                }
                 $('#ingredient-list').append(item)
             }
         }
@@ -346,16 +332,6 @@ $(document).ready(function() {
         })
 
     }
-
-
-
-
-
-
-
-
-
-
 
 
 })
