@@ -47,7 +47,8 @@ class BaseEntity{
         }
         return $state;
     }
-        
+    
+    
     /**
      * getRelatedEntity
      * Get an entity that is joined to the current instance by a foreign key

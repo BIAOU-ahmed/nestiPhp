@@ -8,13 +8,13 @@
         <div id="error-message" class="w-full block bg-red-400 text-gray-700 text-center px-6 py-4 border-0 relative mb-4">
 
             <span class="  inline-block text-2xl align-middle mr-8">
-                Erreur d'identifiant ou de mot de passe
+                L'utilisateur a bien été supprimer
             </span>
 
         </div>
-    <?php 
-    unset($_SESSION["message"]);
-} ?>
+    <?php
+        unset($_SESSION["message"]);
+    } ?>
 
     <div class="py-6 px-4" x-data="datatables()">
         <h1 class="text-4xl py-4 border-b mb-10">Utilisateurs</h1>
@@ -122,8 +122,8 @@
 
                                                             <div class="bg-green-500 ml-5 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
                                                                 <button name="delete" type="submit" value="1" class="text-lg text-center  block lg:inline-block lg:mt-0">
-                                                                Confirmer </button> 
-                                                                
+                                                                    Confirmer </button>
+
 
                                                             </div>
                                                         </div>

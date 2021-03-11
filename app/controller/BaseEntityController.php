@@ -12,7 +12,7 @@
 
 
 
-class BaseEntityController extends baseController
+class BaseEntityController extends BaseController
 {
 
     protected static $entity;
@@ -61,8 +61,8 @@ class BaseEntityController extends baseController
             $templates['action'] = strtolower(self::getEntityClass()) . "/" . $templates['action'];
         }
 
-       
-        
+
+
         // Add shared parameters to the existing ones
         $vars = array_merge($vars, [
             'entity' =>  self::getEntity(),
@@ -96,6 +96,66 @@ class BaseEntityController extends baseController
     {
 
         return get_called_class()::$entityClass;
+    }
+
+
+
+    public static function addImage()
+    {
+        if (isset($_FILES)) {
+            $filetype = array('jpeg', 'jpg', 'png', 'gif', 'PNG', 'JPEG', 'JPG');
+            // FormatUtil::dump($_POST['idRecipe']);
+            if (isset($_POST['idRecipe']) || isset($_POST['idArticle'])) {
+                $id = isset($_POST['idRecipe']) ? $_POST['idRecipe'] : $_POST['idArticle'];
+                $directoryName = isset($_POST['idRecipe']) ? 'recipes' : 'articles';
+            }
+
+            foreach ($_FILES as $key) {
+
+                $name = time() . $key['name'];
+                $path = "../public/images/$directoryName/" . $name;
+                $file_ext =  pathinfo($name, PATHINFO_EXTENSION);
+
+
+                if (in_array(strtolower($file_ext), $filetype)) {
+
+                    if ($key['size'] < 1000000) {
+                        if (move_uploaded_file($key['tmp_name'], $path)) {
+
+                            $d = new DateTime('NOW');
+                            $t = explode('.', $name);
+                            $image = new Image();
+                            $image->setName($t[0]);
+                            $image->setDateCreation($d->format('Y-m-d H:i:s'));
+                            $image->setFileExtension($t[1]);
+                            // FormatUtil::dump($image);
+                            ImageDao::saveOrUpdate($image);
+                            // echo static::getDao();
+                            $entity = static::getDao()::findById($id);
+                            // FormatUtil::dump($entity);
+                            $entity->setIdImage($image->getId());
+                            static::getDao()::saveOrUpdate($entity);
+                            // FormatUtil::dump($image);
+                            echo SiteUtil::url() . "public/images/$directoryName/" . $name;
+                        }
+                    } else {
+                        echo "FILE_SIZE_ERROR";
+                    }
+                } else {
+                    echo "FILE_TYPE_ERROR";
+                }
+            }
+        }
+        // FormatUtil::dump($_POST['entity']);
+
+        if (isset($_POST['entity']['recipe']) || isset($_POST['entity']['article'])) {
+            $id = isset($_POST['entity']['recipe']) ? $_POST['entity']['recipe'] : $_POST['entity']['article'];
+            $name = isset($_POST['entity']['recipe']) ? 'recipes' : 'articles';
+            $entity = static::getDao()::findById($id);
+            $entity->setIdImage(null);
+            static::getDao()::saveOrUpdate($entity);
+            echo SiteUtil::url() . "public/images/$name/gateauauxfraises.jpg";
+        }
     }
 
     /**
@@ -147,7 +207,7 @@ class BaseEntityController extends baseController
             FormatUtil::dump(self::getEntity());
             self::getDao()::delete(self::getEntity());
             $_SESSION['message'] = "deleted";
-            header('Location: ' . SiteUtil::url() . $controller.'/list');
+            header('Location: ' . SiteUtil::url() . $controller . '/list');
             // self::render(null, $templateVars);
 
             // header('Location: ' . SiteUtil::url() . $controller.'/list?message=deleted');

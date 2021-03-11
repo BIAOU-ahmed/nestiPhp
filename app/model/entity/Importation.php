@@ -4,7 +4,7 @@ class Importation extends BaseEntity{
     private $idAdministrator;
     private $idArticle;
     private $idSupplierOrder;
-    private $dateImportation;
+    private $importationDate;
 
     
     public function getAdministrator(): ?Administrator{ 
@@ -51,22 +51,23 @@ class Importation extends BaseEntity{
         return $this;
     }
 
+
     /**
-     * Get the value of dateImportation
-     */
-    public function getDateImportation()
+     * Get the value of importationDate
+     */ 
+    public function getImportationDate()
     {
-        return $this->dateImportation;
+        return $this->importationDate;
     }
 
     /**
-     * Set the value of dateImportation
+     * Set the value of importationDate
      *
      * @return  self
-     */
-    public function setDateImportation($dateImportation)
+     */ 
+    public function setImportationDate($importationDate)
     {
-        $this->dateImportation = $dateImportation;
+        $this->importationDate = $importationDate;
 
         return $this;
     }

@@ -35,7 +35,7 @@ class UserController extends BaseEntityController
 
     public static function login()
     {
-
+        $templateVars = [];
         $template = 'login';
         if (isset($_POST['Users'])) {
 
@@ -51,17 +51,30 @@ class UserController extends BaseEntityController
                 ConnectionLogDao::saveOrUpdate($newConnection);
                 header('Location: ' . SiteUtil::url() . 'recipe/list');
             }else{
-                $templateVars = ['message' => 'errorLogin'];
+                $templateVars['message'] = 'errorLogin';
 
             }
         }
-        self::render(['action' => 'login', 'base' => 'users/baseLogin'],$templateVars);;
+        self::render(['action' => 'login', 'base' => 'users/baseLogin'],$templateVars);
     }
     public static function orderLines()
     {
-
-       
-        self::render(['action' => 'userOrderLines', 'base' => 'users/baseLogin']);
+        if(isset($_POST['order'])){
+            $orderId = (INT) trim($_POST['order']);
+            $order = OrdersDao::findById($orderId);
+            $orderLines = $order->getOrderLines();
+            // FormatUtil::dump($orderLines);
+            $array = [];
+            $index = 0;
+            foreach($orderLines as $lines){
+                $array[$index]['unitQuantity'] = $lines->getArticle()->getUnitQuantity();
+                $array[$index]['unitName'] = $lines->getArticle()->getUnit()->getName();
+                $array[$index]['productName'] = $lines->getArticle()->getProduct()->getName();
+                $array[$index]['quantity'] = $lines->getQuantity();
+               $index++;
+            }
+            echo json_encode($array);
+        }
     }
 
 

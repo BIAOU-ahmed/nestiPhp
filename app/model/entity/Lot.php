@@ -85,6 +85,9 @@ class Lot extends BaseEntity{
         return $this;
     }
 
+    public function getSubTotal(){
+        return $this->getUnitCost() * $this->getQuantity();
+    }
     /**
      * Get the value of quantity
      */

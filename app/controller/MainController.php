@@ -20,7 +20,7 @@ class MainController
         $controller = SiteUtil::getUrlParameters()[0] ?? "";
         $id = SiteUtil::getUrlParameters()[2] ?? "";
         $action = SiteUtil::getUrlParameters()[1] ?? "";
-      
+
 
 
         // UserController::setEntity(UserController::getUser());
@@ -37,6 +37,9 @@ class MainController
                 break;
             case 'article':
                 ArticleController::processAction();
+                break;
+            case 'statistics':
+                StatisticsController::processAction();
                 break;
             case "":
                 RecipeController::processAction();

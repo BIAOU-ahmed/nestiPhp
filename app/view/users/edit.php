@@ -106,8 +106,8 @@
                                 <label class="block text-grey-darker text-sm font-bold mb-2" for="state">Etat</label>
 
                                 <select name="Users[flag]" class="form-select border border-light-blue-500 border-opacity-0 appearance-none rounded mt-1 block w-full py-2 px-3" id="state">
-                                    <option value="a" <?= $vars['entity']->getFlag() == 'a' ? 'selected' : ''; ?>  >Actif</option>
-                                    <option value="w" <?= $vars['entity']->getFlag() == 'w' ||$vars['entity']->getId() == null ? 'selected' : ''; ?> >En attente</option>
+                                    <option value="a" <?= $vars['entity']->getFlag() == 'a' ? 'selected' : ''; ?>>Actif</option>
+                                    <option value="w" <?= $vars['entity']->getFlag() == 'w' || $vars['entity']->getId() == null ? 'selected' : ''; ?>>En attente</option>
                                     <option value="b" <?= $vars['entity']->getFlag() == 'b' ? 'selected' : ''; ?>>Bloqué</option>
                                 </select>
                             </div>
@@ -220,8 +220,34 @@
                         <?php } else { ?>
                             <div class="py-4  px-8">
                                 <span>Informations</span>
-                                <div class="border h-5/6"></div>
-                                <button>Réinitialisation du mot de passe</button>
+                                <div class="border h-5/6">
+                                    <span>Date de création:</span> <br>
+                                    <span>Dernière Connexion: <?= $vars["entity"]->getLastConnectionDate() ?></span><br>
+                                    <?php if ($vars["entity"]->isChef()) { ?>
+                                        <h4 class="block text-grey-darker text-xl font-bold">Chef Patissier</h4>
+                                        <span>Nombre de recette: <?= $vars["entity"]->getChef()->getNbRecipe() ?></span><br>
+                                        <span>Dernière Recette: <?= $vars["entity"]->getChef()->getLastRecipe() ?></span>
+                                    <?php } ?>
+                                    <h4 class="block text-grey-darker text-xl font-bold">Utilisateur</h4>
+                                    <span>Nombre de commande: <?= $vars["entity"]->getNbOrder() ?></span><br>
+                                    <span>Montant total des commandes: <?= $vars["entity"]->ordersPrice() ?></span><br>
+                                    <span>Derniere commande: <?= $vars["entity"]->getLastOrder() ?></span><br>
+                                    <?php if ($vars["entity"]->isAdministrator()) { ?>
+                                        <h4 class="block text-grey-darker text-xl font-bold">Administrateur</h4>
+                                        <span>Nombre d'importation faite: <?= $vars["entity"]->getAdministrator()->getNbImportation() ?></span><br>
+                                        <span>date de la derniere importation: <?= $vars["entity"]->getAdministrator()->getLastImportation() ?></span>
+                                    <?php } ?>
+                                    <?php if ($vars["entity"]->isModerator()) { ?>
+                                        <h4 class="block text-grey-darker text-xl font-bold">Modérateur</h4>
+                                        <span>Nombre de commentaire bloqué: <?= $vars["entity"]->getModerator()->getNbBlockedComment() ?></span><br>
+                                        <span>Nombre de commentaire approuvé: <?= $vars["entity"]->getModerator()->getNbApprovedComment() ?></span>
+                                    <?php } ?>
+                                </div>
+                                <button class="w-full bg-indigo-500 text-gray-100 text-xl p-2 rounded mt-5
+                                font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-indigo-600
+                                ">
+                                    Réinitialisation du mot de passe
+                                </button>
                             </div>
                         <?php }  ?>
                     </div>
@@ -243,94 +269,88 @@
 
         <!-- Content -->
         <div class="bg-grey-lightest">
-            <div class=" ">
-                <div class=" bg-gray-50 rounded shadow pb-5">
+            <div class="bg-gray-50 rounded shadow pb-5">
 
-                    <div class="pt-4 px-8 text-black text-4xl  border-grey-lighter">
+                <div class="pt-4 px-8 text-black text-4xl  border-grey-lighter">
 
-                        Ses commandes
-                    </div>
-                    <span class="py-4 px-8 text-xs text-grey">Consultation des commandes</span>
-
-
-                    <div class="grid gap-5 grid-cols-3">
+                    Ses commandes
+                </div>
+                <span class="py-4 px-8 text-xs text-grey">Consultation des commandes</span>
 
 
+                <div class="grid gap-5 grid-cols-3">
 
-                        <div class=" ml-3 rounded-lg mb-5  col-span-2 relative">
-                            <div class="flex-1 pr-4 mt-5 mb-5 ml-3">
-                                <div class="relative md:w-1/3">
-                                    <input type="search" class="w-full pl-10 pr-4 py-2 rounded-lg shadow focus:outline-none focus:shadow-outline text-gray-600 font-medium" placeholder="Search...">
-                                    <div class="absolute top-0 left-0 inline-flex items-center p-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-400" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <rect x="0" y="0" width="24" height="24" stroke="none"></rect>
-                                            <circle cx="10" cy="10" r="7" />
-                                            <line x1="21" y1="21" x2="15" y2="15" />
-                                        </svg>
-                                    </div>
+
+
+                    <div class=" ml-3 rounded-lg mb-5  col-span-2 relative">
+                        <div class="flex-1 pr-4 mt-5 mb-5 ml-3">
+                            <div class="relative md:w-1/3">
+                                <input type="search" class="w-full pl-10 pr-4 py-2 rounded-lg shadow focus:outline-none focus:shadow-outline text-gray-600 font-medium" placeholder="Search...">
+                                <div class="absolute top-0 left-0 inline-flex items-center p-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-400" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="0" y="0" width="24" height="24" stroke="none"></rect>
+                                        <circle cx="10" cy="10" r="7" />
+                                        <line x1="21" y1="21" x2="15" y2="15" />
+                                    </svg>
                                 </div>
                             </div>
+                        </div>
 
-                            <table class="bg-white  border-collapse table-auto w-full whitespace-no-wrap bg-white table-striped relative">
-                                <thead class="h-20">
-                                    <tr class="">
+                        <table class="bg-white  border-collapse table-auto w-full whitespace-no-wrap bg-white table-striped relative">
+                            <thead class="h-20">
+                                <tr class="">
 
 
-                                        <th class="bg-gray-100 sticky top-0 border-b border-gray-200 w-1/12 px-2 text-gray-600 font-bold  uppercase"> ID</th>
-                                        <th class="bg-gray-100 sticky top-0 border-b border-gray-200 w-1/6 text-gray-600 font-bold  "> Utilisateur</th>
-                                        <th class="bg-gray-100 sticky top-0 border-b border-gray-200  w-1/6 text-gray-600 font-bold  "> Montant</th>
-                                        <th class="bg-gray-100 sticky top-0 border-b border-gray-200 w-1/6  text-gray-600 font-bold "> Nb d'article</th>
-                                        <th class="bg-gray-100 sticky top-0 border-b border-gray-200 w-1/6 text-gray-600 font-bold "> Date</th>
-                                        <th class="bg-gray-100 sticky top-0 border-b border-gray-200  w-1/6 text-gray-600 font-bold  "> Etat</th>
+                                    <th class="bg-gray-100 sticky top-0 border-b border-gray-200 w-1/12 px-2 text-gray-600 font-bold  uppercase"> ID</th>
+                                    <th class="bg-gray-100 sticky top-0 border-b border-gray-200 w-1/6 text-gray-600 font-bold  "> Utilisateur</th>
+                                    <th class="bg-gray-100 sticky top-0 border-b border-gray-200  w-1/6 text-gray-600 font-bold  "> Montant</th>
+                                    <th class="bg-gray-100 sticky top-0 border-b border-gray-200 w-1/6  text-gray-600 font-bold "> Nb d'article</th>
+                                    <th class="bg-gray-100 sticky top-0 border-b border-gray-200 w-1/6 text-gray-600 font-bold "> Date</th>
+                                    <th class="bg-gray-100 sticky top-0 border-b border-gray-200  w-1/6 text-gray-600 font-bold  "> Etat</th>
 
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <?php foreach ($vars['entity']->getOrders() as $order) {
+                                    $orderLines = $order->getOrderLines(); ?>
+                                    <tr class="order text-center" data-url="<?= $vars['baseUrl'] ?>" data-id="<?= $order->getId(); ?>">
+
+                                        <td class="border-dashed border-t border-gray-200  ">
+                                            <span class="text-gray-700 py-3 "> <?= $order->getId() ?></span>
+                                        </td>
+                                        <td class="border-dashed border-t border-gray-200 ">
+                                            <span class="text-gray-700 py-3 "><?= $order->getUser()->getFirstName() . ' ' . $order->getUser()->getLastName() ?></span>
+                                        </td>
+                                        <td class="border-dashed border-t border-gray-200 ">
+                                            <span class="text-gray-700  py-3 "> <?= $order->getPrice()  ?></span>
+                                        </td>
+                                        <td class="border-dashed border-t text-left border-gray-200 ">
+                                            <span class="text-gray-700 py-3 "> <?= $order->getNbArticle() ?> </span>
+                                        </td>
+                                        <td class="border-dashed border-t border-gray-200 ">
+                                            <span class="text-gray-700  py-3"><?= $order->getFormatedDate() ?></span>
+                                        </td>
+                                        <td class="border-dashed border-t border-gray-200 grid pt-3">
+                                            <?= $order->getState($order) ?>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                <?php } ?>
 
-                                    <?php foreach ($vars['entity']->getOrders() as $order) {
-                                        $orderLines = $order->getOrderLines(); ?>
-                                        <tr class="order text-center" data-url="<?= $vars['baseUrl'] ?>" data-id="<?= $order->getId(); ?>">
-
-                                            <td class="border-dashed border-t border-gray-200  ">
-                                                <span class="text-gray-700 py-3 "> <?= $order->getId() ?></span>
-                                            </td>
-                                            <td class="border-dashed border-t border-gray-200 ">
-                                                <span class="text-gray-700 py-3 "><?= $vars['entity']->getFirstName() . ' ' . $vars['entity']->getLastName() ?></span>
-                                            </td>
-                                            <td class="border-dashed border-t border-gray-200 ">
-                                                <span class="text-gray-700  py-3 "> <?= $order->getPrice()  ?></span>
-                                            </td>
-                                            <td class="border-dashed border-t text-left border-gray-200 ">
-                                                <span class="text-gray-700 py-3 "> <?= sizeof($order->getOrderLines()) ?> </span>
-                                            </td>
-                                            <td class="border-dashed border-t border-gray-200 ">
-                                                <span class="text-gray-700  py-3"><?= $order->getDateCreation() ?></span>
-                                            </td>
-                                            <td class="border-dashed border-t border-gray-200 grid pt-3">
-                                                <?= $order->getState($order) ?>
-                                            </td>
-                                        </tr>
-                                    <?php } ?>
-
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="ml-5 mr-5 mt-10">
-                            <div class="block flex-grow flex ">
-                                <span class="text-xl mr-5">Détails</span>
-                                <span id="order-id" class="bg-yellow-200">N°</span>
-                            </div>
-
-
-                            <div id="orderLineDetail" class="border h-80 bg-white">
-                            </div>
-                        </div>
-
+                            </tbody>
+                        </table>
                     </div>
 
+                    <div class="ml-5 mr-5 mt-10">
+                        <div class="block flex-grow flex ">
+                            <span class="text-xl mr-5">Détails</span>
+                            <span id="order-id" class="bg-yellow-200">N°</span>
+                        </div>
 
 
+                        <div class="h-48 max-h-full border bg-white">
+                        </div>
+                    </div>
 
                 </div>
 
@@ -350,7 +370,7 @@
 
                         Ses commentaires
                     </div>
-                    <span class="py-4 px-8 text-xs text-grey">Modération de ces commandes</span>
+                    <span class="py-4 px-8 text-xs text-grey">Modération de ces commentaires</span>
 
 
 
@@ -381,7 +401,7 @@
                                     <tr class="text-center" onclick='showDetail(this)'>
 
                                         <td class="border-dashed border-t border-gray-200  ">
-                                            <span class="text-gray-700 py-3 "> <?= '$comment->getId()' ?></span>
+                                            <span class="text-gray-700 py-3 "> <?= $comment->getId() ?></span>
                                         </td>
                                         <td class="border-dashed border-t border-gray-200 ">
                                             <span class="text-gray-700 py-3 "><?= $comment->getCommentTitle() ?></span>
@@ -393,10 +413,10 @@
                                             <span class="text-gray-700 py-3 "> <?= $comment->getCommentContent() ?> </span>
                                         </td>
                                         <td class="border-dashed border-t border-gray-200 ">
-                                            <span class="text-gray-700  py-3"><?= $comment->getDateCreation() ?></span>
+                                            <span class="text-gray-700  py-3"><?= $comment->getFormatedDate() ?></span>
                                         </td>
                                         <td class="border-dashed border-t border-gray-200 pt-3">
-                                            <?= $order->getState($order) ?>
+                                            <?= $comment->getState($comment) ?>
                                         </td>
                                         <td class="border-dashed border-t border-gray-200 grid pt-3">
                                             <span class="text-gray-700  text-center ">
@@ -442,32 +462,7 @@
     //     console.log(orderDetail)
     // }
 
-    $(document).ready(function() {
-        $('.order').click(function() {
-            $('#orderLineDetail').html("")
-            var order = $(this).data("id");
-            let barUrl = $(this).data("url");
-            $(".order").css("background-color", "white");
-            $(this).css("background-color", "#fac02e");
-            console.log(barUrl)
-            if (order != "") {
-                $.ajax({
-                    type: 'POST',
-                    url: barUrl + '/user/orderLines',
-                    data: 'order=' + encodeURIComponent(order),
-                    success: function(data) {
-                        if (data != "") {
-                            
-                            $('#orderLineDetail').append(data);
-                            $('#order-id').html('N°' + order);
-                        }
 
-                    }
-
-                })
-            }
-        })
-    })
 
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -573,3 +568,4 @@
         }
     });
 </script>
+<script src="<?= $vars['baseUrl'] ?>public/js/orders.js"></script>

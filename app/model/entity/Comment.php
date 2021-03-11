@@ -1,6 +1,7 @@
 <?php
 
-class Comment extends BaseEntity{
+class Comment extends BaseEntity
+{
     private $idComment;
     private $commentTitle;
     private $commentContent;
@@ -10,35 +11,43 @@ class Comment extends BaseEntity{
     private $idUser;
     private $idModerator;
 
-    
-    public function getModerator(): ?Moderator{
+
+    public function getModerator(): ?Moderator
+    {
         return $this->getRelatedEntity("Moderator");
     }
-    public function setModerator(Moderator $m){
+    public function setModerator(Moderator $m)
+    {
         $this->setRelatedEntity($m);
     }
 
-    public function getUser(): ?Users{
+    public function getUser(): ?Users
+    {
         return $this->getRelatedEntity("User");
     }
 
-    public function setUser(Users $user){
+    public function setUser(Users $user)
+    {
         $this->setRelatedEntity($user);
     }
 
-    public function getRecipe(): ?Recipe{
+    public function getRecipe(): ?Recipe
+    {
         return $this->getRelatedEntity("Recipe");
     }
 
-    public function setRecipe(Recipe $recipe){
+    public function setRecipe(Recipe $recipe)
+    {
         $this->setRelatedEntity($recipe);
     }
-    
-    public function getImage(): ?Image{
+
+    public function getImage(): ?Image
+    {
         return $this->getRelatedEntity("Image");
     }
-    
-    public function setImage(Image $i){
+
+    public function setImage(Image $i)
+    {
         $this->setRelatedEntity($i);
     }
 
@@ -162,6 +171,26 @@ class Comment extends BaseEntity{
         return $this;
     }
 
+    public function getFormatedDate()
+    {
+        setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
+        FormatUtil::dump(strftime(" %d %B %G ", strtotime($this->getDateCreation())));
+        return utf8_encode(ucwords(strftime(" %d %B %G %Hh%M", strtotime($this->getDateCreation()))));
+    }
+
+    public function getState($entity)
+    {
+
+        if ($entity->getFlag() == "a") {
+            $state = "Approuvé";
+        } else if ($entity->getFlag() == "w") {
+            $state = "En attente";
+        } else {
+            $state = "Bloqué";
+        }
+        return $state;
+    }
+
     /**
      * Get the value of idRecipe
      */
@@ -184,7 +213,7 @@ class Comment extends BaseEntity{
 
     /**
      * Get the value of idUser1
-     */ 
+     */
     public function getIdModerator()
     {
         return $this->idModerator;
@@ -194,7 +223,7 @@ class Comment extends BaseEntity{
      * Set the value of idUser1
      *
      * @return  self
-     */ 
+     */
     public function setIdModerator($idModerator)
     {
         $this->idModerator = $idModerator;

@@ -1,6 +1,7 @@
 <?php
 
-class Article extends BaseEntity{
+class Article extends BaseEntity
+{
     private $idArticle;
     private $unitQuantity;
     private $flag;
@@ -9,53 +10,64 @@ class Article extends BaseEntity{
     private $idImage;
     private $idUnit;
     private $idProduct;
+    private $name;
 
 
-    public function getArticlePrices(): array{
+    public function getArticlePrices(): array
+    {
         return $this->getRelatedEntities("ArticlePrice");
     }
 
-    public function getLots(): array{
+    public function getLots(): array
+    {
         return $this->getRelatedEntities("Lot");
     }
 
-    public function getOrderLines(): array{
+    public function getOrderLines(): array
+    {
         return $this->getRelatedEntities("OrderLine");
     }
-    
-    public function getProduct(): ?Product{
+
+    public function getProduct(): ?Product
+    {
         return $this->getRelatedEntity("Product");
     }
-    
-    public function getUnit(): ?Unit{
+
+    public function getUnit(): ?Unit
+    {
         return $this->getRelatedEntity("Unit");
     }
-    
-    public function getImage(): ?Image{
+
+    public function getImage(): ?Image
+    {
         return $this->getRelatedEntity("Image");
     }
 
-    public function setUnit(Unit $u){
+    public function setUnit(Unit $u)
+    {
         $this->setRelatedEntity($u);
     }
 
 
-    public function setProduct(Product $p){
+    public function setProduct(Product $p)
+    {
         $this->setRelatedEntity($p);
     }
 
 
-    public function setImage(Image $i){
+    public function setImage(Image $i)
+    {
         $this->setRelatedEntity($i);
     }
 
-    public function getOrders(): array{
-        return $this->getIndirectlyRelatedEntities("Orders", "OrderLine", BaseDao::FLAGS['active']); 
+    public function getOrders(): array
+    {
+        return $this->getIndirectlyRelatedEntities("Orders", "OrderLine", BaseDao::FLAGS['active']);
     }
 
     public function getLastPrice(): String
     {
- 
+
         $maxDate = 0;
         $arrayArticlePrice = $this->getArticlePrices();
 
@@ -68,7 +80,33 @@ class Article extends BaseEntity{
         }
         return $price;
     }
-    
+
+    public function getLastPriceAt(String $dateMax): String
+    {
+
+        $maxDate = 0;
+        $arrayArticlePrice = $this->getArticlePrices();
+
+        foreach ($arrayArticlePrice as $value) {
+            $date = strtotime($value->getDateStart());
+            if ($date <= $dateMax) {
+                if ($maxDate <  $date) {
+                    $maxDate =  $date;
+                    $price = $value->getPrice();
+                }
+            }
+        }
+        return $price;
+    }
+
+    public function getTotalPurchases()
+    {
+        $total = 0;
+        foreach ($this->getLots() as $lot) {
+            $total += $lot->getSubTotal();
+        }
+        return $total;
+    }
 
     /**
      * Get the value of idProduct
@@ -227,6 +265,56 @@ class Article extends BaseEntity{
     public function setDateModification($dateModification)
     {
         $this->dateModification = $dateModification;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of name
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getLastImportation()
+    {
+        $importations = ImportationDao::findAllBy('idArticle', $this->getId());
+        usort($importations, function ($a, $b) {
+            return strcmp($a->getImportationDate(), $b->getImportationDate());
+        });
+        $index = sizeof($importations) - 1;
+        $result = '';
+        if ($index >= 0) {
+            $result = $importations[$index]->getImportationDate();
+        }
+        return $result;
+    }
+
+    public function getInventory()
+    {
+        $totalQuantity = 0;
+        foreach ($this->getOrderLines() as $orderLine) {
+            $totalQuantity += $orderLine->getQuantity();
+        }
+        return $totalQuantity;
+    }
+    public function getFactoryName()
+    {
+        $unitQuantity = $this->getUnitQuantity();
+        $unitName = $this->getUnit()->getName();
+        $productName = $this->getProduct()->getName();
+        $name = $unitQuantity . ' ' . $unitName . ' de ' . $productName;
+        return $name;
+    }
+    /**
+     * Set the value of name
+     *
+     * @return  self
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
 
         return $this;
     }

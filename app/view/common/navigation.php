@@ -11,7 +11,7 @@
       <a href="<?=$vars['baseUrl']?>user/list" class="<?=($vars['urlParameters']['location']=='user')?'active':'';?> text-lg text-center nav-button block  lg:inline-block lg:mt-0 text-teal-lighter hover:text-white">
         Utilisateurs
       </a>
-      <a href="#responsive-header" class="<?=($vars['urlParameters']['location']=='statistics')?'active':'';?> mr-2 text-lg text-center nav-button block lg:inline-block lg:mt-0 text-white">
+      <a href="<?=$vars['baseUrl']?>statistics/dashboard" class="<?=($vars['urlParameters']['location']=='statistics')?'active':'';?> mr-2 text-lg text-center nav-button block lg:inline-block lg:mt-0 text-white">
       <i class="far fa-chart-bar"></i> Statistiques
       </a>
     </div>

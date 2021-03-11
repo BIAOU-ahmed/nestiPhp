@@ -25,7 +25,14 @@ class Recipe extends BaseEntity
             $this->setFlag("w");
         }
     }
-
+    public function getAllIngredient()
+    {
+        return ProductDao::findAll();
+    }
+    public function getAllUnit()
+    {
+        return UnitDao::findAll();
+    }
     public function getComments(): array
     {
         return $this->getRelatedEntities("Comment");

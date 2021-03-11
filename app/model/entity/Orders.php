@@ -1,24 +1,49 @@
 <?php
 
-class Orders extends BaseEntity{
+class Orders extends BaseEntity
+{
     private $idOrders;
     private $flag;
     private $dateCreation;
-    private $idUser;
+    private $idUsers;
 
-    
-    public function getOrderLines(): array{
+
+    public function getOrderLines(): array
+    {
         return $this->getRelatedEntities("OrderLine");
     }
-    
-    public function getUser(): ?Users{
-        return $this->getRelatedEntity("User");
+
+    public function getUser(): ?Users
+    {
+        return $this->getRelatedEntity("Users");
     }
 
-    public function setUser(Users $user){
+    public function setUser(Users $user)
+    {
         $this->setRelatedEntity($user);
     }
 
+    public function getState($entity)
+    {
+
+        if ($entity->getFlag() == "a") {
+            $state = "Payé";
+        } else if ($entity->getFlag() == "w") {
+            $state = "En attente";
+        } else {
+            $state = "Annulé";
+        }
+        return $state;
+    }
+
+    public function getNbArticle()
+    {
+        $nbArticle = 0;
+        foreach ($this->getOrderLines() as $orderLine) {
+            $nbArticle += $orderLine->getQuantity();
+        }
+        return $nbArticle;
+    }
     /**
      * Get the value of idOrdes
      */
@@ -48,14 +73,28 @@ class Orders extends BaseEntity{
     }
 
 
-    public function getPrice(){
+    public function getPrice()
+    {
         $orderLines = $this->getOrderLines();
         $price = 0;
-        foreach($orderLines as $line){
-            $price +=(INT) $line->getArticle()->getLastPrice() * $line->getQuantity();
+        $dateMax = strtotime($this->getDateCreation());
+        foreach ($orderLines as $line) {
+            $price += $line->getArticle()->getLastPriceAt($dateMax) * $line->getQuantity();
         }
         return $price;
     }
+
+    public function getPurchases()
+    {
+        $orderLines = $this->getOrderLines();
+        $price = 0;
+        $dateMax = strtotime($this->getDateCreation());
+        foreach ($orderLines as $line) {
+            $price += $line->getArticle()->getTotalPurchases() * $line->getQuantity();
+        }
+        return $price;
+    }
+
     /**
      * Set the value of flag
      *
@@ -68,44 +107,51 @@ class Orders extends BaseEntity{
         return $this;
     }
 
-    
 
-    /**
-     * Get the value of idUser
-     */
-    public function getIdUser()
-    {
-        return $this->idUser;
-    }
-
-    /**
-     * Set the value of idUser
-     *
-     * @return  self
-     */
-    public function setIdUser($idUser)
-    {
-        $this->idUser = $idUser;
-
-        return $this;
-    }
 
     /**
      * Get the value of dateCreation
-     */ 
+     */
     public function getDateCreation()
     {
         return $this->dateCreation;
     }
 
+    public function getFormatedDate()
+    {
+        setlocale(LC_TIME,'fr_FR.utf8','fra');
+        FormatUtil::dump(strftime(" %d %B %G ", strtotime($this->getDateCreation())));
+        return utf8_encode(ucwords(strftime(" %d %B %G %Hh%M", strtotime($this->getDateCreation()))));
+    }
+    
     /**
      * Set the value of dateCreation
      *
      * @return  self
-     */ 
+     */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of idUsers
+     */
+    public function getIdUsers()
+    {
+        return $this->idUsers;
+    }
+
+    /**
+     * Set the value of idUsers
+     *
+     * @return  self
+     */
+    public function setIdUsers($idUsers)
+    {
+        $this->idUsers = $idUsers;
 
         return $this;
     }

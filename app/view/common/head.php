@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="<?= $vars['baseUrl'] ?>public/fontawesome-free-5.15.1-web/css/all.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    
+
     <?php
     if (isset($vars['stylesheet'])) {
         echo ' <link rel="stylesheet" href="' . $vars['baseUrl'] . 'public/css/' . $vars['stylesheet'] . '.css">';
@@ -19,7 +19,9 @@
 
     <!-- tailwind import -->
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-    
-    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto&display=swap" rel="stylesheet">
 
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto&display=swap" rel="stylesheet">
+    <script>
+        let vars = <?= json_encode($vars['jsVars'] ?? []) ?>;
+    </script>
 </head>

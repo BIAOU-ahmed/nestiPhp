@@ -44,10 +44,13 @@ class Product extends BaseEntity{
        
     }
 
-    public function isChef(){
+    public function isIngredient(){
         return $this->getIngredient()!=null;
     }
 
+    public function getType(){
+        return $this->isIngredient() ? 'ingrédient' : 'ustensil';
+    }
 
     /**
      * Get the value of name

@@ -11,6 +11,21 @@ class Administrator extends Users{
         return $this->getIndirectlyRelatedEntities("Lot", "Importation"); 
     }
 
+    public function getNbImportation(){
+        return sizeof($this->getImportations());
+    }
+
+    public function getLastImportation(){
+        $importations = $this->getImportations();
+        usort($importations, function($a, $b) {return strcmp($a->getImportationDate(), $b->getImportationDate());});
+        $index = sizeof($importations)-1;
+        $result = '';
+        if($index>=0){
+            $result = $importations[$index]->getImportationDate();
+        }
+        return $result;
+    }
+
     /**
      * Get the value of idAdministrator
      */ 

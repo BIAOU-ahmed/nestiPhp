@@ -141,7 +141,7 @@ if ($vars['entity']->getImage()) {
 
                             <form method="post" class="mb-4 h-full" id="recipeImg" action="<?= $vars['baseUrl'] ?>recipe/addImage">
                                 <div>
-                                    <img id="recipe-image" class="h-80 rounded lg:w-4/5 md:w-full recipe-img  mb-5 bg-gray-300" src="<?= $vars['baseUrl'] ?>public/images/recipes/<?= $img ?>" alt="">
+                                    <img id="image" class="h-80 rounded lg:w-4/5 md:w-full recipe-img  mb-5 bg-gray-300" src="<?= $vars['baseUrl'] ?>public/images/recipes/<?= $img ?>" alt="">
                                     <input type="hidden" value="<?= $vars['entity']->getId() ?>" name="idRecipe">
                                 </div>
                                 <?php if ($vars['entity']->getId()) { ?>
@@ -200,9 +200,9 @@ if ($vars['entity']->getImage()) {
                                 <?php } ?>
                                 <label>Télécharger une nouvelle image</label>
                                 <div class="lg:w-4/5 flex justify-between">
-                                    <input name="image" class=" w-4/5 appearance-none border rounded py-2 px-3 text-grey-darker" id="image" type="file">
+                                    <input name="image_link" class=" w-4/5 appearance-none border rounded py-2 px-3 text-grey-darker" id="image_link" type="file">
                                     <?php if (UserController::getLoggedInUser()->isChef()) { ?>
-                                    <input type="submit" data-id="<?= $vars['entity']->getId() ?>" data-url="<?= $vars['baseUrl'] ?>" id="add-image" value="OK" class="cursor-pointer w-1/6 h-full bg-indigo-500 text-gray-100 p-2 rounded">
+                                        <input type="submit" data-id="<?= $vars['entity']->getId() ?>" data-url="<?= $vars['baseUrl'] ?>" id="add-image" value="OK" class="cursor-pointer w-1/6 h-full bg-indigo-500 text-gray-100 p-2 rounded">
                                     <?php } ?>
                                     <!-- Ok -->
                                     <!-- </input> -->
@@ -375,8 +375,8 @@ if ($vars['entity']->getImage()) {
 
                             <div class="mb-4 h-full">
                                 <h2>Liste des ingredients</h2>
-                                <div class="inline-block h-80 w-full">
-                                    <div class="resize-none  w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none">
+                                <div class="inline-block  w-full">
+                                    <div class="resize-none h-56 min-h-full w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none">
 
                                         <ul id="ingredient-list">
                                             <!-- <div class="flex lg:justify-between mb-2">
@@ -396,11 +396,25 @@ if ($vars['entity']->getImage()) {
                                 </div>
                                 <span>Ajouter un ingredient</span>
                                 <div class="inline-block w-full mb-5 mt-3">
-                                    <input class="resize-none h-80 w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" id="ingredient" type="text"></input>
+                                    <input list="ingredient_list" class="resize-none h-80 w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" id="ingredient" type="text"></input>
+                                    <datalist id="ingredient_list">
+                                        <?php foreach ($vars['entity']->getAllIngredient() as $ingredient) { 
+                                            if($ingredient->isIngredient()){
+                                            ?>
+                                            <option value="<?= $ingredient->getName()?>">
+                                            <?php } } ?>
+                                    </datalist>
                                 </div>
                                 <div class="w-full flex justify-between">
                                     <input name="" class=" w-1/3 appearance-none border rounded py-2 px-3 text-grey-darker" id="quantity" type="number">
-                                    <input name="" class=" w-1/3 appearance-none border rounded py-2 px-3 text-grey-darker" id="unit" type="text">
+                                    <input list="unit_list" name="" class=" w-1/3 appearance-none border rounded py-2 px-3 text-grey-darker" id="unit" type="text">
+                                    <datalist id="unit_list">
+                                        <?php foreach ($vars['entity']->getAllUnit() as $unit) { 
+                                            
+                                            ?>
+                                            <option value="<?= $unit->getName()?>">
+                                            <?php } ?>
+                                    </datalist>
                                     <button data-id="<?= $vars['entity']->getId() ?>" data-url="<?= $vars['baseUrl'] ?>" id="add-ingredient" class=" lg:w-1/6 md:1/3 h-full bg-indigo-500 text-gray-100 p-2 rounded">
                                         Ok
                                     </button>
@@ -423,6 +437,7 @@ if ($vars['entity']->getImage()) {
 
 </div>
 <script src="<?= $vars['baseUrl'] ?>public/js/recipe.js"></script>
+<script src="<?= $vars['baseUrl'] ?>public/js/image.js"></script>
 <script>
 
 </script>

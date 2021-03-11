@@ -261,6 +261,29 @@ class Users extends BaseEntity
         }
         return $roles;
     }
+    public function getNbOrder(){
+        return sizeof($this->getOrders());
+    }
+
+    public function ordersPrice(){
+        $userOrders = $this->getOrders();
+        $total = 0;
+        foreach($userOrders as $order){
+            $total += $order->getPrice();
+        }
+        return $total;
+    }
+
+    public function getLastOrder(){        
+        $userOrders = $this->getOrders();
+        usort($userOrders, function($a, $b) {return strcmp($a->getDateCreation(), $b->getDateCreation());});
+        $index = sizeof($userOrders)-1;
+        $result = '';
+        if($index>=0){
+            $result = $userOrders[$index]->getPrice();
+        }
+        return $result;
+    }
 
     public function getChef(){
         return ChefDao::findById($this->getId());

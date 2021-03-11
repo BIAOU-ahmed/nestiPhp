@@ -3,7 +3,20 @@
 
     <!-- <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css">
 	<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script> -->
+    <?php
+    // FormatUtil::dump($_POST);
+    // FormatUtil::dump($vars);
+    if (isset($_SESSION['message'])) { ?>
+        <div id="error-message" class="w-full block bg-red-400 text-gray-700 text-center px-6 py-4 border-0 relative mb-4">
 
+            <span class="  inline-block text-2xl align-middle mr-8">
+                La recette a bien été supprimer
+            </span>
+
+        </div>
+    <?php
+        unset($_SESSION["message"]);
+    } ?>
 
     <div class="container mx-auto py-6 px-4" x-data="datatables()">
         <h1 class="text-4xl py-4 border-b mb-10">Recettes</h1>
@@ -13,7 +26,7 @@
         <div class="mb-4 flex justify-between items-center">
             <div class="flex-1 pr-4">
                 <div class="relative md:w-1/3">
-                    <input type="search" class="w-full pl-10 pr-4 py-2 rounded-lg shadow focus:outline-none focus:shadow-outline text-gray-600 font-medium" placeholder="Search...">
+                    <input id="search" type="search" class="w-full pl-10 pr-4 py-2 rounded-lg shadow focus:outline-none focus:shadow-outline text-gray-600 font-medium" placeholder="Search...">
                     <div class="absolute top-0 left-0 inline-flex items-center p-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-400" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="0" y="0" width="24" height="24" stroke="none"></rect>
@@ -90,43 +103,45 @@
                                     <div class="fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal<?= $recipe->getId() ?>" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                                         <div class="relative sm:w-3/4 md:w-1/2 lg:w-1/3  sm:mx-auto my-10 opacity-100">
                                             <div class="relative bg-gray-300 shadow-lg rounded-md text-gray-900 z-20" @click.away="showModal<?= $recipe->getId() ?> = false" x-show="showModal<?= $recipe->getId() ?>" x-transition:enter="transition transform duration-300" x-transition:enter-start="scale-0" x-transition:enter-end="scale-100" x-transition:leave="transition transform duration-300" x-transition:leave-start="scale-100" x-transition:leave-end="scale-0">
-                                                <header class="w-full h-40 grid mb-5 flex items-center  ">
-                                                    <div class=" w-full   grid  bg-white h-20">
+                                                <form action="<?= $vars['baseUrl'] ?>recipe/delete/<?= $recipe->getId() ?>" method="post">
 
-                                                        <h2 class=" font-semibold text-center justify-self-center self-center "><i class="text-3xl text-red-600 fas fa-exclamation-triangle"></i> Voulez-vous vraiment supprimer l'element: <?= $recipe->getId() ?> ?</h2>
 
-                                                    </div>
+                                                    <header class="w-full h-40 grid mb-5 flex items-center  ">
+                                                        <div class=" w-full   grid  bg-white h-20">
 
-                                                </header>
-                                                <main class="  h-20 grid   p-2 text-center">
-                                                    <p class="w-2/3 justify-self-center bg-white rounded-md">
-                                                        Cette action est définitive et irréversible
-                                                    </p>
-                                                </main>
-                                                <footer class="">
-
-                                                    <div class="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
-                                                        <button class="bg-red-500  active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease" @click="showModal<?= $recipe->getId() ?> = false">
-                                                            <span class="text-lg"> Annuler </span>
-                                                        </button>
-
-                                                        <div class="bg-green-500 ml-5 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
-                                                            <a href="<?= $vars['baseUrl'] ?>recipe/edit" class="text-lg text-center  block lg:inline-block lg:mt-0">
-                                                                </i> Confirmer
-                                                            </a>
+                                                            <h2 class=" font-semibold text-center justify-self-center self-center "><i class="text-3xl text-red-600 fas fa-exclamation-triangle"></i> Voulez-vous vraiment supprimer l'element: <?= $recipe->getId() ?> ?</h2>
 
                                                         </div>
-                                                    </div>
-                                                </footer>
+
+                                                    </header>
+                                                    <main class="  h-20 grid   p-2 text-center">
+                                                        <p class="w-2/3 justify-self-center bg-white rounded-md">
+                                                            Cette action est définitive et irréversible
+                                                        </p>
+                                                    </main>
+                                                    <footer class="">
+
+                                                        <div class="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
+                                                            <button class="bg-red-500  active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease" @click="showModal<?= $recipe->getId() ?> = false">
+                                                                <span class="text-lg"> Annuller </span>
+                                                            </button>
+
+                                                            <div class="bg-green-500 ml-5 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
+                                                                <button name="delete" type="submit" value="1" class="text-lg text-center  block lg:inline-block lg:mt-0">
+                                                                    Confirmer </button>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </footer>
+
+                                                </form>
+
                                             </div>
                                         </div>
                                     </div>
 
-
-
-
                                 </div>
-
 
 
 
@@ -141,3 +156,4 @@
 
 
 </div>
+<script src="<?= $vars['baseUrl'] ?>public/js/search.js"></script>

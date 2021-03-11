@@ -18,6 +18,21 @@ class Chef extends Users{
         return $this->idChef;
     }
 
+    public function getNbRecipe(){
+        $chefRecipes = RecipeDao::findAllBy('idChef',$this->getIdChef());
+        return sizeof($this->getRecipes());
+    }
+
+    public function getLastRecipe(){
+        $chefRecipes =$this->getRecipes();
+        usort($chefRecipes, function($a, $b) {return strcmp($a->getDateCreation(), $b->getDateCreation());});
+        $index = sizeof($chefRecipes)-1;
+        $result = '';
+        if($index>=0){
+            $result = $chefRecipes[$index]->getName();
+        }
+        return $result;
+    }
     /**
      * Set the value of idChef
      *
