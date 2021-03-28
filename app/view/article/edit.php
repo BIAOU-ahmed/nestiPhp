@@ -198,7 +198,8 @@ if ($vars['entity']->getImage()) {
                 </div>
             <?php } else { ?>
                 <div class=" grid lg:gap-10 md:gap-5 grid-cols-2">
-                    <form class="" action="<?= $vars['baseUrl'] ?>article/edit/<?= $vars["entity"]->getId() ?>" method="post">
+
+                    <form class="" action="<?= $vars['baseUrl'] ?>article/edit" method="post" enctype="multipart/form-data">
 
 
                         <div class="w-full inline-block">
@@ -210,8 +211,12 @@ if ($vars['entity']->getImage()) {
                                 <div class=" mb-4">
                                     <div class=" mr-1">
                                         <label class="block text-grey-darker text-sm font-bold mb-2" for="name">Téléverser un fichier .CSV</label>
-                                        <input class="appearance-none border rounded inline-block w-full py-2 px-3 text-grey-darker" id="name" type="file">
-
+                                        <input class="appearance-none border rounded inline-block w-full py-2 px-3 text-grey-darker" id="name" name="csvfile" type="file">
+                                        <?php if (@$vars['message'] == 'errorLogin') { ?>
+                                            <span class="">
+                                                Déconnexion réussi
+                                            </span>
+                                        <?php } ?>
                                     </div>
                                 </div>
 
@@ -235,7 +240,27 @@ if ($vars['entity']->getImage()) {
                     <div class="py-4  px-8">
                         <span>Liste des articles importés</span>
                         <div class="border h-5/6">
-                            
+
+
+                            <ul>
+                                <?php
+                                if (isset($vars['imported'])) {
+                                    foreach ($vars['imported'] as $key => $value) {
+                                ?>
+                                        <li class="flex justify-between">
+                                        <span><?= $value['name'] ?></span>
+                                        <span><?= $value['amount'] ?></span>
+                                            <a href="<?= $vars['baseUrl'] ?>article/edit/<?= $value['id'] ?>"><i class="fas fa-pencil-alt"></i></a>
+                                        </li>
+                                <?php
+                                    }
+                                    // FormatUtil::dump($vars['imported']);
+                                }
+
+                                ?>
+
+                            </ul>
+
                         </div>
                     </div>
 

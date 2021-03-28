@@ -99,4 +99,8 @@ class BaseController
     {
         self::render('error/error404');
     }
+    public static function accessDenied()
+    {
+        self::render('error/notAccess');
+    }
 }

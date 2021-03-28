@@ -90,13 +90,13 @@
                                 <label class="block text-grey-darker text-sm font-bold mb-2" for="role">Role</label>
                                 <div class="grid gap-4 grid-cols-3">
                                     <label class="inline-flex items-center mt-3">
-                                        <input type="checkbox" name="roles[admin]" value="admin" class="form-checkbox h-5 w-5 text-purple-600"><span class="ml-2 text-gray-700">Administrateur</span>
+                                        <input <?= $vars['entity']->isAdministrator() ? 'checked' : ''; ?> type="checkbox" name="roles[admin]" value="admin" class="form-checkbox h-5 w-5 text-purple-600"><span class="ml-2 text-gray-700">Administrateur</span>
                                     </label>
                                     <label class="inline-flex items-center mt-3">
-                                        <input type="checkbox" name="roles[chef]" value="chef" class="form-checkbox h-5 w-5 text-purple-600"><span class="ml-2 text-gray-700">Chef</span>
+                                        <input <?= $vars['entity']->isChef() ? 'checked' : ''; ?> type="checkbox" name="roles[chef]" value="chef" class="form-checkbox h-5 w-5 text-purple-600"><span class="ml-2 text-gray-700">Chef</span>
                                     </label>
                                     <label class="inline-flex items-center mt-3">
-                                        <input type="checkbox" name="roles[moderator]" value="moderator" class="form-checkbox h-5 w-5 text-purple-600"><span class="ml-2 text-gray-700">Moderateur</span>
+                                        <input <?= $vars['entity']->isModerator() ? 'checked' : ''; ?> type="checkbox" name="roles[moderator]" value="moderator" class="form-checkbox h-5 w-5 text-purple-600"><span class="ml-2 text-gray-700">Moderateur</span>
                                     </label>
                                 </div>
 
@@ -130,7 +130,7 @@
                                 <div class="relative shadow lg:w-1/5 md:w-1/2 text-center">
                                     <a href="<?= $vars['baseUrl'] ?>user/" class="text-lg  p-2  block lg:inline-block lg:mt-0">
                                         <?php if ($vars["entity"]->getId() == null) {  ?>
-                                            Anuller
+                                            Annuler
                                         <?php } else { ?>
                                             Supprimer
                                         <?php }  ?>
@@ -348,7 +348,7 @@
                         </div>
 
 
-                        <div class="h-48 max-h-full border bg-white">
+                        <div id="orderLineDetail" class="h-48 border bg-white">
                         </div>
                     </div>
 
@@ -381,7 +381,6 @@
                                 <tr class="">
 
 
-                                    <th class="bg-gray-100 sticky top-0 border-b border-gray-200 w-1/12 px-2 text-gray-600 font-bold  uppercase"> ID</th>
                                     <th class="bg-gray-100 sticky top-0 border-b border-gray-200 w-1/6 text-gray-600 font-bold  "> Titre</th>
                                     <th class="bg-gray-100 sticky top-0 border-b border-gray-200  w-1/6 text-gray-600 font-bold  "> Recette</th>
                                     <th class="bg-gray-100 sticky top-0 border-b border-gray-200 w-1/6  text-gray-600 font-bold "> Contenu</th>
@@ -394,15 +393,11 @@
                             <tbody>
 
                                 <?php
-                                FormatUtil::dump($vars['entity']->getComments());
                                 foreach ($vars['entity']->getComments() as $comment) {
 
                                 ?>
                                     <tr class="text-center" onclick='showDetail(this)'>
 
-                                        <td class="border-dashed border-t border-gray-200  ">
-                                            <span class="text-gray-700 py-3 "> <?= $comment->getId() ?></span>
-                                        </td>
                                         <td class="border-dashed border-t border-gray-200 ">
                                             <span class="text-gray-700 py-3 "><?= $comment->getCommentTitle() ?></span>
                                         </td>
@@ -419,13 +414,113 @@
                                             <?= $comment->getState($comment) ?>
                                         </td>
                                         <td class="border-dashed border-t border-gray-200 grid pt-3">
-                                            <span class="text-gray-700  text-center ">
-                                                <a href="<?= $vars['baseUrl'] ?>user/edit/<?= $comment->getId() ?>" class="underline ">Approuver</a>
-                                            </span> <br>
-                                            <span class="text-gray-700 text-center ">
 
-                                                <a href="" class="underline ">Bloquer</a>
-                                            </span>
+                                            <div x-data="{ showModal<?= $comment->getIdUsers() ?>: false }" :class="{'overflow-y-hidden': showModal<?= $comment->getIdUsers() ?> }">
+                                                <main class="flex flex-col sm:flex-row justify-center items-center">
+                                                    <a class="cursor-pointer underline  text-gray-700 p-2 w-32   " @click="showModal<?= $comment->getIdUsers() ?> = true">
+                                                        Approuver
+                                                    </a>
+
+                                                </main>
+
+                                                <!-- Modal1 -->
+                                                <div class="fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal<?= $comment->getIdUsers() ?>" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                                                    <div class="relative sm:w-3/4 md:w-1/2 lg:w-1/3  sm:mx-auto my-10 opacity-100">
+                                                        <div class="relative bg-gray-300 shadow-lg rounded-md text-gray-900 z-20" @click.away="showModal<?= $comment->getIdUsers() ?> = false" x-show="showModal<?= $comment->getIdUsers() ?>" x-transition:enter="transition transform duration-300" x-transition:enter-start="scale-0" x-transition:enter-end="scale-100" x-transition:leave="transition transform duration-300" x-transition:leave-start="scale-100" x-transition:leave-end="scale-0">
+                                                            <form action="<?= $vars['baseUrl'] ?>user/approuvedComment/<?= $vars['entity']->getId() ?>" method="post">
+
+                                                                <input type="hidden" name="id" value="<?= $comment->getRecipe()->getId() ?>">
+                                                                <input type="hidden" name="idModerator" value="<?= UserController::getLoggedInUser()->getId() ?>">
+
+                                                                <header class="w-full h-40 grid mb-5 flex items-center  ">
+                                                                    <div class=" w-full   grid  bg-white h-20">
+
+                                                                        <h2 class=" font-semibold text-center justify-self-center self-center "><i class="text-3xl text-red-600 fas fa-exclamation-triangle"></i> Voulez-vous vraiment approuver ce commentaire ? </h2>
+
+                                                                    </div>
+
+                                                                </header>
+                                                                <main class="  h-20 grid   p-2 text-center">
+                                                                    <p class="w-2/3 justify-self-center bg-white rounded-md">
+                                                                        Cette action est définitive et irréversible
+                                                                    </p>
+                                                                </main>
+                                                                <footer class="">
+
+                                                                    <div class="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
+                                                                        <button class="bg-red-500  active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease" @click="showModal<?= $comment->getIdUsers() ?> = false">
+                                                                            <span class="text-lg"> Annuller </span>
+                                                                        </button>
+
+                                                                        <div class="bg-green-500 ml-5 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
+                                                                            <button name="delete" type="submit" value="1" class="text-lg text-center  block lg:inline-block lg:mt-0">
+                                                                                Confirmer </button>
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </footer>
+
+                                                            </form>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div> <br>
+                                            <div x-data="{ showModal<?= $comment->getIdUsers() ?>: false }" :class="{'overflow-y-hidden': showModal<?= $comment->getIdUsers() ?> }">
+                                                <main class="flex flex-col sm:flex-row justify-center items-center">
+                                                    <a class="cursor-pointer underline  text-gray-700 p-2 w-32   " @click="showModal<?= $comment->getIdUsers() ?> = true">
+                                                        Bloquer
+                                                    </a>
+
+                                                </main>
+
+                                                <!-- Modal1 -->
+                                                <div class="fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal<?= $comment->getIdUsers() ?>" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                                                    <div class="relative sm:w-3/4 md:w-1/2 lg:w-1/3  sm:mx-auto my-10 opacity-100">
+                                                        <div class="relative bg-gray-300 shadow-lg rounded-md text-gray-900 z-20" @click.away="showModal<?= $comment->getIdUsers() ?> = false" x-show="showModal<?= $comment->getIdUsers() ?>" x-transition:enter="transition transform duration-300" x-transition:enter-start="scale-0" x-transition:enter-end="scale-100" x-transition:leave="transition transform duration-300" x-transition:leave-start="scale-100" x-transition:leave-end="scale-0">
+                                                            <form action="<?= $vars['baseUrl'] ?>user/blockedComment/<?= $vars['entity']->getId() ?>" method="post">
+
+                                                                <input type="hidden" name="id" value="<?= $comment->getRecipe()->getId() ?>">
+                                                                <input type="hidden" name="idModerator" value="<?= UserController::getLoggedInUser()->getId() ?>">
+                                                                <header class="w-full h-40 grid mb-5 flex items-center  ">
+                                                                    <div class=" w-full   grid  bg-white h-20">
+
+                                                                        <h2 class=" font-semibold text-center justify-self-center self-center "><i class="text-3xl text-red-600 fas fa-exclamation-triangle"></i> Voulez-vous vraiment bloquer ce commentaire ? </h2>
+
+                                                                    </div>
+
+                                                                </header>
+                                                                <main class="  h-20 grid   p-2 text-center">
+                                                                    <p class="w-2/3 justify-self-center bg-white rounded-md">
+                                                                        Cette action est définitive et irréversible
+                                                                    </p>
+                                                                </main>
+                                                                <footer class="">
+
+                                                                    <div class="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
+                                                                        <button class="bg-red-500  active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease" @click="showModal<?= $comment->getIdUsers() ?> = false">
+                                                                            <span class="text-lg"> Annuller </span>
+                                                                        </button>
+
+                                                                        <div class="bg-green-500 ml-5 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
+                                                                            <button name="delete" type="submit" value="1" class="text-lg text-center  block lg:inline-block lg:mt-0">
+                                                                                Confirmer </button>
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </footer>
+
+                                                            </form>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
                                         </td>
                                     </tr>
                                 <?php } ?>

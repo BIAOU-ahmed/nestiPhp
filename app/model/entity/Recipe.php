@@ -37,6 +37,11 @@ class Recipe extends BaseEntity
     {
         return $this->getRelatedEntities("Comment");
     }
+    public function getGrades(): array
+    {
+        return $this->getRelatedEntities("Grades");
+    }
+
     public function getParagraphs(): array
     {
         $paragraphs = $this->getRelatedEntities("Paragraph");
@@ -101,6 +106,17 @@ class Recipe extends BaseEntity
         return $this->idRecipe;
     }
 
+    public function getRate(){
+        $result = 0;
+        $total = 0;
+        foreach ($this->getGrades() as $value) {
+            $total += $value->getRating();
+        }
+        if(count($this->getGrades())!=0){
+            $result = $total/count($this->getGrades());
+        }
+        return $result;
+    }
 
     public function getTime()
     {

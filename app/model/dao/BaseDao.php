@@ -170,7 +170,7 @@ class BaseDao
     {
         $pdo = DatabaseUtil::connect();
        
-        $sql = "SELECT * FROM " . self::getTableName() . " WHERE $key > ? AND DAY(dateCreation) = ?";
+        $sql = "SELECT * FROM " . self::getTableName() . " WHERE $key > ? AND DAY($key) = ?";
         $values = $value;
 
         if ( $flag != null && in_array('flag', self::getColumnNames()) ){
@@ -254,7 +254,6 @@ class BaseDao
         foreach ( self::getParentClasses() as $currentClass ) { 
             $pdo = DatabaseUtil::connect();
             $currentDao = $currentClass::getDaoClass();
-            
             if($currentDao::findById($entity->getId()) != null){
                 $insertedId = $entity->getId();
                 continue;

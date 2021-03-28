@@ -42,10 +42,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
 
     const el1 = document.getElementById('chartConection');
-
+    console.log(vars.connexionByHour)
     const dataConnexionLogByHour = {
         categories: ['Connection'],
-        series: [{ "name": 12.4, "data": 41 }, { "name": 12, "data": 412 }]
+        series: vars.connexionByHour
 
     }
 
@@ -62,7 +62,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
             dataLabels: {
                 visible: true,
                 anchor: 'outer',
-
+                pieSeriesName: {
+                    visible: true,
+                },
             },
             radiusRange: {
                 inner: '60%',
@@ -74,3 +76,24 @@ window.addEventListener("DOMContentLoaded", (event) => {
     const chartConection = toastui.Chart.pieChart({ el: el1, data: dataConnexionLogByHour, options: optionsConnexionLog });
 
 });
+
+
+console.log(vars.articlePurchases)
+const elArticle = document.getElementById('chartArticle');
+const dataArticle = {
+    categories: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    series: [{
+            name: 'couts',
+            data: vars.articlePurchases,
+        },
+        {
+            name: 'ventes',
+            data: vars.articleSales,
+        }
+    ],
+};
+const optionsArticle = {
+    chart: { title: 'Monthly Revenue', width: 900, height: 400 },
+};
+
+const chart = toastui.Chart.columnChart({ el: elArticle, data: dataArticle, options: optionsArticle });

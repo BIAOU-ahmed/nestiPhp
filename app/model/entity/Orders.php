@@ -120,7 +120,6 @@ class Orders extends BaseEntity
     public function getFormatedDate()
     {
         setlocale(LC_TIME,'fr_FR.utf8','fra');
-        FormatUtil::dump(strftime(" %d %B %G ", strtotime($this->getDateCreation())));
         return utf8_encode(ucwords(strftime(" %d %B %G %Hh%M", strtotime($this->getDateCreation()))));
     }
     

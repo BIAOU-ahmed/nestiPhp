@@ -21,14 +21,16 @@ class UserController extends BaseEntityController
     //     return "Users";
     // }
 
-    // public static function callActionMethod($action)
-    // {
-    //     self::$entity = self::getUser();
-    //     if (self::$entity == null) {
-    //         $action = "login";
-    //     }
-    //     parent::callActionMethod($action);
-    // }
+    public static function callActionMethod($action)
+    {
+        if ($action != 'login' && $action != 'logout') {
+            if (!UserController::getLoggedInUser()->isModerator() && !UserController::getLoggedInUser()->isAdministrator()) {
+                $action = "accessDenied";
+            }
+        }
+
+        parent::callActionMethod($action);
+    }
 
 
 
@@ -50,33 +52,84 @@ class UserController extends BaseEntityController
                 $newConnection->setDateConnection($today);
                 ConnectionLogDao::saveOrUpdate($newConnection);
                 header('Location: ' . SiteUtil::url() . 'recipe/list');
-            }else{
+            } else {
                 $templateVars['message'] = 'errorLogin';
-
             }
         }
-        self::render(['action' => 'login', 'base' => 'users/baseLogin'],$templateVars);
+        self::render(['action' => 'login', 'base' => 'users/baseLogin'], $templateVars);
     }
     public static function orderLines()
     {
-        if(isset($_POST['order'])){
-            $orderId = (INT) trim($_POST['order']);
+        if (isset($_POST['order'])) {
+            $orderId = (int) trim($_POST['order']);
             $order = OrdersDao::findById($orderId);
             $orderLines = $order->getOrderLines();
             // FormatUtil::dump($orderLines);
             $array = [];
             $index = 0;
-            foreach($orderLines as $lines){
+            foreach ($orderLines as $lines) {
                 $array[$index]['unitQuantity'] = $lines->getArticle()->getUnitQuantity();
                 $array[$index]['unitName'] = $lines->getArticle()->getUnit()->getName();
                 $array[$index]['productName'] = $lines->getArticle()->getProduct()->getName();
                 $array[$index]['quantity'] = $lines->getQuantity();
-               $index++;
+                $index++;
             }
             echo json_encode($array);
         }
     }
 
+    public static function blockedComment()
+    {
+
+        echo "toto";
+        $id = SiteUtil::getUrlParameters()[2] ?? "";
+        $values = [$id, $_POST['id']];
+        $comment = CommentDao::findComment($values);
+        FormatUtil::dump($_POST['id']);
+        FormatUtil::dump($_POST['idModerator']);
+        FormatUtil::dump($comment);
+        $comment->setIdModerator($_POST['idModerator']);
+        $comment->setFlag('b');
+        FormatUtil::dump($comment);
+        FormatUtil::dump("iduser " . $comment->getIdUsers());
+        $controller = SiteUtil::getUrlParameters()[0] ?? "";
+        // $id = SiteUtil::getUrlParameters()[2] ?? "";
+        CommentDao::updateComment($comment);
+        // $_SESSION['message'] = "deleted";
+        header('Location: ' . SiteUtil::url() . $controller . '/edit/' . $id);
+        // // self::render(null, $templateVars);
+
+        // // header('Location: ' . SiteUtil::url() . $controller.'/list?message=deleted');
+        // // header('Location: ' . SiteUtil::url() . $controller . '/list/deleted');
+
+        // exit();
+    }
+    public static function approuvedComment()
+    {
+
+        echo "toto";
+        $id = SiteUtil::getUrlParameters()[2] ?? "";
+        $values = [$id, $_POST['id']];
+        $comment = CommentDao::findComment($values);
+        FormatUtil::dump($_POST['id']);
+        FormatUtil::dump($_POST['idModerator']);
+        FormatUtil::dump($comment);
+        $comment->setIdModerator($_POST['idModerator']);
+        $comment->setFlag('a');
+        FormatUtil::dump($comment);
+        FormatUtil::dump("iduser " . $comment->getIdUsers());
+        $controller = SiteUtil::getUrlParameters()[0] ?? "";
+        // $id = SiteUtil::getUrlParameters()[2] ?? "";
+        CommentDao::updateComment($comment);
+        // $_SESSION['message'] = "deleted";
+        header('Location: ' . SiteUtil::url() . $controller . '/edit/' . $id);
+        // // self::render(null, $templateVars);
+
+        // // header('Location: ' . SiteUtil::url() . $controller.'/list?message=deleted');
+        // // header('Location: ' . SiteUtil::url() . $controller . '/list/deleted');
+
+        // exit();
+    }
 
     public static function logout()
     {
@@ -147,9 +200,9 @@ class UserController extends BaseEntityController
 
                 EntityUtil::setFromArray($user, $validatedProperties);
                 $user->setIdCity($city->getId());
-                
 
-                
+
+
                 self::getDao()::saveOrUpdate($user);
 
                 if (isset($_POST['roles']['admin'])) {
@@ -161,8 +214,7 @@ class UserController extends BaseEntityController
                 if (isset($_POST['roles']['moderator'])) {
                     $user->makeModerator();
                 }
-
-                $templateName = ""; // null template will redirect to default action
+                // null template will redirect to default action
             } else {
                 $templateVars["errors"] = $formBuilder->getErrors();
                 $properties = $_POST[static::getEntityClass()];

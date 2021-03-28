@@ -14,11 +14,11 @@ class Grades extends BaseEntity{
         $this->setRelatedEntity($r);
     }
 
-    public function getUser(): ?User{ 
+    public function getUser(): ?Users{ 
         return $this->getRelatedEntity("User");
     }
 
-    public function setUser(User $u){
+    public function setUser(Users $u){
         $this->setRelatedEntity($u);
     }
 

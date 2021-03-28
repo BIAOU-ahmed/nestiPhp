@@ -107,7 +107,8 @@ if ($vars['entity']->getImage()) {
                                 </div>
 
 
-                                <?php if (UserController::getLoggedInUser()->isChef()) { ?>
+                                <?php
+                                if ($vars['entity']->getId() == '' || $vars['loggedInUser']->getId() == $vars['entity']->getChef()->getId() || $vars['loggedInUser']->isAdministrator()) { ?>
                                     <div class="  flex">
                                         <div class="relative mr-5 lg:w-1/6 md:w-1/2 shadow">
 
@@ -128,7 +129,8 @@ if ($vars['entity']->getImage()) {
 
                                         </div>
                                     </div>
-                                <?php } ?>
+                                <?php }
+                                ?>
                             </div>
 
                         </div>
@@ -150,7 +152,7 @@ if ($vars['entity']->getImage()) {
                                         <div x-data="{ showModal: false }" :class="{'overflow-y-hidden': showModal }">
                                             <main class="">
                                                 <?php
-                                                if (UserController::getLoggedInUser()->isChef()) { ?>
+                                                if ($vars['loggedInUser']->getId() == $vars['entity']->getChef()->getId() || $vars['loggedInUser']->isAdministrator()) { ?>
                                                     <button type="button" @click="showModal = true" class="block"><i class="rounded text-center pt-1 text-3xl h-10 w-10 bg-red-600 border text-white block fas fa-trash-alt my-2"></i></button>
                                                 <?php } ?>
                                             </main>
@@ -201,7 +203,7 @@ if ($vars['entity']->getImage()) {
                                 <label>Télécharger une nouvelle image</label>
                                 <div class="lg:w-4/5 flex justify-between">
                                     <input name="image_link" class=" w-4/5 appearance-none border rounded py-2 px-3 text-grey-darker" id="image_link" type="file">
-                                    <?php if (UserController::getLoggedInUser()->isChef()) { ?>
+                                    <?php if ($vars['entity']->getId() == '' || $vars['loggedInUser']->getId() == $vars['entity']->getChef()->getId() || $vars['loggedInUser']->isAdministrator()) { ?>
                                         <input type="submit" data-id="<?= $vars['entity']->getId() ?>" data-url="<?= $vars['baseUrl'] ?>" id="add-image" value="OK" class="cursor-pointer w-1/6 h-full bg-indigo-500 text-gray-100 p-2 rounded">
                                     <?php } ?>
                                     <!-- Ok -->
@@ -323,7 +325,10 @@ if ($vars['entity']->getImage()) {
                                 <main class="flex w-full flex-col sm:flex-row justify-center items-center">
 
                                     <div class="w-full ml-15 h-20 mt-5 flex justify-end">
-                                        <button id="addprep" class="justify-self-end rounded-lg w-11/12 border h-full" @click="showModal = true"><i class="text-4xl fas fa-plus"></i></button>
+                                        <?php if ($vars['entity']->getId() == '' || $vars['loggedInUser']->getId() == $vars['entity']->getChef()->getId() || $vars['loggedInUser']->isAdministrator()) { ?>
+
+                                            <button id="addprep" class="justify-self-end rounded-lg w-11/12 border h-full" @click="showModal = true"><i class="text-4xl fas fa-plus"></i></button>
+                                        <?php } ?>
                                     </div>
                                 </main>
 
@@ -376,9 +381,9 @@ if ($vars['entity']->getImage()) {
                             <div class="mb-4 h-full">
                                 <h2>Liste des ingredients</h2>
                                 <div class="inline-block  w-full">
-                                    <div class="resize-none h-56 min-h-full w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none">
+                                    <div class="resize-none min-h-full w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none pb-5">
 
-                                        <ul id="ingredient-list">
+                                        <ul id="ingredient-list" data-cantDelete="<?= ($vars['entity']->getId() == '' || $vars['loggedInUser']->getId() == $vars['entity']->getChef()->getId() || $vars['loggedInUser']->isAdministrator()) ? 'true' : 'false' ?>">
                                             <!-- <div class="flex lg:justify-between mb-2">
                                                 <li >3 litre de poire </li>
                                                 <button data-id="" data-url="" id="add-ingredient" class="md:ml-2 md:w-1/6 lg:w-1/12 bg-indigo-500 text-gray-100  rounded">
@@ -398,26 +403,32 @@ if ($vars['entity']->getImage()) {
                                 <div class="inline-block w-full mb-5 mt-3">
                                     <input list="ingredient_list" class="resize-none h-80 w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" id="ingredient" type="text"></input>
                                     <datalist id="ingredient_list">
-                                        <?php foreach ($vars['entity']->getAllIngredient() as $ingredient) { 
-                                            if($ingredient->isIngredient()){
-                                            ?>
-                                            <option value="<?= $ingredient->getName()?>">
-                                            <?php } } ?>
+                                        <?php foreach ($vars['entity']->getAllIngredient() as $ingredient) {
+                                            if ($ingredient->isIngredient()) {
+                                        ?>
+                                                <option value="<?= $ingredient->getName() ?>">
+                                            <?php }
+                                        } ?>
                                     </datalist>
                                 </div>
                                 <div class="w-full flex justify-between">
                                     <input name="" class=" w-1/3 appearance-none border rounded py-2 px-3 text-grey-darker" id="quantity" type="number">
                                     <input list="unit_list" name="" class=" w-1/3 appearance-none border rounded py-2 px-3 text-grey-darker" id="unit" type="text">
                                     <datalist id="unit_list">
-                                        <?php foreach ($vars['entity']->getAllUnit() as $unit) { 
-                                            
-                                            ?>
-                                            <option value="<?= $unit->getName()?>">
+                                        <?php foreach ($vars['entity']->getAllUnit() as $unit) {
+
+                                        ?>
+                                            <option value="<?= $unit->getName() ?>">
                                             <?php } ?>
                                     </datalist>
-                                    <button data-id="<?= $vars['entity']->getId() ?>" data-url="<?= $vars['baseUrl'] ?>" id="add-ingredient" class=" lg:w-1/6 md:1/3 h-full bg-indigo-500 text-gray-100 p-2 rounded">
-                                        Ok
-                                    </button>
+                                    <input data-id="<?= $vars['entity']->getId() ?>" data-url="<?= $vars['baseUrl'] ?>" id="add-ingredient" type="hidden" name="">
+                                    <?php if ($vars['entity']->getId() == '' || $vars['loggedInUser']->getId() == $vars['entity']->getChef()->getId() || $vars['loggedInUser']->isAdministrator()) { ?>
+
+                                        <button id="add_ingredient" class=" lg:w-1/6 md:1/3 h-full bg-indigo-500 text-gray-100 p-2 rounded">
+                                            Ok
+
+                                        </button>
+                                    <?php } ?>
                                 </div>
 
                             </div>

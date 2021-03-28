@@ -2,13 +2,12 @@
 
 class Comment extends BaseEntity
 {
-    private $idComment;
     private $commentTitle;
     private $commentContent;
     private $dateCreation;
     private $flag;
     private $idRecipe;
-    private $idUser;
+    private $idUsers;
     private $idModerator;
 
 
@@ -51,45 +50,6 @@ class Comment extends BaseEntity
         $this->setRelatedEntity($i);
     }
 
-    /**
-     * Get the value of idUser
-     */
-    public function getIdUser()
-    {
-        return $this->idUser;
-    }
-
-    /**
-     * Set the value of idUser
-     *
-     * @return  self
-     */
-    public function setIdUser($idUser)
-    {
-        $this->idUser = $idUser;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of idComment
-     */
-    public function getIdComment()
-    {
-        return $this->idComment;
-    }
-
-    /**
-     * Set the value of idComment
-     *
-     * @return  self
-     */
-    public function setIdComment($idComment)
-    {
-        $this->idComment = $idComment;
-
-        return $this;
-    }
 
     /**
      * Get the value of commentTitle
@@ -227,6 +187,26 @@ class Comment extends BaseEntity
     public function setIdModerator($idModerator)
     {
         $this->idModerator = $idModerator;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of idUsers
+     */ 
+    public function getIdUsers()
+    {
+        return $this->idUsers;
+    }
+
+    /**
+     * Set the value of idUsers
+     *
+     * @return  self
+     */ 
+    public function setIdUsers($idUsers)
+    {
+        $this->idUsers = $idUsers;
 
         return $this;
     }

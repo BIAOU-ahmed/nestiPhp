@@ -10,6 +10,9 @@ $(document).ready(function() {
     //     // your code
     // });
 
+    var recipe = $("#add-ingredient").data("id");
+    let barUrl = $("#add-ingredient").data("url");
+
     $('#addprep').click(function() {
         $('#modal').removeClass('hidden')
     })
@@ -43,36 +46,34 @@ $(document).ready(function() {
 
 
 
-    $('#add-ingredient').click(function() {
-        // $('#ingredient-list').html("")
-        var recipe = $(this).data("id");
-        let barUrl = $(this).data("url");
-        let ingredientName = $("#ingredient").val();
-        let unitName = $("#unit").val();
-        let quantity = $("#quantity").val();
+    $('#add_ingredient').click(function() {
+            // $('#ingredient-list').html("")
+            // var recipe = $(this).data("id");
+            // let barUrl = $(this).data("url");
+            let ingredientName = $("#ingredient").val();
+            let unitName = $("#unit").val();
+            let quantity = $("#quantity").val();
+            // console.log(recipe)
+            // console.log(barUrl)
+            if (recipe != "") {
+
+
+                $.post(barUrl + '/recipe/addIngredient', {
+                    "recipe": encodeURIComponent(recipe),
+                    "ingredientName": encodeURIComponent(ingredientName),
+                    "unitName": encodeURIComponent(unitName),
+                    "quantity": encodeURIComponent(quantity)
+                }, (response) => {
+                    // let array = PSON.parse(response);
+                    addIngredientRecipe(response);
+                });
+
+            } else {
+                alert("Veuillez d'abord céer une recette")
+            }
+        })
         // console.log(recipe)
-        // console.log(barUrl)
-        if (recipe != "") {
-
-
-            $.post(barUrl + '/recipe/addIngredient', {
-                "recipe": encodeURIComponent(recipe),
-                "ingredientName": encodeURIComponent(ingredientName),
-                "unitName": encodeURIComponent(unitName),
-                "quantity": encodeURIComponent(quantity)
-            }, (response) => {
-                // let array = PSON.parse(response);
-                addIngredientRecipe(response);
-            });
-
-        } else {
-            alert("Veuillez d'abord céer une recette")
-        }
-    })
-    var recipe = $("#add-ingredient").data("id");
-    let barUrl = $("#add-ingredient").data("url");
-    // console.log(recipe)
-    // console.log("url" + barUrl)
+        // console.log("url" + barUrl)
     $.post(barUrl + '/recipe/addIngredient', {
         "load": encodeURIComponent(recipe),
     }, (response) => {
@@ -105,8 +106,8 @@ $(document).ready(function() {
         var result = true;
         var i;
         for (i = 0; i < x.options.length; i++) {
-            console.log(unit)
-            console.log(x.options[i].value)
+            // console.log(unit)
+            // console.log(x.options[i].value)
             if (unit == x.options[i].value) {
                 result = false;
                 break;
@@ -116,7 +117,7 @@ $(document).ready(function() {
     }
 
     function addIngredientRecipe(data) {
-        alert(data)
+        // alert(data)
         if (data === "false") {
             alert("test")
         } else if (data !== '') {
@@ -129,7 +130,7 @@ $(document).ready(function() {
                 let item = '<div class="flex justify-between mb-2"> <li  >' + n[k].quantity + " " + n[k].unitName + " de " + n[k].ingredientName + '</li> <button  data-idrecipe="' + n[k].idRecipe + '" data-idproduct="' + n[k].idProduct + '" class="deleteIngredient md:ml-2 md:w-1/6 lg:w-1/12 bg-indigo-500 text-gray-100  rounded">' +
                     'X' +
                     '</button> </div>';
-                console.log("ingredient" + ingredientNotPresent(n[k].ingredientName))
+                // console.log("ingredient" + ingredientNotPresent(n[k].ingredientName))
                 if (ingredientNotPresent(n[k].ingredientName)) {
                     let newIng = '<option value="' + n[k].ingredientName + '"></option>'
                     $('#ingredient_list').append(newIng)
@@ -149,19 +150,26 @@ $(document).ready(function() {
                 // let button = el[0].querySelector('button')
             var recipe = $(this).data("idrecipe");
             var product = $(this).data("idproduct");
+            var right = $('#ingredient-list').data("cantdelete");
+            // console.log(right)
+            if (right == true) {
+                $.post(barUrl + '/recipe/addIngredient', {
+                    "recipe": encodeURIComponent(recipe),
+                    "idProduct": encodeURIComponent(product),
+                }, (response) => {
+                    // let array = PSON.parse(response);
+                    // alert(response)
+                    addIngredientRecipe(response);
+                });
+            } else if ('false') {
+                alert('non');
+            }
             // console.log(barUrl)
-            $.post(barUrl + '/recipe/addIngredient', {
-                "recipe": encodeURIComponent(recipe),
-                "idProduct": encodeURIComponent(product),
-            }, (response) => {
-                // let array = PSON.parse(response);
-                // alert(response)
-                addIngredientRecipe(response);
-            });
 
-            console.log($(this))
-            console.log(recipe)
-            console.log(product)
+
+            // console.log($(this))
+            // console.log(recipe)
+            // console.log(product)
 
         })
 
@@ -276,31 +284,39 @@ $(document).ready(function() {
         $('.moveParagraph').click(function() {
             // $('#ingredient-list').html("")
 
+            // $(this).addClass("rotate-left");
+
             var recipe = $(this).data("idrecipe");
             var para = $(this).data("id");
             var action = $(this).data("action");
-            console.log(recipe)
+            if (action === "up") {
+                console.log($(this).parent().parent().children('div').eq(1).children().addClass("rotate-left"));
+                console.log($(this).parent().parent().prev().children('div').eq(1).children().addClass("rotate-down"));
+            } else if (action === "down") {
+                $(this).parent().parent().children('div').eq(1).children().addClass("rotate-down");
+                $(this).parent().parent().next().children('div').eq(1).children().addClass("rotate-left");
+            }
+            console.log(action)
                 // let barUrl = $(this).data("url");
                 // let preparationContent = $("#preparationsContent").val();
+            setTimeout(function() {
+                // console.log(recipe)
+                // console.log(barUrl)
+                if (recipe != "") {
+                    $.post(barUrl + '/recipe/movePreparations', {
+                        "recipe": encodeURIComponent(recipe),
+                        "action": encodeURIComponent(action),
+                        "id": encodeURIComponent(para)
+                    }, (response) => {
+                        // let array = PSON.parse(response);
+                        // $('#new-content').val(response);
+                        // alert(response)
+                        addParagraph(response);
 
-            // console.log(recipe)
-            // console.log(barUrl)
-            if (recipe != "") {
+                    });
 
-
-                $.post(barUrl + '/recipe/movePreparations', {
-                    "recipe": encodeURIComponent(recipe),
-                    "action": encodeURIComponent(action),
-                    "id": encodeURIComponent(para)
-                }, (response) => {
-                    // let array = PSON.parse(response);
-                    // $('#new-content').val(response);
-                    // alert(response)
-                    addParagraph(response);
-
-                });
-
-            }
+                }
+            }, 4000);
         })
 
         $('.deletePara').click(function() {
@@ -308,9 +324,9 @@ $(document).ready(function() {
 
             var recipe = $(this).data("idrecipe");
             var para = $(this).data("id");
-            console.log(recipe)
-                // let barUrl = $(this).data("url");
-                // let preparationContent = $("#preparationsContent").val();
+            // console.log(recipe)
+            // let barUrl = $(this).data("url");
+            // let preparationContent = $("#preparationsContent").val();
 
             // console.log(recipe)
             // console.log(barUrl)

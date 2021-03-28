@@ -291,13 +291,45 @@ class Article extends BaseEntity
         return $result;
     }
 
-    public function getInventory()
+    public function getNbOrdered()
     {
         $totalQuantity = 0;
         foreach ($this->getOrderLines() as $orderLine) {
-            $totalQuantity += $orderLine->getQuantity();
+            if ($orderLine->getOrder()->getFlag() != "b") {
+                $totalQuantity += $orderLine->getQuantity();
+            }
         }
         return $totalQuantity;
+    }
+
+    public function getTotalSalls()
+    {
+        $totalQuantity = 0;
+        foreach ($this->getOrderLines() as $orderLine) {
+            if ($orderLine->getOrder()->getFlag() != "b") {
+                $totalQuantity += $this->getLastPriceAt($orderLine->getOrder()->getDateCreation()) * $orderLine->getQuantity();
+            }
+        }
+        return $totalQuantity;
+    }
+    public function getBenefit(){
+        FormatUtil::dump('vend'.$this->getTotalSalls());
+        FormatUtil::dump('couts'.$this->getTotalPurchases());
+
+        return $this->getTotalSalls() - $this->getTotalPurchases();
+    }
+    public function getNbBought()
+    {
+        $totalQuantity = 0;
+        foreach ($this->getLots() as $lot) {
+            $totalQuantity += $lot->getQuantity();
+        }
+        return $totalQuantity;
+    }
+
+    public function getInventory()
+    {
+        return $this->getNbBought() - $this->getNbOrdered();
     }
     public function getFactoryName()
     {

@@ -21,20 +21,22 @@ class RecipeController extends BaseEntityController
     //     return "Users";
     // }
 
-    // public static function callActionMethod($action)
-    // {
-    //     self::$entity = self::getUser();
-    //     if (self::$entity == null) {
-    //         $action = "login";
-    //     }
-    //     parent::callActionMethod($action);
-    // }
+    public static function callActionMethod($action)
+    {
+        if ((!UserController::getLoggedInUser()->isChef() && !UserController::getLoggedInUser()->isAdministrator())) {
+            $action = "accessDenied";
+        }
+        $id = SiteUtil::getUrlParameters()[2] ?? "";
+        if(!UserController::getLoggedInUser()->isChef() && $action=="edit" && $id == ''){
+            $action = "accessDenied";
+        }
+        parent::callActionMethod($action);
+    }
 
 
 
     public static function edit()
     {
-
         $templateName = 'edit';
         $templateVars = ["isSubmitted" => !empty($_POST[self::getEntityClass()])];
 
@@ -52,12 +54,12 @@ class RecipeController extends BaseEntityController
                 $chefId =  UserController::getLoggedInUser()->getId();
                 $validatedProperties = $formBuilder->getParameters();
                 EntityUtil::setFromArray($recipe, $validatedProperties);
-                if(!$recipe->getId()){
+                if (!$recipe->getId()) {
                     $recipe->setIdChef($chefId);
                 }
                 self::getDao()::saveOrUpdate($recipe);
-                // header('Location: ' . SiteUtil::url() . 'recipe/list/'.$recipe->getId());
-                // exit;
+                header('Location: ' . SiteUtil::url() . 'recipe/edit/' . $recipe->getId());
+                exit;
             } else {
                 $templateVars["errors"] = $formBuilder->getErrors();
                 $properties = $_POST[static::getEntityClass()];
@@ -200,6 +202,11 @@ class RecipeController extends BaseEntityController
                         ProductDao::save($ingredient);
                         $ingredient->makeIngredient();
                     }
+
+                    $ing = IngredientDao::findById($ingredient->getId());
+                    if($ing==null){
+                        $ingredient->makeIngredient();
+                    }
                     // FormatUtil::dump($unit);
                     // FormatUtil::dump($ingredient);
                     // FormatUtil::dump($ingredient->getId());
@@ -207,7 +214,7 @@ class RecipeController extends BaseEntityController
                     $ingredientRecipe = IngredientRecipeDao::findOneBy($ingredient->getId(), $recipe->getId());
                     // FormatUtil::dump($ingredientRecipe);
                     if (!$ingredientRecipe) {
-                       
+
                         if ($unit == null) {
                             $unit = new Unit();
                             $unit->setName($unitName);
@@ -221,7 +228,7 @@ class RecipeController extends BaseEntityController
                         $ingredientRecipe->setQuantity($quantity);
                         // FormatUtil::dump($ingredientRecipe);
                         IngredientRecipeDao::save($ingredientRecipe);
-                    }else{
+                    } else {
                         $result = false;
                     }
                 }
