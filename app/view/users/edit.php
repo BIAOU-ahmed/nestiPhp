@@ -127,16 +127,14 @@
 
                                 </div>
 
-                                <div class="relative shadow lg:w-1/5 md:w-1/2 text-center">
-                                    <a href="<?= $vars['baseUrl'] ?>user/" class="text-lg  p-2  block lg:inline-block lg:mt-0">
-                                        <?php if ($vars["entity"]->getId() == null) {  ?>
-                                            Annuler
-                                        <?php } else { ?>
-                                            Supprimer
-                                        <?php }  ?>
-                                    </a>
+                                <?php if ($vars["entity"]->getId() == null) {  ?>
+                                    <input type="reset" value="Annuler" class="cursor-pointer bg-white text-lg  p-2  block lg:inline-block lg:mt-0 relative shadow lg:w-1/5 md:w-1/2 text-center">
 
-                                </div>
+                                <?php } else { ?>
+                                    <input type="reset" value="Supprimer" class="cursor-pointer bg-white text-lg  p-2  block lg:inline-block lg:mt-0 relative shadow lg:w-1/5 md:w-1/2 text-center">
+
+                                <?php }  ?>
+
                             </div>
                             <?php  ?>
                         </div>

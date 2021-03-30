@@ -32,7 +32,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     };
 
     const options = {
-        chart: { title: '', width: 600, height: 400 },
+        chart: { title: '', width: 400, height: 400 },
         xAxis: { pointOnColumn: false, title: { text: '' } },
         yAxis: { title: '' },
     };
@@ -78,7 +78,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
 });
 
 
-console.log(vars.articlePurchases)
 const elArticle = document.getElementById('chartArticle');
 const dataArticle = {
     categories: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
@@ -93,7 +92,7 @@ const dataArticle = {
     ],
 };
 const optionsArticle = {
-    chart: { title: 'Monthly Revenue', width: 900, height: 400 },
+    chart: { title: 'Nombre d\'article en vente '+vars.articlePurchases.length, width: 900, height: 400 },
 };
 
 const chart = toastui.Chart.columnChart({ el: elArticle, data: dataArticle, options: optionsArticle });

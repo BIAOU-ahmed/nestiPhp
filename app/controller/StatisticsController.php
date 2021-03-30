@@ -1,17 +1,5 @@
 <?php
 
-//require_once PATH_ENTITY . 'Recipe.php';
-//require_once PATH_TOOLS . 'FormatUtil.php';
-//require_once PATH_MODEL . 'dao/RecipeDao.php';
-//require_once PATH_MODEL . 'entity/BaseEntity.php';
-
-//SiteUtil::require('model/entity/Recipe.php');
-//SiteUtil::require('model/entity/BaseEntity.php');
-//SiteUtil::require('model/dao/RecipeDao.php');
-//SiteUtil::require('model/entity/BaseEntity.php');
-
-
-
 class StatisticsController extends BaseController
 {
 
@@ -37,8 +25,6 @@ class StatisticsController extends BaseController
         foreach ($categories as $key => $logs) {
             $connexionByHour[] = (object) array("name" => $key, "data" => count($logs));
         }
-        // FormatUtil::dump($connexionByHour);
-        // FormatUtil::dump($categories);
 
 
         $allUsers = UsersDao::findAll();
@@ -56,7 +42,6 @@ class StatisticsController extends BaseController
 
 
         $allRecipes = RecipeDao::findAll();
-        // FormatUtil::dump($allRecipes[0]->getGrades());
         usort($allRecipes, function ($v1, $v2) {
             return $v2->getRate() <=> $v1->getRate();
         });
@@ -74,7 +59,6 @@ class StatisticsController extends BaseController
         foreach ($allUsers as $user) {
             $mostConectedUsers[] = ["id" => $user->getId(), "name" => $user->getFirstName() . ' ' . $user->getLastName()];
         }
-        // FormatUtil::dump($allOrders);
         $startDate = new DateTime;
         $startDate->add(DateInterval::createFromDateString("-10 days"));
 
@@ -86,14 +70,9 @@ class StatisticsController extends BaseController
             $date = new DateTime;
             $date->add(DateInterval::createFromDateString("-{$i}days"));
             $day = intval($date->format('d'));
-            // FormatUtil::dump($date);
-            // echo "il y a $i jopur";
-            // FormatUtil::dump($day);
             $value = [$startDate->format('Y-m-d H:i:s'), $day];
             $orders = OrdersDao::findAllAffterDate("dateCreation", $value, 'a');
             $lots = LotDao::findAllAffterDate("dateReception", $value, 'a');
-            // FormatUtil::dump($orders);
-            // //        $purchaseTotal = 0;
             $soldTotal = 0;
             $purchasedTotal = 0;
             foreach ($orders as $order) {
@@ -108,14 +87,13 @@ class StatisticsController extends BaseController
 
 
         $articleOutOfStock = array_filter(ArticleDao::findAll(), function ($a) {
-            return $a->getInventory() == 0;
+            return $a->getInventory() <= 0;
         });
         $allArticles = ArticleDao::findAll();
         usort($allArticles, function ($v1, $v2) {
             return $v2->getTotalSalls() <=> $v1->getTotalSalls();
         });
         $allArticles = array_slice($allArticles, 0, 10);
-        FormatUtil::dump($allArticles);
         $articleSales = [];
         $articlePurchases = [];
         foreach ($allArticles as $value) {

@@ -120,14 +120,7 @@ if ($vars['entity']->getImage()) {
 
                                         </div>
 
-                                        <div class="relative shadow lg:w-1/5 md:w-1/2 text-center">
-                                            <a href="<?= $vars['baseUrl'] ?>user/" class="text-lg  p-2  block lg:inline-block lg:mt-0">
-
-                                                Annuler
-
-                                            </a>
-
-                                        </div>
+                                        <input type="reset" value="Annuler" class="cursor-pointer bg-white text-lg  p-2  block lg:inline-block lg:mt-0 relative shadow lg:w-1/5 md:w-1/2 text-center">
                                     </div>
                                 <?php }
                                 ?>
