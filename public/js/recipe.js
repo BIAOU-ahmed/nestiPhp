@@ -180,7 +180,7 @@ $(document).ready(function() {
 
     function addParagraph(data) {
         $('#paragraph-container').html("")
-            // alert(data)
+            alert(data)
         let n = JSON.parse(data)
         for (var k in n) {
             let maxpreparation = Object.keys(n).length;

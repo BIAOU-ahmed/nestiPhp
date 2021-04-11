@@ -11,6 +11,7 @@ class Recipe extends BaseEntity
     private $preparationTime;
     private $idChef;
     private $idImage;
+    private $idCategory;
 
     private $errors;
 
@@ -281,6 +282,26 @@ class Recipe extends BaseEntity
     public function setIdChef($idChef)
     {
         $this->idChef = $idChef;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of idCategory
+     */ 
+    public function getIdCategory()
+    {
+        return $this->idCategory;
+    }
+
+    /**
+     * Set the value of idCategory
+     *
+     * @return  self
+     */ 
+    public function setIdCategory($idCategory)
+    {
+        $this->idCategory = $idCategory;
 
         return $this;
     }

@@ -175,5 +175,51 @@ class ArticleController extends BaseEntityController
 
     // SELECT ol.amountReceive, ol.deliveryDate, ol.idOrders ,ol.idArticle , a.amount, a.createdAt,a.articleState, p.productName, c.conditioningName FROM order_line ol INNER JOIN article a ON ol.idArticle=a.idArticle INNER JOIN product p ON a.idProduct = p.idProduct INNER JOIN conditioning c ON a.idArticle = c.idConditioning WHERE ol.deliveryDate IS NOT NULL
     // SELECT ol.amountReceive, ol.deliveryDate, ol.idOrders ,ol.idArticle , a.amount, a.createdAt,a.articleState, p.productName, c.conditioningName , s.price, MAX(s2.price) FROM order_line ol INNER JOIN article a ON ol.idArticle=a.idArticle INNER JOIN product p ON a.idProduct = p.idProduct INNER JOIN conditioning c ON a.idConditioning = c.idConditioning INNER JOIN orders o ON ol.idOrders = o.idOrders INNER JOIN sell s ON o.idProvider = s.idProvider AND a.idArticle = s.idArticle INNER JOIN sell s2 ON a.idArticle=s2.idArticle  WHERE ol.deliveryDate IS NOT NULL GROUP BY ol.idOrders, ol.idArticle
-
+    //     SELECT
+    //     ol.amountReceive,
+    //     ol.deliveryDate,
+    //     ol.idOrders,
+    //     ol.idArticle,
+    //     a.amount,
+    //     a.createdAt,
+    //     a.articleState,
+    //     p.productName,
+    //     c.conditioningName,
+    //     s.price,
+    //     igr.idProduct,
+    //     MAX(s2.price * 1.2),
+    //     CASE WHEN igr.idProduct IS NULL THEN 'ustensil' ELSE 'ingredient'
+    // END
+    // FROM
+    //     order_line ol
+    // INNER JOIN article a ON
+    //     ol.idArticle = a.idArticle
+    // INNER JOIN product p ON
+    //     a.idProduct = p.idProduct
+    // INNER JOIN conditioning c ON
+    //     a.idConditioning = c.idConditioning
+    // INNER JOIN orders o ON
+    //     ol.idOrders = o.idOrders
+    // INNER JOIN sell s ON
+    //     o.idProvider = s.idProvider AND a.idArticle = s.idArticle
+    // INNER JOIN sell s2 ON
+    //     a.idArticle = s2.idArticle
+    // LEFT JOIN ingredient igr ON
+    //     p.idProduct = igr.idProduct
+    // WHERE
+    //     ol.deliveryDate IS NOT NULL AND s2.idProvider IN(
+    //     SELECT
+    //         p1.idProvider
+    //     FROM
+    //         provider p1
+    //     INNER JOIN orders o1 ON
+    //         p1.idProvider = o1.idProvider
+    //     INNER JOIN order_line ol1 ON
+    //         ol1.idOrders = o1.idOrders
+    //     WHERE
+    //         ol1.idArticle = a.idArticle
+    // )
+    // GROUP BY
+    //     ol.idOrders,
+    //     ol.idArticle
 }

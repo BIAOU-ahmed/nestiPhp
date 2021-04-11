@@ -15,6 +15,7 @@ class StatisticsController extends BaseController
     public static function dashboard()
     {
         $connexionByHour = [];
+        $categories = [];
         $allLogs = ConnectionLogDao::findAll();
         foreach ($allLogs as $book) {
             $format = 'Y-m-d H:i:s';

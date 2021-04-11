@@ -112,10 +112,12 @@ class BaseEntityController extends BaseController
 
             foreach ($_FILES as $key) {
 
-                $name = time() . $key['name'];
-                $path = "../public/images/$directoryName/" . $name;
+                $nameFirstPart = explode('.', $key['name']);
+                $name =  $nameFirstPart[0].time().'.'.$nameFirstPart[1];
+                $path = "https://alidjinou.needemand.com/realisations/images/$directoryName/" . $name;
                 $file_ext =  pathinfo($name, PATHINFO_EXTENSION);
-
+                // FormatUtil::dump($nameFirstPart);
+                
 
                 if (in_array(strtolower($file_ext), $filetype)) {
 

@@ -7,7 +7,7 @@
 class DatabaseUtil
 {
     // Default database connection parameters, depending on HTTP_HOST
-    private static $defaultConnectionParameters = ["user" => "root", "db_name" => "nestiPhp", "password" => "", "host" => "localhost"];
+    private static $defaultConnectionParameters = ["user" => "root", "db_name" => "nestiShop", "password" => "", "host" => "localhost"];
     private static $connectionParameters = null;
     private static $conn = null; // Connection object
     
