@@ -69,9 +69,16 @@ class ArticleController extends BaseEntityController
                         $lotValues = [$value[3], $value[2]];
                         $lot = LotDao::findOneLot($lotValues);
                         if (!$product) {
-                            $product = new Unit();
+                            $product = new Product();
                             $product->setName($value[7]);
                             ProductDao::save($product);
+                            if ($value[11] == 'ingredient') {
+                                $product->makeIngredient();
+                            }
+
+                            // $ingredient = new Ingredient();
+                            // $ingredient->setIdIngredient($product->getId());
+                            // I
                             echo 'no';
                         }
                         if (!$unit) {
@@ -102,12 +109,12 @@ class ArticleController extends BaseEntityController
                             echo 'yes article';
                         } else {
                             $lot = new Lot();
-                            $lot->setIdArticle($article->getId());
+                            $lot->setIdArticle($value[3]);
                             $lot->setIdSupplierOrder($value[2]);
                             $lot->setUnitCost($value[9]);
                             $lot->setQuantity($value[0]);
                             $lot->setDateReception($value[1]);
-                            // FormatUtil::dump($lot);
+                            FormatUtil::dump($lot);
                             LotDao::save($lot);
                             $importation = new Importation();
                             $importation->setIdSupplierOrder($lot->getIdSupplierOrder());
@@ -120,7 +127,7 @@ class ArticleController extends BaseEntityController
                             $finaleValue[$key]['id'] = $article->getId();
                             $articlePrice = new ArticlePrice();
                             $articlePrice->setPrice($value[10]);
-                            $articlePrice->setIdArticle($article->getId());
+                            $articlePrice->setIdArticle($value[3]);
                             $articlePrice->setDateStart($today);
                             ArticlePriceDao::save($articlePrice);
                         }

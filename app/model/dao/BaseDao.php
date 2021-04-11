@@ -265,10 +265,15 @@ class BaseDao
             $values = array_map(function($columnName) use ($entity) { return EntityUtil::get($entity,$columnName); }, $columnNames);
 
             // if we're dealing with an inherited table, we must insert parent id explicitly to child table
-            if (self::hasParentEntity($currentClass)){
+            if (self::hasParentEntity($currentClass) || $currentClass =='Article'){
                 $columnNames[] = $currentDao::getPkColumnName();
-                $values[] = $insertedId;
-                $entity->setId($insertedId);
+                if($currentClass !='Article'){
+
+                    $values[] = $insertedId;
+                    $entity->setId($insertedId);
+                }else {
+                    $values[] = $entity ->getId();
+                }
             }
  
             // Need a list of question marks of same size as the list of column names
@@ -276,7 +281,8 @@ class BaseDao
 
             $sql = "INSERT INTO " . $currentDao::getTableName() . " (" . implode(',', $columnNames) . ") 
             values(" . implode(',', $questionMarks) . ")";
-            
+            echo $sql.' '.$currentClass;
+            FormatUtil::dump($values);
             $q = $pdo->prepare($sql);
             
             $q->execute($values);  
