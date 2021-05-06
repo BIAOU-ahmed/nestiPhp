@@ -121,10 +121,8 @@ if ($vars['entity']->getImage()) {
                                     <label id="img-url" class="self-center" for=""> <?= $img ?> </label>
                                     <div x-data="{ showModal: false }" :class="{'overflow-y-hidden': showModal }">
                                         <main class="">
-                                            <?php
-                                            if (UserController::getLoggedInUser()->isChef()) { ?>
-                                                <button type="button" @click="showModal = true" class="block"><i class="rounded text-center pt-1 text-3xl h-10 w-10 bg-red-600 border text-white block fas fa-trash-alt my-2"></i></button>
-                                            <?php } ?>
+                                            <button type="button" @click="showModal = true" class="block"><i class="rounded text-center pt-1 text-3xl h-10 w-10 bg-red-600 border text-white block fas fa-trash-alt my-2"></i></button>
+
                                         </main>
 
                                         <!-- Modal1 -->
@@ -172,9 +170,9 @@ if ($vars['entity']->getImage()) {
                                 <label>Télécharger une nouvelle image</label>
                                 <div class="lg:w-4/5 flex justify-between">
                                     <input name="image_link" class=" w-4/5 appearance-none border rounded py-2 px-3 text-grey-darker" id="image_link" type="file">
-                                    <?php if (UserController::getLoggedInUser()->isChef()) { ?>
-                                        <input type="submit" data-id="<?= $vars['entity']->getId() ?>" data-url="<?= $vars['baseUrl'] ?>" id="add-image" value="OK" class="cursor-pointer w-1/6 h-full bg-indigo-500 text-gray-100 p-2 rounded">
-                                    <?php } ?>
+
+                                    <input type="submit" data-id="<?= $vars['entity']->getId() ?>" data-url="<?= $vars['baseUrl'] ?>" id="add-image" value="OK" class="cursor-pointer w-1/6 h-full bg-indigo-500 text-gray-100 p-2 rounded">
+
                                     <!-- Ok -->
                                     <!-- </input> -->
                                 </div>
@@ -205,7 +203,7 @@ if ($vars['entity']->getImage()) {
                                     <div class=" mr-1">
                                         <label class="block text-grey-darker text-sm font-bold mb-2" for="name">Téléverser un fichier .CSV</label>
                                         <input class="appearance-none border rounded inline-block w-full py-2 px-3 text-grey-darker" id="name" name="csvfile" type="file">
-                                        <?php if (@$vars['message'] == 'errorLogin') { ?>
+                                        <?php if (@$vars['message'] == 'error') { ?>
                                             <span class="">
                                                 Déconnexion réussi
                                             </span>

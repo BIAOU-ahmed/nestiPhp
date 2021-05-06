@@ -25,18 +25,15 @@ class CommentDao extends BaseDao
 
     public static function updateComment(?Comment &$entity)
     {
-        // Loop through inherited tables (from parent to child), updating the relevant entity properties
         foreach (self::getParentClasses() as $currentClass) {
             $pdo = DatabaseUtil::connect();
             $currentDao = $currentClass::getDaoClass();
 
 
             $sql = "UPDATE " . $currentDao::getTableName() . " SET commentTitle = ? , commentContent = ? , dateCreation = ? , flag = ? , idModerator = ?  WHERE idUsers = ? AND idRecipe= ?";
-            FormatUtil::dump($sql);
             $q = $pdo->prepare($sql);
 
             $values = [$entity->getCommentTitle(), $entity->getCommentContent(), $entity->getDateCreation(), $entity->getFlag(), $entity->getIdModerator(), $entity->getIdUsers(), $entity->getIdRecipe()];
-            FormatUtil::dump($values);
 
             $q->execute($values);
         }

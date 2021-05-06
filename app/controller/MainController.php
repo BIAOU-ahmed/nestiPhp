@@ -22,12 +22,11 @@ class MainController
         $action = SiteUtil::getUrlParameters()[1] ?? "";
 
 
-
-        // UserController::setEntity(UserController::getUser());
+        // check if an user is logged if not redirect to the login page 
         if (UserController::getLoggedInUser() == null) {
             return  UserController::processAction('login');
         }
-
+        // process action according to the controller
         switch ($controller) {
             case 'user':
                 UserController::processAction();

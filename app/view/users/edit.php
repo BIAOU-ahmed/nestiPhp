@@ -22,9 +22,9 @@
                             <div class="mb-4">
                                 <div class=" mr-1">
                                     <label class="block text-grey-darker text-sm font-bold mb-2" for="name">Nom</label>
-                                    <input name="Users[lastName]" class="<?= isset($vars["errors"]['lastName']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="name" type="text" value="<?= $vars['entity']->getLastName(); ?>" placeholder="Your first name">
+                                    <input name="Users[lastName]" class="<?= isset($vars["errors"]['lastName']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="name" type="text" value="<?= $vars['entity']->getLastName(); ?>" placeholder="Votre nom">
                                     <?php if (isset($vars["errors"]['lastName']['notEmpty'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your last name cannot be empty.</div>
+                                        <div class="invalid-feedback text-red-600">Le nom est obligatoire.</div>
                                     <?php } ?>
 
 
@@ -34,9 +34,9 @@
                             <div class=" mb-4">
                                 <div class=" mr-1">
                                     <label class="block text-grey-darker text-sm font-bold mb-2" for="first_name">Prénom</label>
-                                    <input name="Users[firstName]" class="<?= isset($vars["errors"]['firstName']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="first_name" type="text" value="<?= $vars['entity']->getFirstName(); ?>" placeholder="Your first name">
+                                    <input name="Users[firstName]" class="<?= isset($vars["errors"]['firstName']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="first_name" type="text" value="<?= $vars['entity']->getFirstName(); ?>" placeholder="Votre prenom">
                                     <?php if (isset($vars["errors"]['firstName']['notEmpty'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your first name cannot be empty.</div>
+                                        <div class="invalid-feedback text-red-600">Le prenom est obligatoire.</div>
                                     <?php } ?>
                                 </div>
 
@@ -44,9 +44,9 @@
                             <div class=" mb-4">
                                 <div class=" mr-1">
                                     <label class="block text-grey-darker text-sm font-bold mb-2" for="address1">adresse</label>
-                                    <input name="Users[address1]" class="<?= isset($vars["errors"]['address1']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="address1" type="text" value="<?= $vars['entity']->getAddress1(); ?>" placeholder="Your first name">
+                                    <input name="Users[address1]" class="<?= isset($vars["errors"]['address1']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="address1" type="text" value="<?= $vars['entity']->getAddress1(); ?>" placeholder="Votre adresse">
                                     <?php if (isset($vars["errors"]['address1']['notEmpty'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your adresse cannot be empty.</div>
+                                        <div class="invalid-feedback text-red-600">Votre adresse ne peut pas etre vide.</div>
                                     <?php } ?>
                                 </div>
 
@@ -54,7 +54,7 @@
                             <div class=" mb-4">
                                 <div class=" mr-1">
                                     <label class="block text-grey-darker text-sm font-bold mb-2" for="address2">Complement</label>
-                                    <input name="Users[address2]" class="appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="address2" type="text" value="<?= $vars['entity']->getAddress2(); ?>" placeholder="Your first name">
+                                    <input name="Users[address2]" class="appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="address2" type="text" value="<?= $vars['entity']->getAddress2(); ?>" placeholder="Complement d'adresse">
 
                                 </div>
 
@@ -62,26 +62,24 @@
                             <div class=" mb-4 lg:flex justify-between">
                                 <div class=" mr-1 lg:inline-block ">
                                     <label class="block text-grey-darker text-sm font-bold mb-2 " for="zipCode">Code Postale</label>
-                                    <input name="Users[zipCode]" class="<?= isset($vars["errors"]['zipCode']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="zipCode" type="text" value="<?= $vars['entity']->getZipCode(); ?>" placeholder="Your first name">
+                                    <input name="Users[zipCode]" class="<?= isset($vars["errors"]['zipCode']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="zipCode" type="text" value="<?= $vars['entity']->getZipCode(); ?>" placeholder="34070">
                                     <?php if (isset($vars["errors"]['zipCode']['notEmpty'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your zipCode cannot be empty.</div>
+                                        <div class="invalid-feedback text-red-600">Le code postale est obligatoire.</div>
                                     <?php } ?>
                                     <?php if (isset($vars["errors"]['zipCode']['numeric'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your first zipCode must be numeric.</div>
+                                        <div class="invalid-feedback text-red-600">Le code postale doit etre un nombre.</div>
                                     <?php } ?>
                                 </div>
                                 <div class=" mr-1 lg:inline-block ">
                                     <label class="block text-grey-darker text-sm font-bold mb-2 " for="city">Ville</label>
-                                    <input list="citys" name="Users[city]" class="<?= isset($vars["errors"]['city']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="city" type="text" value="<?= $vars['entity']->getCity() != null ? $vars['entity']->getCity()->getName() : ''; ?>" placeholder="Your first name" />
+                                    <input list="citys" name="Users[city]" class="<?= isset($vars["errors"]['city']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="city" type="text" value="<?= $vars['entity']->getCity() != null ? $vars['entity']->getCity()->getName() : ''; ?>" placeholder="Montpellier" />
                                     <?php if (isset($vars["errors"]['city']['notEmpty'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your city cannot be empty.</div>
+                                        <div class="invalid-feedback text-red-600">La ville est obligatoire.</div>
                                     <?php } ?>
                                     <datalist id="citys">
-                                        <option value="Chocolate">
-                                        <option value="Coconut">
-                                        <option value="Mint">
-                                        <option value="Strawberry">
-                                        <option value="Vanilla">
+                                        <?php foreach ($vars['entity']->getAllCities() as $city) { ?>
+                                            <option value="<?= $city->getName() ?>">
+                                            <?php } ?>
                                     </datalist>
                                 </div>
 
@@ -111,11 +109,7 @@
                                     <option value="b" <?= $vars['entity']->getFlag() == 'b' ? 'selected' : ''; ?>>Bloqué</option>
                                 </select>
                             </div>
-                            <?php
-                            //  FormatUtil::dump(UserController::getLoggedInUser()->getId());
-                            // if (UserController::getLoggedInUser()->isAdministrator()) { 
-                            //     FormatUtil::dump(UserController::getLoggedInUser()->isAdministrator());
-                            ?>
+
                             <div class="  flex">
                                 <div class="relative mr-5 lg:w-1/6 md:w-1/2 shadow">
 
@@ -131,8 +125,11 @@
                                     <input type="reset" value="Annuler" class="cursor-pointer bg-white text-lg  p-2  block lg:inline-block lg:mt-0 relative shadow lg:w-1/5 md:w-1/2 text-center">
 
                                 <?php } else { ?>
-                                    <input type="reset" value="Supprimer" class="cursor-pointer bg-white text-lg  p-2  block lg:inline-block lg:mt-0 relative shadow lg:w-1/5 md:w-1/2 text-center">
+                                   <a href="<?= $vars['baseUrl'] ?>user/delete/<?= $vars["entity"]->getId() ?>" class="bg-white text-lg  p-2  block lg:inline-block lg:mt-0 relative shadow lg:w-1/5 md:w-1/2 text-center">
 
+                                        Supprimer
+                                    </a>
+                                    
                                 <?php }  ?>
 
                             </div>
@@ -146,45 +143,45 @@
 
                                 <div class="mb-4">
                                     <label class="block text-grey-darker text-sm font-bold mb-2" for="login">Login</label>
-                                    <input name="Users[login]" class="<?= isset($vars["errors"]['login']) ? 'border-red-600' : '' ?>  appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="login" type="text" placeholder="Your email address">
+                                    <input name="Users[login]" class="<?= isset($vars["errors"]['login']) ? 'border-red-600' : '' ?>  appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="login" type="text" placeholder="Le pseudo">
                                     <?php if (isset($vars["errors"]['login']['notEmpty'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your login can't be empty.</div>
+                                        <div class="invalid-feedback text-red-600">Le pseudo est obligatoire.</div>
                                     <?php } ?>
                                     <?php if (isset($vars["errors"]['login']['unique'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your login may be unique.</div>
+                                        <div class="invalid-feedback text-red-600">Le pseudo doit etre unique.</div>
                                     <?php } ?>
                                 </div>
                                 <div class="mb-4">
                                     <label class="block text-grey-darker text-sm font-bold mb-2" for="email">Email</label>
-                                    <input name="Users[email]" class="<?= isset($vars["errors"]['email']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="email" type="email" placeholder="Your email address">
+                                    <input name="Users[email]" class="<?= isset($vars["errors"]['email']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="email" type="email" placeholder="john.doe@example.com">
                                     <?php if (isset($vars["errors"]['email']['email'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your email must be of type email.</div>
+                                        <div class="invalid-feedback text-red-600">Invalid email.</div>
                                     <?php } ?>
                                     <?php if (isset($vars["errors"]['email']['unique'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your email may be unique.</div>
+                                        <div class="invalid-feedback text-red-600">L'email doit etre unique.</div>
                                     <?php } ?>
                                 </div>
                                 <div class="mb-4">
                                     <label class="block text-grey-darker text-sm font-bold mb-2" for="password">Mot de passe</label>
-                                    <input name="Users[password]" class="<?= isset($vars["errors"]['password']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="password" type="password" placeholder="Your secure password">
+                                    <input name="Users[password]" class="<?= isset($vars["errors"]['password']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="password" type="password" placeholder="mot de passe">
 
                                     <?php if (isset($vars["errors"]['password']['notEmpty'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your password cannot be empty.</div>
+                                        <div class="invalid-feedback text-red-600">Mot de passe obligatoire.</div>
                                     <?php } ?>
                                     <?php if (isset($vars["errors"]['password']['strong'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your password is not strong </div>
+                                        <div class="invalid-feedback text-red-600">Mot de passe trop faible</div>
                                     <?php } ?>
                                     <?php if (isset($vars["errors"]['password']['haveNumber'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your password dont have number </div>
+                                        <div class="invalid-feedback text-red-600">le mot de passe doit avoir au moins un nombre </div>
                                     <?php } ?>
                                     <?php if (isset($vars["errors"]['password']['haveLower'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your password dont have lower </div>
+                                        <div class="invalid-feedback text-red-600">le mot de passe doit avoir au moins une lettre minuscule </div>
                                     <?php } ?>
                                     <?php if (isset($vars["errors"]['password']['haveUpper'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your password dont have uper </div>
+                                        <div class="invalid-feedback text-red-600">le mot de passe doit avoir au moins une lettre majuscule </div>
                                     <?php } ?>
                                     <?php if (isset($vars["errors"]['password']['haveSpecialChar'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your password dont have special char </div>
+                                        <div class="invalid-feedback text-red-600">le mot de passe doit avoir au moins un caractère speciale </div>
                                     <?php } ?>
                                     <div class="grid">
                                         <span id="strength" class="justify-self-end"></span>
@@ -201,7 +198,11 @@
                                     <span>Conseils pour le mot de passe: </span>
                                 </div>
 
-                                <div id="digit" class="mt-1 ml-5 flex fas">
+                                <div id="nomberof" class="mt-1 ml-5 flex fas">
+                                    <i></i> <span class="ml-2">Doit Avoir au moins 10 carateres </span>
+                                </div>
+                                </br>
+                                <div id="digit" class="mt-1 ml-5 flex fas ">
                                     <i></i> <span class="ml-2">Doit contenir au moins un chiffre </span>
                                 </div>
                                 <div id="lower" class="mt-1 ml-5 flex fas ">
@@ -548,16 +549,6 @@
 
 
 <script>
-    // let orderDetail = <?= json_encode($vars['orderLines']); ?>;
-
-    // function showDetail(tableRow) {
-    //     let orderId = tableRow.querySelector('td:first-child span').innerHTML;
-    //     console.log(orderDetail)
-    // }
-
-
-
-
     document.addEventListener("DOMContentLoaded", function() {
 
 
@@ -604,18 +595,19 @@
             let lowerMessage = document.querySelector('#lower');
             let upperMessage = document.querySelector('#uper');
             let speMessage = document.querySelector('#spe');
+            let numbe = document.querySelector('#nomberof');
             var n = 0;
             var regex = /\d/g;
             var regexLower = /[a-z]/;
             var regexUpper = /[A-Z]+/;
             var regexCharSpe = /[!#%_?*$\\]/;
-
+            let allvalideted = true;
             if (value.match(regex)) {
                 n += 10;
-                console.log("in dig");
                 itOk(digitMessage)
 
             } else {
+                allvalideted = false;
                 notOk(digitMessage)
             }
 
@@ -623,9 +615,9 @@
 
             if (value.match(regexLower)) {
                 n += 26;
-                console.log("in low");
                 itOk(lowerMessage)
             } else {
+                allvalideted = false;
                 notOk(lowerMessage)
             }
 
@@ -634,6 +626,7 @@
                 n += 26;
                 itOk(upperMessage)
             } else {
+                allvalideted = false;
                 notOk(upperMessage)
             }
 
@@ -641,9 +634,28 @@
                 n += 8;
                 itOk(speMessage)
             } else {
+                allvalideted = false;
                 notOk(speMessage)
             }
-            return Math.round(value.length * Math.log2(n));
+            if (value.length >= 10) {
+                n += 10;
+                itOk(numbe)
+            } else {
+                n = 10;
+                notOk(numbe)
+            }
+            if (value.length >= 16) {
+                n += 10;
+            } else {
+
+                allvalideted = false;
+            }
+            if (allvalideted) {
+                n = 100;
+            }
+
+            return n;
+
         }
 
         function notOk(element) {

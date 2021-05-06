@@ -24,6 +24,7 @@ class UserController extends BaseEntityController
     public static function callActionMethod($action)
     {
         if ($action != 'login' && $action != 'logout') {
+            //only moderator or administrator is allow
             if (!UserController::getLoggedInUser()->isModerator() && !UserController::getLoggedInUser()->isAdministrator()) {
                 $action = "accessDenied";
             }
@@ -35,6 +36,7 @@ class UserController extends BaseEntityController
 
 
 
+    // login a user if the user exist and have the rigth password
     public static function login()
     {
         $templateVars = [];
@@ -47,6 +49,7 @@ class UserController extends BaseEntityController
 
                 self::setLoggedInUser($candidate, $_POST['Users']['password']);
                 $today = date("Y-m-d H:i:s");
+                // create new connection log 
                 $newConnection = new ConnectionLog();
                 $newConnection->setIdUsers(self::getLoggedInUser()->getId());
                 $newConnection->setDateConnection($today);
@@ -58,13 +61,15 @@ class UserController extends BaseEntityController
         }
         self::render(['action' => 'login', 'base' => 'users/baseLogin'], $templateVars);
     }
+
+    // get  all order lines of a order 
     public static function orderLines()
     {
         if (isset($_POST['order'])) {
             $orderId = (int) trim($_POST['order']);
             $order = OrdersDao::findById($orderId);
             $orderLines = $order->getOrderLines();
-            // FormatUtil::dump($orderLines);
+
             $array = [];
             $index = 0;
             foreach ($orderLines as $lines) {
@@ -78,64 +83,48 @@ class UserController extends BaseEntityController
         }
     }
 
+    // blocke a comment  
     public static function blockedComment()
     {
 
-        echo "toto";
         $id = SiteUtil::getUrlParameters()[2] ?? "";
         $values = [$id, $_POST['id']];
         $comment = CommentDao::findComment($values);
-        FormatUtil::dump($_POST['id']);
-        FormatUtil::dump($_POST['idModerator']);
-        FormatUtil::dump($comment);
+
+        // change the flag to blocked 
         $comment->setIdModerator($_POST['idModerator']);
         $comment->setFlag('b');
-        FormatUtil::dump($comment);
-        FormatUtil::dump("iduser " . $comment->getIdUsers());
+
         $controller = SiteUtil::getUrlParameters()[0] ?? "";
-        // $id = SiteUtil::getUrlParameters()[2] ?? "";
+
         CommentDao::updateComment($comment);
-        // $_SESSION['message'] = "deleted";
+
         header('Location: ' . SiteUtil::url() . $controller . '/edit/' . $id);
-        // // self::render(null, $templateVars);
-
-        // // header('Location: ' . SiteUtil::url() . $controller.'/list?message=deleted');
-        // // header('Location: ' . SiteUtil::url() . $controller . '/list/deleted');
-
-        // exit();
     }
+    // to approuved the comment 
     public static function approuvedComment()
     {
 
-        echo "toto";
         $id = SiteUtil::getUrlParameters()[2] ?? "";
         $values = [$id, $_POST['id']];
         $comment = CommentDao::findComment($values);
-        FormatUtil::dump($_POST['id']);
-        FormatUtil::dump($_POST['idModerator']);
-        FormatUtil::dump($comment);
+        // change the flag to active
         $comment->setIdModerator($_POST['idModerator']);
         $comment->setFlag('a');
-        FormatUtil::dump($comment);
-        FormatUtil::dump("iduser " . $comment->getIdUsers());
+
         $controller = SiteUtil::getUrlParameters()[0] ?? "";
-        // $id = SiteUtil::getUrlParameters()[2] ?? "";
+
         CommentDao::updateComment($comment);
-        // $_SESSION['message'] = "deleted";
+
         header('Location: ' . SiteUtil::url() . $controller . '/edit/' . $id);
-        // // self::render(null, $templateVars);
-
-        // // header('Location: ' . SiteUtil::url() . $controller.'/list?message=deleted');
-        // // header('Location: ' . SiteUtil::url() . $controller . '/list/deleted');
-
-        // exit();
     }
 
+    // disconnect the user  
     public static function logout()
     {
         self::setLoggedInUser(null);
         $templateVars = ['message' => 'disconnect'];
-        // header('Location: ' . SiteUtil::url() . 'user/login');
+
         self::render(['action' => 'login', 'base' => 'users/baseLogin'], $templateVars);;
     }
 
@@ -163,48 +152,43 @@ class UserController extends BaseEntityController
         $orders = self::getEntity()->getOrders();
         foreach ($orders as $order) {
             $templateVars['orderLines'][$order->getId()] = $order->getOrderLines();
-            foreach ($order->getOrderLines() as $element) {
-                // FormatUtil::dump((array) $element);
-            }
         }
-        FormatUtil::dump(static::getEntity());
         if ($templateVars["isSubmitted"]) { // if we arrived here by way of the submit button in the edit view
             $user = static::getEntity();
-            // EntityUtil::setFromArray($user, $_POST[static::getEntityClass()]);
-            FormatUtil::dump(static::getEntity());
+
             $formBuilder = new UsersFormBuilder($user, $_POST[static::getEntityClass()]);
-            // FormatUtil::dump( $_POST['roles']);
-            // FormatUtil::dump($formBuilder);
             $city = CityDao::findOneBy("name", $_POST['Users']['city']);
-            if ($formBuilder->isValid()) {
-                if (!$city) {
+            if ($formBuilder->isValid()) { // if is valid
+                if (!$city) { // if city dont exist is created
                     $city = new City();
                     $city->setName($_POST['Users']['city']);
                     $cityId = CityDao::save($city);
                     $city->setId($cityId);
                 }
-                // FormatUtil::dump($city);
+
                 $validatedProperties = $formBuilder->getParameters();
-                // FormatUtil::dump($validatedProperties);
+                // remove the city to change it by the id
                 if (isset($validatedProperties['city'])) {
-                    echo "test";
+
                     unset($validatedProperties['city']);
                 }
 
+                // remove the password entered by the user and change it by the hash password 
                 if (isset($validatedProperties['password'])) {
                     $plainTextPassword = $validatedProperties['password'];
-                    // FormatUtil::dump($plainTextPassword);
+
                     unset($validatedProperties['password']);
                     $user->setPasswordHashFromPlaintext($plainTextPassword);
                 }
 
+                // set all user data with the proporties which is validated
                 EntityUtil::setFromArray($user, $validatedProperties);
                 $user->setIdCity($city->getId());
 
 
 
                 self::getDao()::saveOrUpdate($user);
-
+                // according to the roles choosed we create the child of the user
                 if (isset($_POST['roles']['admin'])) {
                     $user->makeAdministrator();
                 }
@@ -216,20 +200,8 @@ class UserController extends BaseEntityController
                 }
                 // null template will redirect to default action
             } else {
+                // if is not valid 
                 $templateVars["errors"] = $formBuilder->getErrors();
-                $properties = $_POST[static::getEntityClass()];
-                if (isset($properties['password'])) {
-                    unset($properties['password']);
-                }
-
-                if (isset($properties['city'])) {
-                    echo "test";
-                    unset($properties['city']);
-                }
-
-                EntityUtil::setFromArray($user, $properties);
-
-                FormatUtil::dump($templateVars["errors"]);
             }
         }
 
@@ -238,7 +210,7 @@ class UserController extends BaseEntityController
     }
     public static function setLoggedInUser($user, $plaintextPassword = null)
     {
-
+        // to set the logged user in the cookie 
         self::$loggedInUser = $user;
         if ($user == null) {
             $login = null;

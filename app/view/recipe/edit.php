@@ -37,11 +37,11 @@ if ($vars['entity']->getImage()) {
                                 <div class="mb-4">
                                     <div class=" mr-1">
                                         <label class="block text-grey-darker text-sm font-bold mb-2" for="name">Nom de la recette</label>
-                                        <input name="Recipe[name]" class="<?= isset($vars["errors"]['name']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="name" type="text" value="<?= $vars['entity']->getName() ?>" placeholder="Your first name">
+                                        <input name="Recipe[name]" class="<?= isset($vars["errors"]['name']) ? 'border-red-600' : '' ?> appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="name" type="text" value="<?= $vars['entity']->getName() ?>" placeholder="Le nom de la recette">
                                         <div class="">Auteur de la recette: <?= $chef ?>.</div>
 
                                         <?php if (isset($vars["errors"]['name']['notEmpty'])) { ?>
-                                            <div class="invalid-feedback text-red-600">Your last name cannot be empty.</div>
+                                            <div class="invalid-feedback text-red-600">Le nom de la recette est obligatoire.</div>
                                         <?php } ?>
 
 
@@ -61,10 +61,10 @@ if ($vars['entity']->getImage()) {
 
                                     </div>
                                     <?php if (isset($vars["errors"]['difficulty']['notEmpty'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your difficulty name cannot be empty.</div>
+                                        <div class="invalid-feedback text-red-600">La difficulter est obligatoire.</div>
                                     <?php } ?>
                                     <?php if (isset($vars["errors"]['difficulty']['uciqueNumber'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your difficulty name must have one number between [0-5].</div>
+                                        <div class="invalid-feedback text-red-600">La difficulter doit etre un nombre entre [0-5].</div>
                                     <?php } ?>
 
                                 </div>
@@ -79,10 +79,10 @@ if ($vars['entity']->getImage()) {
 
                                     </div>
                                     <?php if (isset($vars["errors"]['portions']['notEmpty'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your recipe portions cannot be empty.</div>
+                                        <div class="invalid-feedback text-red-600">Le nombre de personne est ogligatoire.</div>
                                     <?php } ?>
                                     <?php if (isset($vars["errors"]['portions']['notEmpty'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your recipe portions must be of type numer.</div>
+                                        <div class="invalid-feedback text-red-600">Le nombre de personnes doit etre un nombre.</div>
                                     <?php } ?>
 
                                 </div>
@@ -98,10 +98,10 @@ if ($vars['entity']->getImage()) {
 
                                     </div>
                                     <?php if (isset($vars["errors"]['preparationTime']['notEmpty'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your recipe preparationTime cannot be empty.</div>
+                                        <div class="invalid-feedback text-red-600">Le temps de preparation est necessaire.</div>
                                     <?php } ?>
                                     <?php if (isset($vars["errors"]['preparationTime']['numeric'])) { ?>
-                                        <div class="invalid-feedback text-red-600">Your recipe preparationTime must be of type numer.</div>
+                                        <div class="invalid-feedback text-red-600">Le temps doit etre un nombre.</div>
                                     <?php } ?>
 
                                 </div>
@@ -326,13 +326,13 @@ if ($vars['entity']->getImage()) {
                                 </main>
 
                                 <!-- Modal1 -->
-                                <div id="modal" class="hidden fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                                <div id="modal" class="fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                                     <div class="relative sm:w-3/4 md:w-1/2 lg:w-1/3  sm:mx-auto my-10 opacity-100">
                                         <div class="relative bg-gray-300 shadow-lg rounded-md text-gray-900 z-20" @click.away="showModal= false" x-show="showModal" x-transition:enter="transition transform duration-300" x-transition:enter-start="scale-0" x-transition:enter-end="scale-100" x-transition:leave="transition transform duration-300" x-transition:leave-start="scale-100" x-transition:leave-end="scale-0">
                                             <header class="w-full h-40 grid mb-5 flex items-center  ">
                                                 <div class=" w-full   grid  bg-white h-20">
 
-                                                    <h2 class=" font-semibold text-center justify-self-center self-center "> Voulez-vous vraiment supprimer l'element: ?</h2>
+                                                    <h2 class=" font-semibold text-center justify-self-center self-center "> Veilleez entrer le contenu du paragraph</h2>
 
                                                 </div>
 

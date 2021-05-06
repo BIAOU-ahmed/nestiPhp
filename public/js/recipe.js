@@ -1,40 +1,24 @@
 $(document).ready(function() {
 
-
-
-    // $('#image').change(function(ev) {
-    //     let image = $('#image').val();
-    //     console.log(image);
-    //     $('#img-url').html(image)
-    //     $('#recipe-image').attr('src', image);
-    //     // your code
-    // });
-
     var recipe = $("#add-ingredient").data("id");
     let barUrl = $("#add-ingredient").data("url");
 
-    $('#addprep').click(function() {
-        $('#modal').removeClass('hidden')
-    })
+    // $('#addprep').click(function() {
+    //     $('#modal').removeClass('hidden')
+    // })
 
 
     $('#add-preparation').click(function() {
-        // $('#ingredient-list').html("")
         var recipe = $(this).data("id");
         let barUrl = $(this).data("url");
         let preparationContent = $("#preparationsContent").val();
 
-        // console.log(recipe)
-        // console.log(barUrl)
         if (recipe != "") {
-
 
             $.post(barUrl + '/recipe/addPreparations', {
                 "recipe": encodeURIComponent(recipe),
                 "preparationContent": preparationContent
             }, (response) => {
-                // let array = PSON.parse(response);
-                // $('#new-content').val(response);
                 addParagraph(response);
 
             });
@@ -47,47 +31,41 @@ $(document).ready(function() {
 
 
     $('#add_ingredient').click(function() {
-            // $('#ingredient-list').html("")
-            // var recipe = $(this).data("id");
-            // let barUrl = $(this).data("url");
-            let ingredientName = $("#ingredient").val();
-            let unitName = $("#unit").val();
-            let quantity = $("#quantity").val();
-            // console.log(recipe)
-            // console.log(barUrl)
-            if (recipe != "") {
+        // all values to pass in the ajax request
+        let ingredientName = $("#ingredient").val();
+        let unitName = $("#unit").val();
+        let quantity = $("#quantity").val();
+        if (recipe != "") {
 
+            $.post(barUrl + '/recipe/addIngredient', {
+                "recipe": encodeURIComponent(recipe),
+                "ingredientName": encodeURIComponent(ingredientName),
+                "unitName": encodeURIComponent(unitName),
+                "quantity": encodeURIComponent(quantity)
+            }, (response) => {
+                addIngredientRecipe(response);
+            });
 
-                $.post(barUrl + '/recipe/addIngredient', {
-                    "recipe": encodeURIComponent(recipe),
-                    "ingredientName": encodeURIComponent(ingredientName),
-                    "unitName": encodeURIComponent(unitName),
-                    "quantity": encodeURIComponent(quantity)
-                }, (response) => {
-                    // let array = PSON.parse(response);
-                    addIngredientRecipe(response);
-                });
+        } else {
+            alert("Veuillez d'abord céer une recette")
+        }
+    })
 
-            } else {
-                alert("Veuillez d'abord céer une recette")
-            }
-        })
-        // console.log(recipe)
-        // console.log("url" + barUrl)
+    // ajax request on load of the page to get all ingredient of the recipe
     $.post(barUrl + '/recipe/addIngredient', {
         "load": encodeURIComponent(recipe),
     }, (response) => {
-        // alert(response);
         addIngredientRecipe(response);
     });
 
+    // ajax request on load of the page to get all apragraph of the recipe
     $.post(barUrl + '/recipe/addPreparations', {
         "load": encodeURIComponent(recipe),
     }, (response) => {
-        // alert(response);
         addParagraph(response);
     });
 
+    // this function check if the ingredient pass in parameter is present in the datalist or not
     function ingredientNotPresent(ingredient) {
         var x = document.getElementById("ingredient_list");
         var result = true;
@@ -101,13 +79,12 @@ $(document).ready(function() {
         return result;
     }
 
+    // this function check if the unit pass in parameter is present in the datalist or not
     function unitNotPresent(unit) {
         var x = document.getElementById("unit_list");
         var result = true;
         var i;
         for (i = 0; i < x.options.length; i++) {
-            // console.log(unit)
-            // console.log(x.options[i].value)
             if (unit == x.options[i].value) {
                 result = false;
                 break;
@@ -117,24 +94,23 @@ $(document).ready(function() {
     }
 
     function addIngredientRecipe(data) {
-        // alert(data)
+        // check if the ingredient is already added
         if (data === "false") {
-            alert("test")
+            alert("Cette ingredient est déjà ajouter si vous voulez la modifier veillez la supprimer et recréer")
         } else if (data !== '') {
-            $('#ingredient-list').html("")
-                // alert(data)
-            let n = JSON.parse(data)
-                // console.log(n)
+            $('#ingredient-list').html("");
+            let n = JSON.parse(data);
 
             for (var k in n) {
                 let item = '<div class="flex justify-between mb-2"> <li  >' + n[k].quantity + " " + n[k].unitName + " de " + n[k].ingredientName + '</li> <button  data-idrecipe="' + n[k].idRecipe + '" data-idproduct="' + n[k].idProduct + '" class="deleteIngredient md:ml-2 md:w-1/6 lg:w-1/12 bg-indigo-500 text-gray-100  rounded">' +
                     'X' +
                     '</button> </div>';
-                // console.log("ingredient" + ingredientNotPresent(n[k].ingredientName))
+                // if the added ingredient is not present in the datalist is addded
                 if (ingredientNotPresent(n[k].ingredientName)) {
                     let newIng = '<option value="' + n[k].ingredientName + '"></option>'
                     $('#ingredient_list').append(newIng)
                 }
+                // if the added unit is not present in the datalist is addded
                 if (unitNotPresent(n[k].unitName)) {
                     let newIng = '<option value="' + n[k].unitName + '"></option>'
                     $('#unit_list').append(newIng)
@@ -144,32 +120,22 @@ $(document).ready(function() {
         }
 
         $('.deleteIngredient').click(function() {
-            // $('#ingredient-list').html("")
-
             var el = $(this)
-                // let button = el[0].querySelector('button')
             var recipe = $(this).data("idrecipe");
             var product = $(this).data("idproduct");
             var right = $('#ingredient-list').data("cantdelete");
-            // console.log(right)
+
+            // if the logged user have rigth to do this action
             if (right == true) {
                 $.post(barUrl + '/recipe/addIngredient', {
                     "recipe": encodeURIComponent(recipe),
                     "idProduct": encodeURIComponent(product),
                 }, (response) => {
-                    // let array = PSON.parse(response);
-                    // alert(response)
                     addIngredientRecipe(response);
                 });
             } else if ('false') {
-                alert('non');
+                alert('Vous ne disposez pas des droit pour effectuer cette action');
             }
-            // console.log(barUrl)
-
-
-            // console.log($(this))
-            // console.log(recipe)
-            // console.log(product)
 
         })
 
@@ -178,14 +144,14 @@ $(document).ready(function() {
         $("#quantity").val("");
     }
 
+    // this function is for add new paragraph for the recipe
     function addParagraph(data) {
         $('#paragraph-container').html("")
-            alert(data)
+            // we parse the data get in json
         let n = JSON.parse(data)
+            // we loop on the json to create all pragraph in our page
         for (var k in n) {
             let maxpreparation = Object.keys(n).length;
-            // console.log(Object.keys(n)[0])
-            // console.log(Object.keys(n)[maxpreparation-1])
             let content = ' <div class="flex mr-1 mb-5 ">' +
                 '<div class="inline-block h-full self-center mr-3">';
             if (Object.keys(n)[0] != k) {
@@ -258,12 +224,8 @@ $(document).ready(function() {
             $("#preparationsContent").val("");
 
         }
-        // $("textarea#para").css('user-select', 'none').bind("selectstart", false);
-        // $("textarea#para").dblclick(function() {
-        //     $("textarea#para").prop('readonly', false);
-        //     // alert($(this).val())
-        //     // alert("Handler for .dblclick() called.");
-        // });
+
+        // add listener on all paragraph when they lost the focust we save the value
         $("textarea#para").focusout(function() {
             var recipe = $(this).data("idrecipe");
             var idPrep = $(this).data("id");
@@ -281,36 +243,28 @@ $(document).ready(function() {
             // $("textarea#para").prop('readonly', true);
         });
 
+        // a listener to move the paragraph to up or down
         $('.moveParagraph').click(function() {
-            // $('#ingredient-list').html("")
-
-            // $(this).addClass("rotate-left");
-
             var recipe = $(this).data("idrecipe");
             var para = $(this).data("id");
             var action = $(this).data("action");
             if (action === "up") {
-                console.log($(this).parent().parent().children('div').eq(1).children().addClass("rotate-left"));
-                console.log($(this).parent().parent().prev().children('div').eq(1).children().addClass("rotate-down"));
+                $(this).parent().parent().children('div').eq(1).children().addClass("rotate-left");
+                $(this).parent().parent().prev().children('div').eq(1).children().addClass("rotate-down");
             } else if (action === "down") {
                 $(this).parent().parent().children('div').eq(1).children().addClass("rotate-down");
                 $(this).parent().parent().next().children('div').eq(1).children().addClass("rotate-left");
             }
-            console.log(action)
-                // let barUrl = $(this).data("url");
-                // let preparationContent = $("#preparationsContent").val();
+
+            // we wait time the css effect pass and we do the changement in the data base
             setTimeout(function() {
-                // console.log(recipe)
-                // console.log(barUrl)
                 if (recipe != "") {
+                    // send the ajax queries to the endpoint
                     $.post(barUrl + '/recipe/movePreparations', {
                         "recipe": encodeURIComponent(recipe),
                         "action": encodeURIComponent(action),
                         "id": encodeURIComponent(para)
                     }, (response) => {
-                        // let array = PSON.parse(response);
-                        // $('#new-content').val(response);
-                        // alert(response)
                         addParagraph(response);
 
                     });
@@ -320,26 +274,17 @@ $(document).ready(function() {
         })
 
         $('.deletePara').click(function() {
-            // $('#ingredient-list').html("")
 
             var recipe = $(this).data("idrecipe");
             var para = $(this).data("id");
-            // console.log(recipe)
-            // let barUrl = $(this).data("url");
-            // let preparationContent = $("#preparationsContent").val();
 
-            // console.log(recipe)
-            // console.log(barUrl)
             if (recipe != "") {
-
 
                 $.post(barUrl + '/recipe/addPreparations', {
                     "recipe": encodeURIComponent(recipe),
                     "deletedPara": encodeURIComponent(para)
                 }, (response) => {
-                    // let array = PSON.parse(response);
-                    // $('#new-content').val(response);
-                    // alert(response)
+
                     addParagraph(response);
 
                 });

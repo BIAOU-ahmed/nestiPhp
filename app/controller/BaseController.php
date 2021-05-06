@@ -1,17 +1,5 @@
 <?php
 
-//require_once PATH_ENTITY . 'Recipe.php';
-//require_once PATH_TOOLS . 'FormatUtil.php';
-//require_once PATH_MODEL . 'dao/RecipeDao.php';
-//require_once PATH_MODEL . 'entity/BaseEntity.php';
-
-//SiteUtil::require('model/entity/Recipe.php');
-//SiteUtil::require('model/entity/BaseEntity.php');
-//SiteUtil::require('model/dao/RecipeDao.php');
-//SiteUtil::require('model/entity/BaseEntity.php');
-
-
-
 class BaseController
 {
 
@@ -29,7 +17,6 @@ class BaseController
     {
 
         @[$location, $action, $id] = SiteUtil::getUrlParameters();
-
 
         if ($forceAction != null) {
             $action = $forceAction;
@@ -85,11 +72,7 @@ class BaseController
             'urlParameters' => ['action' => $action, 'location' => $controller, 'id' => $id]
         ]);
 
-        // if(isset($vars['entities']) && $action=="delete"){
-        //     $vars['message'] ='errorLogin';
-        //     header('Location: ' . SiteUtil::url() . $controller.'/list');
-        // }
-
+     
 
     }
 

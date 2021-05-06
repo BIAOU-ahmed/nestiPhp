@@ -1,10 +1,6 @@
 $(document).ready(function() {
-    function filterGlobal() {
-        $('#myTable').DataTable().search(
-            $('#search').val(),
-        ).draw();
-    }
-
+    // emplement my table with the component DataTable 
+    // that help to filtered pagined and more
     const table = $('#myTable').DataTable({
         dom: 'p t r',
         "pageLength": 5,
@@ -12,16 +8,14 @@ $(document).ready(function() {
             url: 'http://cdn.datatables.net/plug-ins/1.10.24/i18n/fr_fr.json'
         }
     });
-
+    // add listener to use DataTable wen key up on the search input 
     $('input#search').on('keyup click', function() {
-        console.log('tap');
         table.search(
             $(this).val(),
         ).draw();
-        // filterGlobal();
     });
+    // set time out befor slide sucecces mesage up
     setTimeout(function() {
-        console.log('dddd')
         $('#sucess_message').slideUp("slow");
     }, 5000);
 });

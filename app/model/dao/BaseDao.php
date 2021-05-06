@@ -110,7 +110,6 @@ class BaseDao
     public static function findAll($flag=null): array
     {
         $pdo = DatabaseUtil::connect();
-        //FormatUtil::dump($pdo);
         $sql = "SELECT * FROM " . self::getTableName() . " ORDER BY " . self::getPkColumnName() . " DESC";
         
         $values = [];
@@ -281,8 +280,6 @@ class BaseDao
 
             $sql = "INSERT INTO " . $currentDao::getTableName() . " (" . implode(',', $columnNames) . ") 
             values(" . implode(',', $questionMarks) . ")";
-            echo $sql.' '.$currentClass;
-            FormatUtil::dump($values);
             $q = $pdo->prepare($sql);
             
             $q->execute($values);  
@@ -291,7 +288,6 @@ class BaseDao
             $insertedId = $pdo->lastInsertId();
         }
         $entity->setId($insertedId);
-        // FormatUtil::dump($entity);
         return $entity->getId(); // Last inserted ID is entity's id
     }
 

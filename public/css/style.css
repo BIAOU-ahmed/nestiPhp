@@ -79,6 +79,10 @@ input::-webkit-inner-spin-button {
     background-color: #00838f;
 }
 
+.formated_text_color {
+    color: #00838f;
+}
+
 .nav-button {
     width: 20%;
     background-color: #00838f;

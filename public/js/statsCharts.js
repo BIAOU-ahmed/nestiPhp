@@ -5,8 +5,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
      * Orders chart.
      ***************************************************************************************************************************************/
     const el = document.getElementById('chartOrders');
-    console.log(vars);
-    console.log(vars.soldTotalByDay);
     const data = {
 
         categories: [
@@ -92,7 +90,7 @@ const dataArticle = {
     ],
 };
 const optionsArticle = {
-    chart: { title: 'Nombre d\'article en vente '+vars.articlePurchases.length, width: 900, height: 400 },
+    chart: { title: 'Nombre d\'article en vente ' + vars.articlePurchases.length, width: 900, height: 400 },
 };
 
 const chart = toastui.Chart.columnChart({ el: elArticle, data: dataArticle, options: optionsArticle });

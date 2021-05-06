@@ -15,12 +15,7 @@ class RecipeController extends BaseEntityController
     protected static $dao = "RecipeDao";
     protected static $loggedInUser;
     protected static $entity;
-    // public static function getEntityClass()
-    // {
-
-    //     return "Users";
-    // }
-
+    // this function chek the rigth and the action called and redirecte to it
     public static function callActionMethod($action)
     {
         if ((!UserController::getLoggedInUser()->isChef() && !UserController::getLoggedInUser()->isAdministrator())) {
@@ -34,7 +29,7 @@ class RecipeController extends BaseEntityController
     }
 
 
-
+    // this function is to add or edit a recipe
     public static function edit()
     {
         $templateName = 'edit';
@@ -42,6 +37,7 @@ class RecipeController extends BaseEntityController
 
         if ($templateVars["isSubmitted"]) { // if we arrived here by way of the submit button in the edit view
             $recipe = static::getEntity();
+            // build the recipe with the cuilder and the post data
             $formBuilder = new RecipeFormBuilder($recipe, $_POST[static::getEntityClass()]);
 
             // EntityUtil::setFromArray($recipe,$_POST[self::getEntityClass()]);
@@ -49,14 +45,17 @@ class RecipeController extends BaseEntityController
             //     IF NEW.`idImage` IS NULL OR NEW.`idImage` = '' THEN
             //     SET NEW.`idImage` = 1;
             // END IF
+            // check if the values is valid
             if ($formBuilder->isValid()) {
 
                 $chefId =  UserController::getLoggedInUser()->getId();
                 $validatedProperties = $formBuilder->getParameters();
                 EntityUtil::setFromArray($recipe, $validatedProperties);
+                // if id the new recipe add current logged user like chef
                 if (!$recipe->getId()) {
                     $recipe->setIdChef($chefId);
                 }
+                $recipe->setFlag('a');
                 self::getDao()::saveOrUpdate($recipe);
                 header('Location: ' . SiteUtil::url() . 'recipe/edit/' . $recipe->getId());
                 exit;
@@ -71,79 +70,82 @@ class RecipeController extends BaseEntityController
     }
 
 
+    // this is to move the paragraph at up or down
     public static function movePreparations()
     {
+        // check if we have the id of the recipe
         if (isset($_POST['recipe'])) {
-            $idRecipe = $_POST['recipe'];
-            $idParagraph = $_POST['id'];
-            $action = $_POST['action'];
+            $idRecipe = $_POST['recipe']; // the recipe id
+            $idParagraph = $_POST['id']; // the paragraph id
+            $action = $_POST['action']; // the action asked. to up or down
             $recipe = RecipeDao::findById($idRecipe);
-            // echo "idRecipe ".$idRecipe;
-            // FormatUtil::dump($recipe);
             $paragraph = ParagraphDao::findById($idParagraph);
+            // get previews or following paragraph according to the action
             if ($action == "up") {
                 $previous = $paragraph->getPreviousParagraph();
-
-                // FormatUtil::dump($paragraph);
-                // FormatUtil::dump($previous);
             } elseif ($action == "down") {
                 $previous = $paragraph->getFollowingParagraph();
-                // FormatUtil::dump($paragraph->getFollowingParagraph());
             }
 
+            // get the moved paragraph current position
             $currentPosition = $paragraph->getParagraphPosition();
+
+            // get the preview or following position
             $newPosition = $previous->getParagraphPosition();
+
+            // then change the positions
             $paragraph->setParagraphPosition($newPosition);
             $previous->setParagraphPosition($currentPosition);
             ParagraphDao::saveOrUpdate($previous);
             ParagraphDao::saveOrUpdate($paragraph);
-            // FormatUtil::dump($recipe);
+            // get the ricepe paragraphs and create a array to jsofy
             foreach ($recipe->getParagraphs() as $paragraph) {
-                // $array[$ing->getRecipePosition()] = [];
                 $array[$paragraph->getParagraphPosition()]['id'] = $paragraph->getId();
                 $array[$paragraph->getParagraphPosition()]['content'] = $paragraph->getContent();
             }
             echo json_encode($array);
 
-            // FormatUtil::dump($paragraph);
         }
     }
 
+    // this to add or delete paragraph
     public static function addPreparations()
     {
         $array = [];
-        $idRecipe = isset($_POST['recipe']) ? $_POST['recipe'] : $_POST['load'];
+        $idRecipe = isset($_POST['recipe']) ? $_POST['recipe'] : $_POST['load']; // get the recipe id
+
+        // if we have id we get the recipe
         if ($idRecipe) {
             $recipe = RecipeDao::findById($idRecipe);
 
             if (isset($_POST['recipe'])) {
+                // if is to delete the paragraph we get the paragraph 
+                // and all next paragraph and the position of the deleted paragraph
                 if (isset($_POST['deletedPara'])) {
 
                     $recipePara = ParagraphDao::findById($_POST['deletedPara']);
-                    // FormatUtil::dump($ingredientRecipe->getRecipePosition());
                     $values = [$recipePara->getParagraphPosition(), $recipe->getId()];
                     $allNext = ParagraphDao::findPrevOrFollo($values, ">", "ASC");
                     $nextPosition = $recipePara->getParagraphPosition();
                     ParagraphDao::deleteRecipeParagraph($recipePara);
 
+                    // we loop on all next paragraph and change their position 
+                    // staring with the deleted paragraph position
                     foreach ($allNext as $recipeParagraph) {
-                        // $positionSwitch = $recipeIngredient->getRecipePosition();
                         $recipeParagraph->setParagraphPosition($nextPosition);
                         $nextPosition += 1;
                         ParagraphDao::saveOrUpdate($recipeParagraph);
-                        // IngredientRecipeDao::updateRecipeIngredient($recipeIngredient);
                     }
-                    // FormatUtil::dump($allNext);
                 } else {
 
-                    // echo $_POST['preparationContent'];
+                    // else if is to add new paragraph we create a 
+                    // new paragraph object and set the required values
                     $paragraphContent = FormatUtil::sanitize($_POST['preparationContent']);
-                    // echo $paragraphContent;
                     $paragraph = new Paragraph();
                     $paragraph->setIdRecipe($idRecipe);
                     $paragraph->setContent($paragraphContent);
 
-                    // FormatUtil::dump($paragraph);
+                    // if is to update the paragraph content we get the paragraph and set the new content
                     if (isset($_POST['update'])) {
                         $paragraph = ParagraphDao::findById($_POST['update']);
                         $paragraph->setContent($_POST['newValue']);
@@ -152,8 +154,7 @@ class RecipeController extends BaseEntityController
                 }
             }
 
-
-
+            // after the action asked we loop on the recipe paragraph and create an array to return 
             foreach ($recipe->getParagraphs() as $paragraph) {
                 // $array[$ing->getRecipePosition()] = [];
                 $array[$paragraph->getParagraphPosition()]['id'] = $paragraph->getId();
@@ -163,39 +164,39 @@ class RecipeController extends BaseEntityController
         echo json_encode($array);
     }
 
+    // add new or delete ingredient  to the recipe
     public static function addIngredient()
     {
-        $idRecipe = isset($_POST['recipe']) ? $_POST['recipe'] : $_POST['load'];
+        $idRecipe = isset($_POST['recipe']) ? $_POST['recipe'] : $_POST['load']; // get the recipe id passed
         if ($idRecipe) {
 
-            $recipe = RecipeDao::findById($idRecipe);
+            $recipe = RecipeDao::findById($idRecipe); // get the recipe
             $result = true;
             if (isset($_POST['recipe'])) {
                 if (isset($_POST['idProduct'])) {
-                    // echo "toto";
-                    $ingredientRecipe = IngredientRecipeDao::findOneBy($_POST['idProduct'], $recipe->getId());
-                    // FormatUtil::dump($ingredientRecipe->getRecipePosition());
+                    // if we have the id of the product that mean we want to delete the ingredient 
+                    $ingredientRecipe = IngredientRecipeDao::findOneBy($_POST['idProduct'], $recipe->getId()); // get the ingredient recipe
                     $values = [$ingredientRecipe->getRecipePosition(), $recipe->getId()];
                     $allNext = IngredientRecipeDao::findPrevOrFollo($values, ">");
                     $nextPosition = $ingredientRecipe->getRecipePosition();
                     IngredientRecipeDao::deleteRecipeIngredient($ingredientRecipe);
 
+                    // loop on all next ingredient to change their position
                     foreach ($allNext as $recipeIngredient) {
-                        // $positionSwitch = $recipeIngredient->getRecipePosition();
                         $recipeIngredient->setRecipePosition($nextPosition);
                         $nextPosition += 1;
                         IngredientRecipeDao::updateRecipeIngredient($recipeIngredient);
                     }
-                    // FormatUtil::dump($allNext);
                 } else {
-
+                    // else is to add a new recipe then we get all values passed
                     $ingName = $_POST['ingredientName'];
                     $unitName = $_POST['unitName'];
                     $quantity = $_POST['quantity'];
 
-                    $ingredient = ProductDao::findOneBy("name", $ingName);
+                    $ingredient = ProductDao::findOneBy("name", $ingName); 
                     $unit = UnitDao::findOneBy("name", $unitName);
 
+                    // check if the ingredient asked to add is already exist if not we add it 
                     if ($ingredient == null) {
                         $ingredient = new Product();
                         $ingredient->setName($ingName);
@@ -204,15 +205,13 @@ class RecipeController extends BaseEntityController
                     }
 
                     $ing = IngredientDao::findById($ingredient->getId());
+                    // if the product is not already an ingredient we add it like a ingredient
                     if($ing==null){
                         $ingredient->makeIngredient();
                     }
-                    // FormatUtil::dump($unit);
-                    // FormatUtil::dump($ingredient);
-                    // FormatUtil::dump($ingredient->getId());
-                    // FormatUtil::dump($unit->getId());
                     $ingredientRecipe = IngredientRecipeDao::findOneBy($ingredient->getId(), $recipe->getId());
-                    // FormatUtil::dump($ingredientRecipe);
+
+                    // check if this ingredient is already added to this recipe if not it added 
                     if (!$ingredientRecipe) {
 
                         if ($unit == null) {
@@ -226,26 +225,23 @@ class RecipeController extends BaseEntityController
                         $ingredientRecipe->setIdRecipe($recipe->getId());
                         $ingredientRecipe->setIdUnit($unit->getId());
                         $ingredientRecipe->setQuantity($quantity);
-                        // FormatUtil::dump($ingredientRecipe);
                         IngredientRecipeDao::save($ingredientRecipe);
                     } else {
+                        // if not we return just false
                         $result = false;
                     }
                 }
 
 
                 // CREATE TRIGGER `increment_position` BEFORE INSERT ON `ingredientrecipe` FOR EACH ROW BEGIN DECLARE naw_position integer; SET @naw_position := (SELECT MAX(recipePosition)FROM ingredientrecipe WHERE idRecipe = NEW.`idRecipe`); SET NEW.`recipePosition` = @maxPosition+1; END 
-                // FormatUtil::dump($unit);
-                // FormatUtil::dump($ingredient);
-                // FormatUtil::dump($recipe);
+               
 
             }
 
             if ($result) {
                 $array = [];
-
+                // if the ingredient is added to the recipe we loop on all the recipe ingredients and make an array to return
                 foreach ($recipe->getIngredientRecipes() as $ing) {
-                    // $array[$ing->getRecipePosition()] = [];
                     $array[$ing->getRecipePosition()]['idRecipe'] = $ing->getIdRecipe();
                     $array[$ing->getRecipePosition()]['idProduct'] = $ing->getIdProduct();
                     $array[$ing->getRecipePosition()]['quantity'] = $ing->getQuantity();
@@ -253,15 +249,11 @@ class RecipeController extends BaseEntityController
                     $array[$ing->getRecipePosition()]['ingredientName'] = $ing->getIngredient()->getName();
                 }
 
-                // FormatUtil::dump($array);
                 echo json_encode($array);
             } else {
                 echo "false";
             }
         }
 
-
-
-        // self::render(['action' => 'addIngredientToRecipe','base' => 'users/baseLogin']);
     }
 }

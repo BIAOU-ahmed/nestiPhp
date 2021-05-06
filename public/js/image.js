@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    //  this function is to display dinamicly the image selected in the file input 
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -10,24 +11,24 @@ $(document).ready(function() {
             reader.readAsDataURL(input.files[0]);
         }
     }
-
+    // listener to change the image when the input file changed 
     $("#image_link").change(function() {
-        alert('toto')
         readURL(this);
     });
 
     let barUrl = $("#add-image").data("url");
-    console.log(barUrl)
+    // listener to delete the image 
     $('#deleteImg').click(function(e) {
-        e.preventDefault();
+        e.preventDefault(); //abort the default action
         let entity = {}
         if ($(this).data('idrecipe')) {
-            entity['recipe'] = $(this).data('idrecipe')
+            entity['recipe'] = $(this).data('idrecipe') // add the id recipe
         } else {
-            entity['article'] = $(this).data('idarticle');
+            entity['article'] = $(this).data('idarticle'); // add the id article
         }
         let data = $(this).data('idrecipe') ? 'recipe' : 'article';
         alert(data)
+            // send the ajax request with id recipe or id article
         $.post(barUrl + '/' + data + '/addImage', {
             entity,
         }, (response) => {
@@ -36,13 +37,15 @@ $(document).ready(function() {
         });
     })
 
+    // listener to add new image
     $('#recipeImg').on('submit', function(e) {
         e.preventDefault();
         var recipe = $('#add-image').data("id");
         let barUrl = $(this).data("url");
         var formData = new FormData(this);
         if (recipe) {
-            alert($('#img-url').html())
+            alert($('#img-url').html());
+            // ajax request to the endpoint to add the new Image
             $.ajax({
                 type: 'POST',
                 url: $(this).attr('action'),
@@ -59,12 +62,10 @@ $(document).ready(function() {
                         alert("le fichier est trop volumineux")
                     } else {
                         addImage(data)
-                        alert(data);
                     }
                 },
                 error: function(data) {
-                    console.log("error");
-                    console.log(data);
+                    console.log("Une erreur est survenue lors de l'ajout de l'image");
                 }
             });
         } else {
@@ -72,24 +73,9 @@ $(document).ready(function() {
         }
 
 
-        // $.post(barUrl + '/recipe/addImage', {
-        //     "recipe": formData,
-        // }, (response) => {
-        //     console.log("success");
-        //     console.log(response);
-        //     if (response == "FILE_TYPE_ERROR") {
-        //         alert("le type de fichier est incorrect")
-        //     } else if (response == "FILE_SIZE_ERROR") {
-        //         alert("le fichier est trop volumineux")
-        //     } else {
-        //         $('#img-url').html(response)
-        //         $('#image').attr('src', response);
-        //         alert(response);
-        //     }
-        // });
-
     })
 
+    // change the src of the image by the data
     function addImage(data) {
         var imgUrl = data.split("/");
 

@@ -29,7 +29,7 @@
                     Success
                 </div>
                 <div class="alert-description text-sm text-green-600">
-                    This is an alert message, alert message goes here..!
+                    Cette recette a été supprimer avec succe!
                 </div>
             </div>
         </div>
@@ -119,7 +119,7 @@
 
                                     </main>
 
-                                    <!-- Modal1 -->
+                                    <!-- Modal for delete confirmation -->
                                     <div class="fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal<?= $recipe->getId() ?>" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                                         <div class="relative sm:w-3/4 md:w-1/2 lg:w-1/3  sm:mx-auto my-10 opacity-100">
                                             <div class="relative bg-gray-300 shadow-lg rounded-md text-gray-900 z-20" @click.away="showModal<?= $recipe->getId() ?> = false" x-show="showModal<?= $recipe->getId() ?>" x-transition:enter="transition transform duration-300" x-transition:enter-start="scale-0" x-transition:enter-end="scale-100" x-transition:leave="transition transform duration-300" x-transition:leave-start="scale-100" x-transition:leave-end="scale-0">
@@ -176,4 +176,3 @@
 
 
 </div>
-<script src="<?= $vars['baseUrl'] ?>public/js/search.js"></script>

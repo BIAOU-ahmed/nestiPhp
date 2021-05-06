@@ -76,24 +76,19 @@ class EntityValidatorUtil
 
     public static function strong($entity,$parameters, String $parameterName)
     {
-        // FormatUtil::dump($parameters[$parameterName]);
         $n = 0;
 
         if (static::haveNumber($entity,$parameters,$parameterName)) {
             $n += 10;
-            echo "in digit";
         }
         if (static::haveLower($entity,$parameters,$parameterName)) {
             $n += 26;
-            echo "in lower";
         }
         if (static::haveUpper($entity,$parameters,$parameterName)) {
             $n += 26;
-            echo "in UPER";
         }
         if (static::haveSpecialChar($entity,$parameters,$parameterName)) {
             $n += 8;
-            echo "in spe";
         }
       
         $result = round(strlen($parameters[$parameterName])) * (log($n) / log(2));
