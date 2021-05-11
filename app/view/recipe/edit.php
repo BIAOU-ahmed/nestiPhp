@@ -105,7 +105,18 @@ if ($vars['entity']->getImage()) {
                                     <?php } ?>
 
                                 </div>
+                                <div class="mb-4">
+                                    <label class="block text-grey-darker text-sm font-bold mb-2" for="state">Etat</label>
 
+                                    <select name="Recipe[flag]" class="form-select border border-light-blue-500 border-opacity-0 appearance-none rounded mt-1 block w-full py-2 px-3" id="state">
+                                        <option value="a" <?= $vars['entity']->getFlag() == 'a' ? 'selected' : ''; ?>>Actif
+                                        </option>
+                                        <option value="w" <?= $vars['entity']->getFlag() == 'w' || $vars['entity']->getId() == null ? 'selected' : ''; ?>>
+                                            En attente</option>
+                                        <option value="b" <?= $vars['entity']->getFlag() == 'b' ? 'selected' : ''; ?>>Bloqué
+                                        </option>
+                                    </select>
+                                </div>
 
                                 <?php
                                 if ($vars['entity']->getId() == '' || $vars['loggedInUser']->getId() == $vars['entity']->getChef()->getId() || $vars['loggedInUser']->isAdministrator()) { ?>
@@ -271,14 +282,14 @@ if ($vars['entity']->getImage()) {
                                                             <header class="w-full h-40 grid mb-5 flex items-center  ">
                                                                 <div class=" w-full   grid  bg-white h-20">
 
-                                                                    <h2 class=" font-semibold text-center justify-self-center self-center "><i class="text-3xl text-red-600 fas fa-exclamation-triangle"></i> Voulez-vous vraiment supprimer l'element: ?</h2>
+                                                                    <h2 class=" font-semibold text-center justify-self-center self-center "><i class="text-3xl text-red-600 fas fa-exclamation-triangle"></i> Voulez-vous vraiment supprimer l'image ?</h2>
 
                                                                 </div>
 
                                                             </header>
                                                             <main class="  h-20 grid   p-2 text-center">
                                                                 <p class="w-2/3 justify-self-center bg-white rounded-md">
-                                                                    Cette action est définitive et irréversible
+                                                                    Vous avez toujours la possibilité d'ajouter un autre a tout moment.
                                                                 </p>
                                                             </main>
                                                             <footer class="">
@@ -394,7 +405,7 @@ if ($vars['entity']->getImage()) {
                                 </div>
                                 <span>Ajouter un ingredient</span>
                                 <div class="inline-block w-full mb-5 mt-3">
-                                    <input list="ingredient_list" class="resize-none h-80 w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" id="ingredient" type="text"></input>
+                                    <input placeholder="Ingrédient" list="ingredient_list" class="resize-none h-80 w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" id="ingredient" type="text"></input>
                                     <datalist id="ingredient_list">
                                         <?php foreach ($vars['entity']->getAllIngredient() as $ingredient) {
                                             if ($ingredient->isIngredient()) {
@@ -405,8 +416,8 @@ if ($vars['entity']->getImage()) {
                                     </datalist>
                                 </div>
                                 <div class="w-full flex justify-between">
-                                    <input name="" class=" w-1/3 appearance-none border rounded py-2 px-3 text-grey-darker" id="quantity" type="number">
-                                    <input list="unit_list" name="" class=" w-1/3 appearance-none border rounded py-2 px-3 text-grey-darker" id="unit" type="text">
+                                    <input name="" placeholder="Quantité" class=" w-1/3 appearance-none border rounded py-2 px-3 text-grey-darker" id="quantity" type="number">
+                                    <input list="unit_list" name="" placeholder="Unité" class=" w-1/3 appearance-none border rounded py-2 px-3 text-grey-darker" id="unit" type="text">
                                     <datalist id="unit_list">
                                         <?php foreach ($vars['entity']->getAllUnit() as $unit) {
 

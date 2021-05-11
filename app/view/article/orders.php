@@ -57,7 +57,7 @@
                                             <span class="text-gray-700 py-3 "><?= $order->getUser()->getFirstName() . ' ' . $order->getUser()->getLastName() ?></span>
                                         </td>
                                         <td class="border-dashed border-t border-gray-200 ">
-                                            <span class="text-gray-700  py-3 "> <?= $order->getPrice()  ?></span>
+                                            <span class="text-gray-700  py-3 "> <?= $order->getPrice().' €'  ?></span>
                                         </td>
                                         <td class="border-dashed border-t text-left border-gray-200 ">
                                             <span class="text-gray-700 py-3 "> <?= $order->getNbArticle() ?> </span>

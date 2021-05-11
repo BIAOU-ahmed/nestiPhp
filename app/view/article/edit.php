@@ -88,6 +88,18 @@ if ($vars['entity']->getImage()) {
 
 
                                 </div>
+                                <div class="mb-4">
+                                    <label class="block text-grey-darker text-sm font-bold mb-2" for="state">Etat</label>
+
+                                    <select name="Article[flag]" class="form-select border border-light-blue-500 border-opacity-0 appearance-none rounded mt-1 block w-full py-2 px-3" id="state">
+                                        <option value="a" <?= $vars['entity']->getFlag() == 'a' ? 'selected' : ''; ?>>Actif
+                                        </option>
+                                        <option value="w" <?= $vars['entity']->getFlag() == 'w' || $vars['entity']->getId() == null ? 'selected' : ''; ?>>
+                                            En attente</option>
+                                        <option value="b" <?= $vars['entity']->getFlag() == 'b' ? 'selected' : ''; ?>>Bloqué
+                                        </option>
+                                    </select>
+                                </div>
 
                                 <div class="  flex">
                                     <div class="relative mr-5 lg:w-1/6 md:w-1/2 shadow">
@@ -133,14 +145,14 @@ if ($vars['entity']->getImage()) {
                                                     <header class="w-full h-40 grid mb-5 flex items-center  ">
                                                         <div class=" w-full   grid  bg-white h-20">
 
-                                                            <h2 class=" font-semibold text-center justify-self-center self-center "><i class="text-3xl text-red-600 fas fa-exclamation-triangle"></i> Voulez-vous vraiment supprimer l'element: ?</h2>
+                                                            <h2 class=" font-semibold text-center justify-self-center self-center "><i class="text-3xl text-red-600 fas fa-exclamation-triangle"></i> Voulez-vous vraiment supprimer l'image ?</h2>
 
                                                         </div>
 
                                                     </header>
                                                     <main class="  h-20 grid   p-2 text-center">
                                                         <p class="w-2/3 justify-self-center bg-white rounded-md">
-                                                            Cette action est définitive et irréversible
+                                                        Vous avez toujours la possibilité d'ajouter un autre a tout moment.
                                                         </p>
                                                     </main>
                                                     <footer class="">

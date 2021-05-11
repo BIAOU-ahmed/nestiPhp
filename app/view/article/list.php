@@ -87,7 +87,7 @@
                                 <span class="text-gray-700 px-6 py-3 "><?= $article->getProduct()->getName() ?></span>
                             </td>
                             <td class="border-dashed border-t border-gray-200 ">
-                                <span class="text-gray-700 px-6 py-3 "> <?= $article->getLastPrice() ?></span>
+                                <span class="text-gray-700 px-6 py-3 "> <?= $article->getLastPrice().' €' ?></span>
                             </td>
                             <td class="border-dashed border-t border-gray-200 ">
                                 <span class="text-gray-700 px-6 py-3 "> <?= $article->getProduct()->getType() ?> </span>

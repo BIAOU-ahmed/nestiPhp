@@ -147,6 +147,7 @@ class ArticleController extends BaseEntityController
             // $article = ArticleDao::findById($_POST[static::getEntityClass()]['idArticle']);
             $article = static::getEntity();
             $article->setName($_POST[static::getEntityClass()]['name']);
+            $article->setFlag($_POST[static::getEntityClass()]['flag']);
             $article->setDateModification($today);
 
             self::getDao()::saveOrUpdate($article);
