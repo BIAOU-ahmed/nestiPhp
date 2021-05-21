@@ -55,7 +55,6 @@ class RecipeController extends BaseEntityController
                 if (!$recipe->getId()) {
                     $recipe->setIdChef($chefId);
                 }
-                $recipe->setFlag('a');
                 self::getDao()::saveOrUpdate($recipe);
                 header('Location: ' . SiteUtil::url() . 'recipe/edit/' . $recipe->getId());
                 exit;

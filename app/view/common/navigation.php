@@ -2,16 +2,19 @@
 
   <div class="w-full block flex-grow flex items-center h-full  ">
     <div class="text-sm h-full nav-links xl:w-3/4 lg:w-3/4 md:w-2/3 flex justify-between items-center lg:mr-auto pr-2 ">
-      <a href="<?=$vars['baseUrl']?>recipe/list" class="<?=($vars['urlParameters']['location']=='recipe')?'active':'';?> ml-2 text-lg text-center nav-button block  lg:inline-block lg:mt-0 text-teal-lighter hover:text-white">
-        Recettes
+      <a href="<?=$vars['baseUrl']?>recipe/list" class="<?=($vars['urlParameters']['location']=='recipe')?'active':'';?> ml-2 text-lg text-center nav-button block  lg:inline-block lg:mt-0 text-teal-lighter text-white lg:w-1/6 md:w-3/12">
+          <i class="far fa-list-alt"></i> Recettes
       </a>
-      <a href="<?=$vars['baseUrl']?>article/list" class="<?=($vars['urlParameters']['location']=='article')?'active':'';?> text-lg text-center nav-button block lg:inline-block lg:mt-0 text-teal-lighter text-white ">
+      <a href="<?=$vars['baseUrl']?>article/list" class="<?=($vars['urlParameters']['location']=='article')?'active':'';?> text-lg text-center nav-button block lg:inline-block lg:mt-0 text-teal-lighter text-white lg:w-1/6 md:w-2/12">
       <i class="fas fa-utensils"></i> Articles
       </a>
-      <a href="<?=$vars['baseUrl']?>user/list" class="<?=($vars['urlParameters']['location']=='user')?'active':'';?> text-lg text-center nav-button block  lg:inline-block lg:mt-0 text-teal-lighter hover:text-white">
-        Utilisateurs
+      <a href="<?=$vars['baseUrl']?>user/list" class=" <?=($vars['urlParameters']['location']=='user')?'active':'';?> text-lg text-center nav-button block  lg:inline-block lg:mt-0 text-teal-lighter text-white lg:w-1/6 md:w-3/12">
+          <i class="inline-block fas fa-users"></i>
+          <span class="inline-block">
+              Utilisateurs
+          </span>
       </a>
-      <a href="<?=$vars['baseUrl']?>statistics/dashboard" class="<?=($vars['urlParameters']['location']=='statistics')?'active':'';?> mr-2 text-lg text-center nav-button block lg:inline-block lg:mt-0 text-white">
+      <a href="<?=$vars['baseUrl']?>statistics/dashboard" class="<?=($vars['urlParameters']['location']=='statistics')?'active':'';?> mr-2 text-lg text-center nav-button block lg:inline-block lg:mt-0 text-white lg:w-1/6 md:w-3/12">
       <i class="far fa-chart-bar"></i> Statistiques
       </a>
     </div>

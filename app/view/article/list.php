@@ -62,15 +62,16 @@
         </div>
 
         <div class="bg-white rounded-lg shadow  relative">
-            <table id="myTable" class="border-collapse table-auto w-full whitespace-no-wrap bg-white table-striped relative">
-                <thead class="h-20">
-                    <tr class="text-center tables_head">
+            <table id="myTable" class="display nowrap ml-0 w-full tab_datatable" >
+                <thead >
+                    <tr class="text-center tables_head w-full">
                         <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold  uppercase text-lg"> ID</th>
                         <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold   text-xs"> Nom</th>
                         <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold   text-xs"> Prix de vente</th>
                         <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold   text-xs"> Type</th>
                         <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold   text-xs"> Derniere Importation</th>
                         <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold   text-xs"> stock</th>
+                        <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold   text-xs"> Statut</th>
                         <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold   text-xs"> Actions</th>
 
                     </tr>
@@ -84,7 +85,7 @@
                                 <span class="text-gray-700 px-6 py-3 "> <?= $article->getId() ?></span>
                             </td>
                             <td class="border-dashed border-t border-gray-200 ">
-                                <span class="text-gray-700 px-6 py-3 "><?= $article->getProduct()->getName() ?></span>
+                                <span class="text-gray-700 px-6 py-3 "><?= $article->getName() ?? $article->getDisplayName() ?></span>
                             </td>
                             <td class="border-dashed border-t border-gray-200 ">
                                 <span class="text-gray-700 px-6 py-3 "> <?= $article->getLastPrice().' €' ?></span>
@@ -98,6 +99,11 @@
                             <td class="border-dashed border-t border-gray-200 ">
                                 <span class="text-gray-700 px-6 py-3 "><?= $article->getInventory() ?></span>
                             </td>
+
+                            <td class="border-dashed border-t border-gray-200 ">
+                                <span class="rounded <?= $article->getStateClass($article) ?> py-1 px-3 text-xs font-bold"><?= $article->getState($article) ?></span>
+                            </td>
+
                             <td class="border-dashed border-t border-gray-200 text-center pt-3">
                                 <span class="text-gray-700  ">
                                     <a href="<?= $vars['baseUrl'] ?>article/edit/<?= $article->getId() ?>" class="underline ">Modifier</a>

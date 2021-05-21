@@ -70,8 +70,8 @@
         </div>
 
         <div class="bg-white rounded-lg shadow  relative">
-            <table id="myTable" class="border-collapse table-auto w-full whitespace-no-wrap bg-white table-striped relative">
-                <thead class="h-20">
+            <table id="myTable" class="display nowrap ml-0 w-full tab_datatable">
+                <thead class="">
                     <tr class="text-center tables_head">
                         <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold  uppercase text-lg"> ID</th>
                         <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold   text-xs"> Nom</th>
@@ -79,6 +79,7 @@
                         <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold   text-xs"> Pour</th>
                         <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold   text-xs"> Temps</th>
                         <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold   text-xs"> Chef</th>
+                        <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold   text-xs"> Statut</th>
                         <th class="sticky top-0 border-b border-gray-200 px-6 py-2 text-white font-bold   text-xs"> Actions</th>
 
                     </tr>
@@ -105,6 +106,9 @@
                             </td>
                             <td class="border-dashed border-t border-gray-200 ">
                                 <span class="text-gray-700 px-6 py-3 "><?= $recipe->getChef()->getLastName(); ?></span>
+                            </td>
+                            <td class="border-dashed border-t border-gray-200 ">
+                                <span class="rounded <?= $recipe->getStateClass($recipe) ?> py-1 px-3 text-xs font-bold"><?= $recipe->getState($recipe) ?></span>
                             </td>
                             <td class="border-dashed border-t border-gray-200 grid pt-3">
                                 <span class="text-gray-700  text-center ">

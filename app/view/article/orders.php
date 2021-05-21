@@ -30,8 +30,8 @@
                             </div>
                         </div>
 
-                        <table id="myTable" class="hover border-collapse table-auto w-full whitespace-no-wrap bg-white table-striped relative">
-                            <thead class="h-20 tables_hesad">
+                        <table id="myTable" class="hover display nowrap ml-0 w-full tab_datatable">
+                            <thead class=" tables_hesad">
                                 <tr class="tables_head">
 
 

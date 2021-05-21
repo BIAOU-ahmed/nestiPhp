@@ -47,6 +47,19 @@ class BaseEntity{
         }
         return $state;
     }
+
+    public function getStateClass($entity)
+    {
+
+        if ($entity->getFlag() == "a") {
+            $color = "bg-green-400";
+        } else if ($entity->getFlag() == "w") {
+            $color = "bg-yellow-400";
+        } else {
+            $color = "bg-red-400";
+        }
+        return $color;
+    }
     
     
     /**

@@ -93,10 +93,10 @@
                         <div class="pb-5 border">
                             <ul>
                                 <?php foreach ($vars['jsVars']['topRecipes'] as $recipe) { ?>
-                                    <li>
+                                    <li class="flex justify-between">
 
-                                        <a href="<?= $vars['baseUrl'] ?>recipe/edit/<?= $recipe->getId() ?>" class="ml-3 "><?= $recipe->getName() ?></i></a>
-                                        par <?= $recipe->getChef()->getFirstName() . ' ' . $recipe->getChef()->getLastName() . ' note ' . $recipe->getRate() ?>
+                                        <a href="<?= $vars['baseUrl'] ?>recipe/edit/<?= $recipe->getId() ?>" class="ml-3 mr-auto"><?= $recipe->getName() ?></a>
+                                        <span> par <?= $recipe->getChef()->getFirstName() . ' ' . $recipe->getChef()->getLastName() ?> </span>
                                     </li>
 
 

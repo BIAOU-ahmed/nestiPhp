@@ -10,7 +10,10 @@
     <!------ Include the above in your HEAD tag ---------->
     <link rel="stylesheet" href="<?= $vars['baseUrl'] ?>public/css/style.css">
     <link rel="stylesheet" href="<?= $vars['baseUrl'] ?>public/fontawesome-free-5.15.1-web/css/all.css">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js" ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <?php
@@ -18,7 +21,33 @@
         echo ' <link rel="stylesheet" href="' . $vars['baseUrl'] . 'public/css/' . $vars['stylesheet'] . '.css">';
     } ?>
 
+    <style>
+        div.dataTables_wrapper {
+            width: 100%;
+            margin: 0 auto;
+        }
+        div.dataTables_scrollHead{
+            width: 100%;
+            margin: 0 auto;
+        }
+        div.dataTables_scrollHeadInner{
+            width: 100% !important;
+        }
+        table.tab_datatable{
+            width: 100% !important;
+        }
 
+        @media (min-width: 640px) {
+            table {
+                display: inline-table !important;
+            }
+
+            thead tr:not(:first-child) {
+                display: none;
+            }
+        }
+
+    </style>
 
     <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto&display=swap" rel="stylesheet">
     <script>

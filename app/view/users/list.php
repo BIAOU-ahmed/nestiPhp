@@ -53,8 +53,8 @@
         </div>
 
         <div class="bg-white rounded-lg shadow  relative">
-            <table id="myTable" class="border-collapse table-auto hover w-full whitespace-no-wrap bg-white table-striped relative">
-                <thead class="h-20">
+            <table id="myTable" class="display nowrap ml-0 w-full tab_datatable">
+                <thead class="">
                     <tr class="tables_head">
                         <th class="sticky top-0 border-b border-gray-200 w-1/12 px-2 text-white font-bold  uppercase"> ID</th>
                         <th class="sticky top-0 border-b border-gray-200 w-1/6 text-white font-bold  "> Nom</th>
@@ -83,7 +83,7 @@
                                 <span class="text-gray-700 py-3 "> <?= $user->getLastConnectionDate() ?> </span>
                             </td>
                             <td class="border-dashed border-t border-gray-200 ">
-                                <span class="text-gray-700  py-3"><?= $user->getState($user) ?></span>
+                                <span class="rounded <?= $user->getStateClass($user) ?> py-1 px-3 text-xs font-bold"><?= $user->getState($user) ?></span>
                             </td>
                             <td class="border-dashed border-t border-gray-200 grid pt-3">
                                 <span class="text-gray-700  text-center ">

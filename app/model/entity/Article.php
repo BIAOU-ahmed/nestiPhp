@@ -78,7 +78,7 @@ class Article extends BaseEntity
                 $price = $value->getPrice();
             }
         }
-        return $price;
+        return round($price, 2);
     }
 
     public function getLastPriceAt(String $dateMax): String
@@ -96,7 +96,7 @@ class Article extends BaseEntity
                 }
             }
         }
-        return $price;
+        return round($price, 2) ;
     }
 
     public function getTotalPurchases()
@@ -349,5 +349,8 @@ class Article extends BaseEntity
         $this->name = $name;
 
         return $this;
+    }
+    public function getDisplayName(){
+        return $this->unitQuantity.' '.$this->getUnit()->getName().' de '.$this->getProduct()->getName();
     }
 }
