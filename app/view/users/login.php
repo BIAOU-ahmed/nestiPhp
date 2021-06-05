@@ -1,41 +1,8 @@
-<!-- <div id="login d-flex align-content-center">
 
-    <div class="container shadow p-3  mb-5 bg-white rounded">
-        <div id="login-row" class="row justify-content-center align-items-center">
-            <div id="login-column" class="col-md-6">
-                <div id="login-box" class="col-md-12">
-                    <form id="login-form" class="form" action="<?= $vars['baseUrl'] ?>loc=user&action=login" method="post">
-                        <h3 class="text-center text-info">Connexion</h3>
-                        <div class="form-group">
-                            <label for="username" class="text-info">Identifiant:</label><br>
-                            <input type="text" name="Users[username]" id="username" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="password" class="text-info">Mot de passe:</label><br>
-                            <input type="text" name="Users[password]" id="password" value="azerty14AZERTY!" class="form-control">
-                        </div>
-                        <div class="form-group float-right">
-                            <input type="submit" name="submit" class="btn btn-info btn-md" value="Valider">
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="login-page">
-    <div class="content">
-        <label for="">Connexion</label>
-
-
-    </div>
-</div> -->
 
 <div class="flex w-full h-full justify-center md:mt-48 items-stretch login-page">
 
-    <div class="flex flex-col w-1/2  self-center">
+    <div class="flex flex-col w-1/2 md:w-2/3  self-center">
         <?php if (@$vars['message'] == 'disconnect') { ?>
             <div id="disconnect-message" class="w-full block text-gray-700 text-center px-6 py-4 border-0 relative mb-4">
 
@@ -57,19 +24,19 @@
         <?php } ?>
         <div class="lg:w-full xl:max-w-screen-sm shadow-2xl bg-white">
 
-            <div class="mt-10 px-12 sm:px-24 md:px-48 lg:px-12 lg:mt-16 xl:px-24 xl:max-w-2xl">
+            <div class="mt-10 px-12 md:px-1 sm:px-24 md:px-4 lg:px-12 lg:mt-16 xl:px-24 xl:max-w-2xl">
                 <h2 class="text-center text-4xl text-indigo-900 font-display font-semibold lg:text-left xl:text-5xl
                     xl:text-bold flex justify-center">Connexion</h2>
-                <div class="mt-12">
-                    <form id="login-form" class="form" action="<?= $vars['baseUrl'] ?>user/login" method="post">
-                        <div>
+                <div class="mt-12 md:w-10/12">
+                    <form id="login-form" class="form " action="<?= $vars['baseUrl'] ?>user/login" method="post">
+                        <div >
                             <div class="ml-6 text-sm font-bold text-gray-700 tracking-wide">Identifiant</div>
-                            <i class="far fa-user-circle"></i><input class=" w-5/6 ml-2 text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="text" value="luther" name="Users[username]">
+                            <i class="far fa-user-circle"></i><input class=" w-5/6  ml-2 text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="text" value="" name="Users[username]">
                         </div>
                         <div class="py-2" x-data="{ show: true }">
                             <span class="ml-6 text-sm font-bold text-gray-700 tracking-wide">Mot de passe</span>
                             <div class="relative">
-                            <i class="fas fa-lock"></i><input placeholder="" :type="show ? 'password' : 'text'" class="w-5/6 ml-2 text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" value="azerty14AZERTY!" type="password" name="Users[password]">
+                            <i class="fas fa-lock"></i><input placeholder="" :type="show ? 'password' : 'text'" class="w-5/6 ml-2 text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" value="" type="password" name="Users[password]">
                                 <div class="absolute inset-y-0 right-0 pr-16 flex items-center text-sm leading-5">
 
                                     <svg class="h-6 text-gray-700" fill="none" @click="show = !show" :class="{'hidden': !show, 'block':show }" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 576 512">

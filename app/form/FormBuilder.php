@@ -12,7 +12,6 @@ class FormBuilder
     {
         $this->entity = $entity;
         $this->parameters = $parameters;
-        // FormatUtil::dump($this->parameters);
     }
     /**
      * isValid
@@ -42,7 +41,6 @@ class FormBuilder
 
         if (isset($this->formParameters[$propertyName])) {
             // Loop through each validator for that field
-            // FormatUtil::dump($this->formParameters);
             foreach ($this->formParameters[$propertyName] as $validatorName) {
                 // store error states (negated validator) with the validator name as key
                 $errored = !EntityValidatorUtil::$validatorName($this->entity,$this->parameters, $propertyName);

@@ -28,7 +28,7 @@ class StatisticsController extends BaseController
 
         // loop on categories to create array of connexion hour number
         foreach ($categories as $key => $logs) {
-            $connectionByHour[] = (object) array("name" => $key, "data" => count($logs));
+            $connectionByHour[] = (object)array("name" => $key, "data" => count($logs));
         }
 
 
@@ -85,7 +85,6 @@ class StatisticsController extends BaseController
             $lots = LotDao::findAllAffterDate("dateReception", $value, 'a'); // get all lot make in 10 last days 
             $soldTotal = 0;
             $purchasedTotal = 0;
-
             foreach ($orders as $order) {
                 $soldTotal += $order->getPrice();
             }
@@ -108,9 +107,11 @@ class StatisticsController extends BaseController
         $allArticles = array_slice($allArticles, 0, 10);
         $articleSales = [];
         $articlePurchases = [];
+
         foreach ($allArticles as $value) {
             $articleSales[] = $value->getTotalSalls();
             $articlePurchases[] = $value->getTotalPurchases();
+
         }
         static::render("statistics/dashboard", [
 

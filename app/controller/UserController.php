@@ -157,6 +157,7 @@ class UserController extends BaseEntityController
             $user = static::getEntity();
 
             $formBuilder = new UsersFormBuilder($user, $_POST[static::getEntityClass()]);
+
             $city = CityDao::findOneBy("name", $_POST['Users']['city']);
             if ($formBuilder->isValid()) { // if is valid
                 if (!$city) { // if city dont exist is created
@@ -198,10 +199,21 @@ class UserController extends BaseEntityController
                 if (isset($_POST['roles']['moderator'])) {
                     $user->makeModerator();
                 }
+                if ($user->getId()) {
+                    $templateVars["succes"] = "L'utilisateur a été modifier avec succès";
+                } else {
+                    $templateVars["succes"] = "L'utilisateur a été ajouter avec succès";
+                    header('Location: ' . SiteUtil::url() . 'user/list/');
+                    exit;
+                }
+
                 // null template will redirect to default action
             } else {
-                // if is not valid 
+
+
                 $templateVars["errors"] = $formBuilder->getErrors();
+
+                $templateVars["properties"] = $_POST[static::getEntityClass()];
             }
         }
 

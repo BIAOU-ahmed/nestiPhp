@@ -85,7 +85,7 @@
                                 <span class="text-gray-700 px-6 py-3 "> <?= $article->getId() ?></span>
                             </td>
                             <td class="border-dashed border-t border-gray-200 ">
-                                <span class="text-gray-700 px-6 py-3 "><?= $article->getName() ?? $article->getDisplayName() ?></span>
+                                <span class="text-gray-700 px-6 py-3 "><?= $article->getName()!='' ?$article->getName(): $article->getDisplayName() ?></span>
                             </td>
                             <td class="border-dashed border-t border-gray-200 ">
                                 <span class="text-gray-700 px-6 py-3 "> <?= $article->getLastPrice().' €' ?></span>
@@ -110,14 +110,14 @@
                                 </span><br>
                                 <div x-data="{ showModal<?= $article->getId() ?>: false }" :class="{'overflow-y-hidden': showModal<?= $article->getId() ?> }">
                                     <main class="flex flex-col sm:flex-row justify-center items-center">
-                                        <a class="cursor-pointer underline  text-gray-700 p-2 w-32   " @click="showModal<?= $article->getId() ?> = true">
+                                        <a class="delete_btn cursor-pointer underline  text-gray-700 p-2 w-32   " @click="showModal<?= $article->getId() ?> = true">
                                             Supprimer
                                         </a>
 
                                     </main>
 
                                     <!-- Modal1 -->
-                                    <div class="fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal<?= $article->getId() ?>" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                                    <div class="delete_modale hidden fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal<?= $article->getId() ?>" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                                         <div class="relative sm:w-3/4 md:w-1/2 lg:w-1/3  sm:mx-auto my-10 opacity-100">
                                             <div class="relative bg-gray-300 shadow-lg rounded-md text-gray-900 z-20" @click.away="showModal<?= $article->getId() ?> = false" x-show="showModal<?= $article->getId() ?>" x-transition:enter="transition transform duration-300" x-transition:enter-start="scale-0" x-transition:enter-end="scale-100" x-transition:leave="transition transform duration-300" x-transition:leave-start="scale-100" x-transition:leave-end="scale-0">
                                                 <form action="<?= $vars['baseUrl'] ?>article/delete/<?= $article->getId() ?>" method="post">

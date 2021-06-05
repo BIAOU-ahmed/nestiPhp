@@ -91,9 +91,12 @@ class BaseEntityController extends BaseController
             }
 
             foreach ($_FILES as $key) {
+                $name ="";
+                if ($key['name']) {
+                    $nameFirstPart = explode('.', $key['name']);
+                    $name =  $nameFirstPart[0] . time() . '.' . $nameFirstPart[1];
+                }
 
-                $nameFirstPart = explode('.', $key['name']);
-                $name =  $nameFirstPart[0] . time() . '.' . $nameFirstPart[1];
                 $path = "../public/images/$directoryName/" . $name;
                 $file_ext =  pathinfo($name, PATHINFO_EXTENSION);
                 // chack if the file have the rigth type
@@ -134,7 +137,7 @@ class BaseEntityController extends BaseController
             $entity = static::getDao()::findById($id);
             $entity->setIdImage(null);
             static::getDao()::saveOrUpdate($entity);
-            echo SiteUtil::url() . "public/images/$name/gateauauxfraises.jpg";
+            echo SiteUtil::url() . "public/images/noImage.jpg";
         }
     }
 
@@ -157,7 +160,6 @@ class BaseEntityController extends BaseController
                 $templateName = null; // null template will redirect to default action
             } else {
                 $templateVars["errors"] = self::getEntity()->getErrors();
-                FormatUtil::dump($templateVars["errors"]);
             }
         }
 

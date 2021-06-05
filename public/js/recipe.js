@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
     var recipe = $("#add-ingredient").data("id");
     let barUrl = $("#add-ingredient").data("url");
@@ -8,20 +8,25 @@ $(document).ready(function() {
     // })
 
 
-    $('#add-preparation').click(function() {
+    $('#add-preparation').click(function () {
         var recipe = $(this).data("id");
         let barUrl = $(this).data("url");
         let preparationContent = $("#preparationsContent").val();
 
         if (recipe != "") {
 
-            $.post(barUrl + '/recipe/addPreparations', {
-                "recipe": encodeURIComponent(recipe),
-                "preparationContent": preparationContent
-            }, (response) => {
-                addParagraph(response);
+            if (preparationContent != "") {
+                $.post(barUrl + '/recipe/addPreparations', {
+                    "recipe": encodeURIComponent(recipe),
+                    "preparationContent": preparationContent
+                }, (response) => {
+                    addParagraph(response);
 
-            });
+                });
+            }else {
+                alert("Le contenu de la preparation ne peut pas être vide")
+            }
+
 
         } else {
             alert("Veuillez d'abord céer une recette")
@@ -29,22 +34,48 @@ $(document).ready(function() {
     })
 
 
-
-    $('#add_ingredient').click(function() {
+    $('#add_ingredient').click(function () {
         // all values to pass in the ajax request
         let ingredientName = $("#ingredient").val();
         let unitName = $("#unit").val();
         let quantity = $("#quantity").val();
-        if (recipe != "") {
 
-            $.post(barUrl + '/recipe/addIngredient', {
-                "recipe": encodeURIComponent(recipe),
-                "ingredientName": encodeURIComponent(ingredientName),
-                "unitName": encodeURIComponent(unitName),
-                "quantity": encodeURIComponent(quantity)
-            }, (response) => {
-                addIngredientRecipe(response);
-            });
+        if (recipe != "") {
+            if (ingredientName != "" && unitName != "" && quantity != "") {
+
+                $.post(barUrl + '/recipe/addIngredient', {
+                    "recipe": encodeURIComponent(recipe),
+                    "ingredientName": ingredientName,
+                    "unitName": unitName,
+                    "quantity": encodeURIComponent(quantity)
+                }, (response) => {
+                    addIngredientRecipe(response);
+                });
+
+            }
+
+            if (ingredientName == "") {
+                $("#ingredient").addClass("border-red-500")
+                $("#ingredient_error").text("Ingredient obligatoire");
+
+            } else {
+                $("#ingredient").removeClass("border-red-500")
+                $("#ingredient_error").text("");
+            }
+            if (unitName == "") {
+                $("#unit").addClass("border-red-500")
+                $("#unit_error").text('Unité obligatoire');
+            } else {
+                $("#unit").removeClass("border-red-500")
+                $("#unit_error").text('');
+            }
+            if (quantity == "") {
+                $("#quantity").addClass("border-red-500")
+                $("#quantity_error").text('Un nombre atendut');
+            } else {
+                $("#quantity").removeClass("border-red-500")
+                $("#quantity_error").text('');
+            }
 
         } else {
             alert("Veuillez d'abord céer une recette")
@@ -119,7 +150,7 @@ $(document).ready(function() {
             }
         }
 
-        $('.deleteIngredient').click(function() {
+        $('.deleteIngredient').click(function () {
             var el = $(this)
             var recipe = $(this).data("idrecipe");
             var product = $(this).data("idproduct");
@@ -147,9 +178,9 @@ $(document).ready(function() {
     // this function is for add new paragraph for the recipe
     function addParagraph(data) {
         $('#paragraph-container').html("")
-            // we parse the data get in json
+        // we parse the data get in json
         let n = JSON.parse(data)
-            // we loop on the json to create all pragraph in our page
+        // we loop on the json to create all pragraph in our page
         for (var k in n) {
             let maxpreparation = Object.keys(n).length;
             let content = ' <div class="flex mr-1 mb-5 ">' +
@@ -161,18 +192,17 @@ $(document).ready(function() {
                 content += '<button class="moveParagraph block my-2" data-idRecipe="' + recipe + '" data-id="' + n[k].id + '"data-action="down"><i class="text-center bg-yellow-400 text-white pt-1 text-3xl h-10 w-10 border block fas fa-arrow-down "></i></button>';
             }
 
-            content += '  <div x-data="{ showModal: false }" :class="{' + "'overflow-y-hidden': showModal }" + '">' +
+            content += '  <div x-data="{ showModal' + n[k].id + '_para: false }" :class="{' + "'overflow-y-hidden': showModal" + n[k].id + "_para }" + '">' +
                 '<main class="flex flex-col sm:flex-row justify-center items-center">' +
 
-                '<button  @click="showModal = true" class="block"><i class="rounded text-center pt-1 text-3xl h-10 w-10 bg-red-600 border text-white block fas fa-trash-alt my-2"></i></button>' +
+                '<button  @click="showModal' + n[k].id + '_para = true" class="delete_btn block"><i class="rounded text-center pt-1 text-3xl h-10 w-10 bg-red-600 border text-white block fas fa-trash-alt my-2"></i></button>' +
 
                 '</main>' +
 
 
-                '<div class="fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">' +
+                '<div class="delete_modale hidden fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal' + n[k].id + '_para" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">' +
                 '<div class="relative sm:w-3/4 md:w-1/2 lg:w-1/3  sm:mx-auto my-10 opacity-100">' +
-                '<div class="relative bg-gray-300 shadow-lg rounded-md text-gray-900 z-20" @click.away="showModal = false" x-show="showModal" x-transition:enter="transition transform duration-300" x-transition:enter-start="scale-0" x-transition:enter-end="scale-100" x-transition:leave="transition transform duration-300" x-transition:leave-start="scale-100" x-transition:leave-end="scale-0">' +
-
+                '<div class="relative bg-gray-300 shadow-lg rounded-md text-gray-900 z-20" @click.away="showModal' + n[k].id + '_para = false" x-show="showModal' + n[k].id + '_para" x-transition:enter="transition transform duration-300" x-transition:enter-start="scale-0" x-transition:enter-end="scale-100" x-transition:leave="transition transform duration-300" x-transition:leave-start="scale-100" x-transition:leave-end="scale-0">' +
 
 
                 '<header class="w-full h-40 grid mb-5 flex items-center  ">' +
@@ -191,12 +221,12 @@ $(document).ready(function() {
                 '<footer class="">' +
 
                 '<div class="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">' +
-                '<button class="bg-red-500  active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease" @click="showModal = false">' +
+                '<button class="bg-red-500  active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease" @click="showModal' + n[k].id + '_para = false">' +
                 '<span class="text-lg"> Annuller </span>' +
                 '</button>' +
 
                 '<div class="bg-green-500 ml-5 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">' +
-                '<button @click="showModal = false" name="delete" type="submit" value="1" class="deletePara text-lg text-center  block lg:inline-block lg:mt-0" data-idrecipe="' + recipe + '" data-id="' + n[k].id + '"+>' +
+                '<button @click="showModal' + n[k].id + '_para = false" name="delete" type="submit" value="1" class="deletePara text-lg text-center  block lg:inline-block lg:mt-0" data-idrecipe="' + recipe + '" data-id="' + n[k].id + '"+>' +
                 'Confirmer </button>' +
 
 
@@ -205,13 +235,11 @@ $(document).ready(function() {
                 '</footer>' +
 
 
-
                 '</div>' +
                 '</div>' +
                 '</div>' +
 
                 '</div>' +
-
 
 
                 '</div>' +
@@ -226,7 +254,7 @@ $(document).ready(function() {
         }
 
         // add listener on all paragraph when they lost the focust we save the value
-        $("textarea#para").focusout(function() {
+        $("textarea#para").focusout(function () {
             var recipe = $(this).data("idrecipe");
             var idPrep = $(this).data("id");
             var newValue = $(this).val();
@@ -244,7 +272,7 @@ $(document).ready(function() {
         });
 
         // a listener to move the paragraph to up or down
-        $('.moveParagraph').click(function() {
+        $('.moveParagraph').click(function () {
             var recipe = $(this).data("idrecipe");
             var para = $(this).data("id");
             var action = $(this).data("action");
@@ -257,7 +285,7 @@ $(document).ready(function() {
             }
 
             // we wait time the css effect pass and we do the changement in the data base
-            setTimeout(function() {
+            setTimeout(function () {
                 if (recipe != "") {
                     // send the ajax queries to the endpoint
                     $.post(barUrl + '/recipe/movePreparations', {
@@ -270,10 +298,10 @@ $(document).ready(function() {
                     });
 
                 }
-            }, 4000);
+            }, 2000);
         })
 
-        $('.deletePara').click(function() {
+        $('.deletePara').click(function () {
 
             var recipe = $(this).data("idrecipe");
             var para = $(this).data("id");

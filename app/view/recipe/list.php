@@ -4,8 +4,6 @@
     <!-- <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css">
 	<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script> -->
     <?php
-    // FormatUtil::dump($_POST);
-    // FormatUtil::dump($vars);
     if (isset($_SESSION['message'])) { ?>
         <!-- <div id="sucess_message" class="w-1/2 block ml-auto bg-red-400 text-gray-700 text-center px-6 py-4 border-0 relative mb-4 mt-2">
 
@@ -117,14 +115,14 @@
 
                                 <div x-data="{ showModal<?= $recipe->getId() ?>: false }" :class="{'overflow-y-hidden': showModal<?= $recipe->getId() ?> }">
                                     <main class="flex flex-col sm:flex-row justify-center items-center">
-                                        <a class="cursor-pointer underline  text-gray-700 p-2 w-32   " @click="showModal<?= $recipe->getId() ?> = true">
+                                        <a class="delete_btn cursor-pointer underline  text-gray-700 p-2 w-32   " @click="showModal<?= $recipe->getId() ?> = true">
                                             Supprimer
                                         </a>
 
                                     </main>
 
                                     <!-- Modal for delete confirmation -->
-                                    <div class="fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal<?= $recipe->getId() ?>" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                                    <div class="delete_modale hidden fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal<?= $recipe->getId() ?>" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                                         <div class="relative sm:w-3/4 md:w-1/2 lg:w-1/3  sm:mx-auto my-10 opacity-100">
                                             <div class="relative bg-gray-300 shadow-lg rounded-md text-gray-900 z-20" @click.away="showModal<?= $recipe->getId() ?> = false" x-show="showModal<?= $recipe->getId() ?>" x-transition:enter="transition transform duration-300" x-transition:enter-start="scale-0" x-transition:enter-end="scale-100" x-transition:leave="transition transform duration-300" x-transition:leave-start="scale-100" x-transition:leave-end="scale-0">
                                                 <form action="<?= $vars['baseUrl'] ?>recipe/delete/<?= $recipe->getId() ?>" method="post">

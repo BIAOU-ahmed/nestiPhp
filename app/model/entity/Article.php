@@ -65,40 +65,53 @@ class Article extends BaseEntity
         return $this->getIndirectlyRelatedEntities("Orders", "OrderLine", BaseDao::FLAGS['active']);
     }
 
-    public function getLastPrice(): String
+    public function getLastPrice(): string
     {
 
         $maxDate = 0;
         $arrayArticlePrice = $this->getArticlePrices();
-
+        $price = 0;
         foreach ($arrayArticlePrice as $value) {
-            $date =   strtotime($value->getDateStart());
-            if ($maxDate <  $date) {
-                $maxDate =  $date;
+            $date = strtotime($value->getDateStart());
+            if ($maxDate < $date) {
+                $maxDate = $date;
                 $price = $value->getPrice();
             }
         }
         return round($price, 2);
     }
 
-    public function getLastPriceAt(String $dateMax): String
+    public function getLastPriceAt(string $dateMax): string
     {
 
         $maxDate = 0;
         $arrayArticlePrice = $this->getArticlePrices();
-
+        $price = '';
         foreach ($arrayArticlePrice as $value) {
             $date = strtotime($value->getDateStart());
             if ($date <= $dateMax) {
-                if ($maxDate <  $date) {
-                    $maxDate =  $date;
+                if ($maxDate < $date) {
+                    $maxDate = $date;
                     $price = $value->getPrice();
                 }
             }
         }
-        return round($price, 2) ;
+        return $price;
     }
 
+    public function getImageName(): ?String
+    {
+        $imageName = "noImage.jpg";
+        if ($this->getImage()) {
+            $imageName = "articles/" . $this->getImageFullName();
+        }
+        return $imageName;
+    }
+
+    public function  getImageFullName()
+    {
+        return $this->getImage() ? $this->getImage()->getName() . '.' . $this->getImage()->getFileExtension() : "noImage.jpg";
+    }
     public function getTotalPurchases()
     {
         $total = 0;
@@ -307,17 +320,20 @@ class Article extends BaseEntity
         $totalQuantity = 0;
         foreach ($this->getOrderLines() as $orderLine) {
             if ($orderLine->getOrder()->getFlag() != "b") {
-                $totalQuantity += $this->getLastPriceAt($orderLine->getOrder()->getDateCreation()) * $orderLine->getQuantity();
+                $dateMax = strtotime($orderLine->getOrder()->getDateCreation());
+
+                $totalQuantity += $this->getLastPriceAt($dateMax) * $orderLine->getQuantity();
             }
         }
         return $totalQuantity;
     }
-    public function getBenefit(){
-        FormatUtil::dump('vend'.$this->getTotalSalls());
-        FormatUtil::dump('couts'.$this->getTotalPurchases());
+
+    public function getBenefit()
+    {
 
         return $this->getTotalSalls() - $this->getTotalPurchases();
     }
+
     public function getNbBought()
     {
         $totalQuantity = 0;
@@ -331,6 +347,7 @@ class Article extends BaseEntity
     {
         return $this->getNbBought() - $this->getNbOrdered();
     }
+
     public function getFactoryName()
     {
         $unitQuantity = $this->getUnitQuantity();
@@ -339,6 +356,7 @@ class Article extends BaseEntity
         $name = $unitQuantity . ' ' . $unitName . ' de ' . $productName;
         return $name;
     }
+
     /**
      * Set the value of name
      *
@@ -350,7 +368,9 @@ class Article extends BaseEntity
 
         return $this;
     }
-    public function getDisplayName(){
-        return $this->unitQuantity.' '.$this->getUnit()->getName().' de '.$this->getProduct()->getName();
+
+    public function getDisplayName()
+    {
+        return $this->unitQuantity . ' ' . $this->getUnit()->getName() . ' de ' . $this->getProduct()->getName();
     }
 }

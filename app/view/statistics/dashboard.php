@@ -52,7 +52,7 @@
                         <?php foreach ($vars['jsVars']['mostBiggenOrders'] as $order) { ?>
                             <li>
                                 Commande n°<?= $order->getId()  ?>
-                                <a href="<?= $vars['baseUrl'] ?>user/edit/<?= $order->getId() ?>" class="ml-3 "><i class="fas fa-pencil-alt"></i></a>
+                                <a href="<?= $vars['baseUrl'] ?>article/orders/" class="ml-3 "><i class="fas fa-pencil-alt"></i></a>
                             </li>
 
 

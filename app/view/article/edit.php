@@ -1,17 +1,8 @@
-<?php
-$img = 'gateauauxfraises.jpg';
-if ($vars['entity']->getImage()) {
-    $img = $vars['entity']->getImage()->getName() . '.' . $vars['entity']->getImage()->getFileExtension();
-}
-
-
-
-?>
 
 <div class="bg-grey-lightest">
     <div class=" pt-8">
         <div class=" bg-white rounded shadow">
-            <div class="ml-1"><a href="">Articles </a>> Article</div>
+            <div class="ml-1"><a href="<?=$vars['baseUrl']?>article/list">Articles </a>> Article</div>
             <?php if ($vars['entity']->getId()) { ?>
                 <div class=" grid lg:gap-10 md:gap-5 grid-cols-2">
                     <form class="" action="<?= $vars['baseUrl'] ?>article/edit/<?= $vars["entity"]->getId() ?>" method="post">
@@ -126,19 +117,18 @@ if ($vars['entity']->getImage()) {
 
                             <form method="post" class="mb-4 h-full" id="recipeImg" action="<?= $vars['baseUrl'] ?>article/addImage">
                                 <div>
-                                    <img id="image" class="h-80 rounded lg:w-4/5 md:w-full recipe-img  mb-5 bg-gray-300" src="<?= $vars['baseUrl'] ?>public/images/articles/<?= $img ?>" alt="">
+                                    <img id="image" class="h-80 rounded lg:w-4/5 md:w-full recipe-img  mb-5 bg-gray-300" src="<?= $vars['baseUrl'] ?>public/images/<?= $vars['entity']->getImageName() ?>" alt="" style="height: 25rem;">
                                     <input type="hidden" value="<?= $vars['entity']->getId() ?>" name="idArticle">
                                 </div>
                                 <div class="lg:w-4/5 flex justify-between">
-                                    <label id="img-url" class="self-center" for=""> <?= $img ?> </label>
+                                    <label id="img-url" class="self-center" for=""> <?= $vars['entity']->getImageFullName() ?> </label>
                                     <div x-data="{ showModal: false }" :class="{'overflow-y-hidden': showModal }">
                                         <main class="">
-                                            <button type="button" @click="showModal = true" class="block"><i class="rounded text-center pt-1 text-3xl h-10 w-10 bg-red-600 border text-white block fas fa-trash-alt my-2"></i></button>
-
-                                        </main>
+                                            <button id="delete_image_btn" type="button" @click="showModal = true" class="delete_btn block"><i class="rounded text-center pt-1 text-3xl h-10 w-10 bg-red-600 border text-white block fas fa-trash-alt my-2"></i></button>
+                                            </main>
 
                                         <!-- Modal1 -->
-                                        <div class="fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                                        <div class="delete_modale hidden fixed inset-0 w-full h-full z-20 bg-gray-200 bg-opacity-50 duration-300 overflow-y-auto" x-show="showModal" x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                                             <div class="relative sm:w-3/4 md:w-1/2 lg:w-1/3  sm:mx-auto my-10 opacity-100">
                                                 <div class="relative bg-gray-300 shadow-lg rounded-md text-gray-900 z-20" @click.away="showModal = false" x-show="showModal" x-transition:enter="transition transform duration-300" x-transition:enter-start="scale-0" x-transition:enter-end="scale-100" x-transition:leave="transition transform duration-300" x-transition:leave-start="scale-100" x-transition:leave-end="scale-0">
 
@@ -257,7 +247,6 @@ if ($vars['entity']->getImage()) {
                                         </li>
                                 <?php
                                     }
-                                    // FormatUtil::dump($vars['imported']);
                                 }
 
                                 ?>

@@ -7,7 +7,7 @@
     },
     "localhost": {
         "user": "root",
-        "db_name": "nestiPhp",
+        "db_name": "nestiShop",
         "password": "",
         "host": "localhost"
     }

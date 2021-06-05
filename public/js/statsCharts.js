@@ -1,5 +1,5 @@
 window.addEventListener("DOMContentLoaded", (event) => {
-    console.log("DOM entièrement chargé et analysé");
+    
 
     /****************************************************************************************************************************************
      * Orders chart.
@@ -40,7 +40,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
 
     const el1 = document.getElementById('chartConection');
-    console.log(vars.connexionByHour)
+    
     const dataConnexionLogByHour = {
         categories: ['Connection'],
         series: vars.connexionByHour

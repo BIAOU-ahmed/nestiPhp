@@ -2,7 +2,7 @@
 
 class CommentDao extends BaseDao
 {
-
+    
     public static function findComment($value, $flag = null): ?Comment
     {
         $pdo = DatabaseUtil::connect();
@@ -17,9 +17,9 @@ class CommentDao extends BaseDao
         $req = $pdo->prepare($sql);
         $req->execute($values);
 
-        $entity = self::fetchEntity($req, $flag); // set entity properties using fetched values
+        $entity = self::fetchEntity($req, $flag); 
 
-        return $entity ?? null; // fetchObject returns boolean false if no row found, whereas we want null
+        return $entity ?? null; 
     }
 
 

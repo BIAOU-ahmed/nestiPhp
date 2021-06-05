@@ -1,7 +1,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title><?= $vars['title'] ?></title>
     <!-- tailwind import -->
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -17,37 +17,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <?php
-    if (isset($vars['stylesheet'])) {
+    if ($vars['stylesheet'] == "login") {
         echo ' <link rel="stylesheet" href="' . $vars['baseUrl'] . 'public/css/' . $vars['stylesheet'] . '.css">';
-    } ?>
-
-    <style>
-        div.dataTables_wrapper {
-            width: 100%;
-            margin: 0 auto;
-        }
-        div.dataTables_scrollHead{
-            width: 100%;
-            margin: 0 auto;
-        }
-        div.dataTables_scrollHeadInner{
-            width: 100% !important;
-        }
-        table.tab_datatable{
-            width: 100% !important;
-        }
-
-        @media (min-width: 640px) {
-            table {
-                display: inline-table !important;
-            }
-
-            thead tr:not(:first-child) {
-                display: none;
-            }
-        }
-
-    </style>
+   } ?>
 
     <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto&display=swap" rel="stylesheet">
     <script>

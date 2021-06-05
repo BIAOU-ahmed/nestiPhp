@@ -3,6 +3,9 @@ class Administrator extends Users{
     private $idAdministrator;
 
 
+    /**
+     * @return array
+     */
     public function getImportations(): array{
         return $this->getRelatedEntities("Importation"); 
     }
@@ -10,11 +13,22 @@ class Administrator extends Users{
     public function getLots(): array{
         return $this->getIndirectlyRelatedEntities("Lot", "Importation"); 
     }
-
-    public function getNbImportation(){
+    
+      
+    /**
+     * getNbImportation
+     *
+     * @return int
+     */
+    public function getNbImportation(): int{
         return sizeof($this->getImportations());
     }
-
+    
+    /**
+     * getLastImportation
+     *
+     * @return void
+     */
     public function getLastImportation(){
         $importations = $this->getImportations();
         usort($importations, function($a, $b) {return strcmp($a->getImportationDate(), $b->getImportationDate());});

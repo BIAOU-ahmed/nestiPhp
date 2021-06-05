@@ -16,7 +16,7 @@ class ArticleController extends BaseEntityController
     protected static $loggedInUser;
     protected static $entity;
 
-    
+
     public static function callActionMethod($action)
     {
         if (!UserController::getLoggedInUser()->isAdministrator()) {
@@ -121,8 +121,6 @@ class ArticleController extends BaseEntityController
                             $articlePrice->setDateStart($today);
                             ArticlePriceDao::save($articlePrice);
                         }
-
-
                     }
                 }
 
@@ -151,7 +149,7 @@ class ArticleController extends BaseEntityController
             $article->setDateModification($today);
 
             self::getDao()::saveOrUpdate($article);
-
+            $templateVars["succes"] = "L'article' a été modifier avec succès";
         }
         if (isset($_FILES['csvfile'])) {
             $templateVars = static::import();

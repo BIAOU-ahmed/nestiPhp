@@ -226,6 +226,27 @@ class Recipe extends BaseEntity
         return $this;
     }
 
+    public function getImageName(): ?String
+    {
+        $imageName = "noImage.jpg";
+        if($this->getImage()){
+            $imageName = "recipes/".$this->getImageFullName();
+        }
+        return $imageName;
+    }
+    public function  getImageFullName(){
+        return $this->getImage()? $this->getImage()->getName().'.'.$this->getImage()->getFileExtension() : "noImage.jpg";
+    }
+
+    public function getChefName(): ?String{
+        $chef = "";
+        if ($this->getId() == null && UserController::getLoggedInUser()->isChef()) {
+            $chef =  UserController::getLoggedInUser()->getFirstName() . ' ' . UserController::getLoggedInUser()->getLastName();
+        } elseif ($this->getId() != null) {
+            $chef =  $this->getChef()->getFirstName() . ' ' . $this->getChef()->getLastName();
+        }
+        return $chef;
+    }
     /**
      * Get the value of name
      */

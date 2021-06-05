@@ -7,7 +7,7 @@ $(document).ready(function() {
         dom: 'p t r',
         "pageLength": 5,
         "language": {
-            url: 'http://cdn.datatables.net/plug-ins/1.10.24/i18n/fr_fr.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/fr_fr.json'
         },
 
     })
@@ -21,4 +21,9 @@ $(document).ready(function() {
     setTimeout(function() {
         $('#sucess_message').slideUp("slow");
     }, 5000);
+
+    $('.delete_btn').click(function() {
+        $('.delete_modale').removeClass('hidden')
+    })
+    
 });

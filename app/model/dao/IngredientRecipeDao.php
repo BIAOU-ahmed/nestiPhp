@@ -13,21 +13,22 @@ class IngredientRecipeDao extends BaseDao
 
 
             $sql = "INSERT INTO `ingredientrecipe` (`idProduct`, `idRecipe`, `quantity`, `idUnit`) VALUES (?, ?, ?, ?);";
-            // FormatUtil::dump($sql);
+            
 
             $q = $pdo->prepare($sql);
 
-            $q->execute(array(EntityUtil::get($entity, "idProduct"), EntityUtil::get($entity, "idRecipe"), EntityUtil::get($entity, "quantity"), EntityUtil::get($entity, "idUnit")));
+            $q->execute(array(EntityUtil::get($entity, "idProduct"), EntityUtil::get($entity, "idRecipe"), 
+            EntityUtil::get($entity, "quantity"), EntityUtil::get($entity, "idUnit")));
         }
 
-        // FormatUtil::dump($entity);
+        
         return $entity; // Last inserted ID is entity's id
     }
 
 
 
     public static function updateRecipeIngredient(?IngredientRecipe &$entity) {
-        // Loop through inherited tables (from parent to child), updating the relevant entity properties
+        
         foreach ( self::getParentClasses() as $currentClass ) { 
             $pdo = DatabaseUtil::connect();
             $currentDao = $currentClass::getDaoClass();

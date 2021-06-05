@@ -12,14 +12,14 @@ class ImportationDao extends BaseDao{
 
 
             $sql = "INSERT INTO `importation` (`idArticle`, `idSupplierOrder`, `idAdministrator`, `importationDate`) VALUES (?, ?, ?, ?);";
-            // FormatUtil::dump($sql);
+           
 
             $q = $pdo->prepare($sql);
 
             $q->execute(array(EntityUtil::get($entity, "idArticle"), EntityUtil::get($entity, "idSupplierOrder"), EntityUtil::get($entity, "idAdministrator"), EntityUtil::get($entity, "importationDate")));
         }
 
-        // FormatUtil::dump($entity);
+       
         return $entity; // Last inserted ID is entity's id
     }
 }

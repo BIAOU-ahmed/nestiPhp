@@ -42,7 +42,6 @@ class BaseController
             if (!is_array($templates)) {
                 $templates = ['action' => $templates, 'base' => 'common/base'];
             }
-
             get_called_class()::setupTemplateVars($vars, $templates);
             // $vars = static::$templateVars;
             //repars a la racine du porjet
@@ -69,10 +68,10 @@ class BaseController
             'templatePath' => SiteUtil::toAbsolute("app/view/" . $templates['action'] . '.php'),
             'loggedInUser' => UserController::getLoggedInUser(),
             'stylesheet' => $templates['action'],
+            'title' => $controller,
             'urlParameters' => ['action' => $action, 'location' => $controller, 'id' => $id]
         ]);
 
-     
 
     }
 

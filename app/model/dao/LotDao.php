@@ -6,7 +6,6 @@ class LotDao extends BaseDao{
     public static function findAll($flag=null): array
     {
         $pdo = DatabaseUtil::connect();
-        //FormatUtil::dump($pdo);
         $sql = "SELECT * FROM " . self::getTableName();
         
         $values = [];
@@ -60,14 +59,13 @@ class LotDao extends BaseDao{
 
 
             $sql = "INSERT INTO `lot` (`idArticle`, `idSupplierOrder`, `unitCost`, `dateReception`, `quantity`) VALUES (?, ?, ?, ?, ?);";
-            // FormatUtil::dump($sql);
+            
 
             $q = $pdo->prepare($sql);
 
             $q->execute(array(EntityUtil::get($entity, "idArticle"), EntityUtil::get($entity, "idSupplierOrder"), EntityUtil::get($entity, "unitCost"), EntityUtil::get($entity, "dateReception"), EntityUtil::get($entity, "quantity")));
         }
 
-        // FormatUtil::dump($entity);
         return $entity; // Last inserted ID is entity's id
     }
 

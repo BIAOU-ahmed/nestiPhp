@@ -22,7 +22,7 @@ class RecipeController extends BaseEntityController
             $action = "accessDenied";
         }
         $id = SiteUtil::getUrlParameters()[2] ?? "";
-        if(!UserController::getLoggedInUser()->isChef() && $action=="edit" && $id == ''){
+        if (!UserController::getLoggedInUser()->isChef() && $action == "edit" && $id == '') {
             $action = "accessDenied";
         }
         parent::callActionMethod($action);
@@ -52,15 +52,21 @@ class RecipeController extends BaseEntityController
                 $validatedProperties = $formBuilder->getParameters();
                 EntityUtil::setFromArray($recipe, $validatedProperties);
                 // if id the new recipe add current logged user like chef
+                $redirect = false;
                 if (!$recipe->getId()) {
                     $recipe->setIdChef($chefId);
+                    $redirect = true;
+                } else {
+                    $templateVars["succes"] = "La recettes a été modifier avec succès";
                 }
                 self::getDao()::saveOrUpdate($recipe);
-                header('Location: ' . SiteUtil::url() . 'recipe/edit/' . $recipe->getId());
-                exit;
+                if ($redirect) {
+                    header('Location: ' . SiteUtil::url() . 'recipe/edit/' . $recipe->getId());
+                    exit;
+                }
             } else {
                 $templateVars["errors"] = $formBuilder->getErrors();
-                $properties = $_POST[static::getEntityClass()];
+                $templateVars["properties"] = $_POST[static::getEntityClass()];
             }
         }
 
@@ -103,7 +109,6 @@ class RecipeController extends BaseEntityController
                 $array[$paragraph->getParagraphPosition()]['content'] = $paragraph->getContent();
             }
             echo json_encode($array);
-
         }
     }
 
@@ -188,11 +193,11 @@ class RecipeController extends BaseEntityController
                     }
                 } else {
                     // else is to add a new recipe then we get all values passed
-                    $ingName = $_POST['ingredientName'];
-                    $unitName = $_POST['unitName'];
-                    $quantity = $_POST['quantity'];
+                    $ingName =  FormatUtil::sanitize($_POST['ingredientName']); ;
+                    $unitName = FormatUtil::sanitize($_POST['unitName']) ;
+                    $quantity = FormatUtil::sanitize($_POST['quantity']) ;
 
-                    $ingredient = ProductDao::findOneBy("name", $ingName); 
+                    $ingredient = ProductDao::findOneBy("name", $ingName);
                     $unit = UnitDao::findOneBy("name", $unitName);
 
                     // check if the ingredient asked to add is already exist if not we add it 
@@ -205,7 +210,7 @@ class RecipeController extends BaseEntityController
 
                     $ing = IngredientDao::findById($ingredient->getId());
                     // if the product is not already an ingredient we add it like a ingredient
-                    if($ing==null){
+                    if ($ing == null) {
                         $ingredient->makeIngredient();
                     }
                     $ingredientRecipe = IngredientRecipeDao::findOneBy($ingredient->getId(), $recipe->getId());
@@ -233,7 +238,7 @@ class RecipeController extends BaseEntityController
 
 
                 // CREATE TRIGGER `increment_position` BEFORE INSERT ON `ingredientrecipe` FOR EACH ROW BEGIN DECLARE naw_position integer; SET @naw_position := (SELECT MAX(recipePosition)FROM ingredientrecipe WHERE idRecipe = NEW.`idRecipe`); SET NEW.`recipePosition` = @maxPosition+1; END 
-               
+
 
             }
 
@@ -253,6 +258,5 @@ class RecipeController extends BaseEntityController
                 echo "false";
             }
         }
-
     }
 }

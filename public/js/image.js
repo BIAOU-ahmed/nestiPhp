@@ -27,13 +27,13 @@ $(document).ready(function() {
             entity['article'] = $(this).data('idarticle'); // add the id article
         }
         let data = $(this).data('idrecipe') ? 'recipe' : 'article';
-        alert(data)
+        // alert(data)
             // send the ajax request with id recipe or id article
         $.post(barUrl + '/' + data + '/addImage', {
             entity,
         }, (response) => {
             addImage(response)
-            alert(response)
+            // alert(response)
         });
     })
 
@@ -44,7 +44,6 @@ $(document).ready(function() {
         let barUrl = $(this).data("url");
         var formData = new FormData(this);
         if (recipe) {
-            alert($('#img-url').html());
             // ajax request to the endpoint to add the new Image
             $.ajax({
                 type: 'POST',
@@ -54,8 +53,6 @@ $(document).ready(function() {
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    console.log("success");
-                    console.log(data);
                     if (data == "FILE_TYPE_ERROR") {
                         alert("le type de fichier est incorrect")
                     } else if (data == "FILE_SIZE_ERROR") {
@@ -65,7 +62,7 @@ $(document).ready(function() {
                     }
                 },
                 error: function(data) {
-                    console.log("Une erreur est survenue lors de l'ajout de l'image");
+                    alert("Une erreur est survenue lors de l'ajout de l'image");
                 }
             });
         } else {
